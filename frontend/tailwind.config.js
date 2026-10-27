@@ -4,39 +4,39 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        dark: {
-          950: '#070A0F',
-          900: '#0B111A',
-          850: '#101826',
-          800: '#162032',
-          700: '#223149',
-          600: '#324564',
-        },
-        cyan: {
-          400: '#22D3EE',
-          500: '#06B6D4',
-        },
-        emerald: {
-          400: '#34D399',
-          500: '#10B981',
-        },
-        amber: {
-          400: '#FBBF24',
-          500: '#F59E0B',
-        },
-        rose: {
-          400: '#FB7185',
-          500: '#F43F5E',
-        }
+        ground: '#fcfcfd',
+        'ground-muted': '#f3f4f6',
+        panel: '#ffffff',
+        ink: '#16191f',
+        'ink-secondary': '#454c58',
+        rule: '#dde0e6',
+        accent: '#074ce0',
+        'on-accent': '#ffffff',
+        field: '#16191f',
+        'on-field': '#fcfcfd',
+        'on-field-secondary': '#d0d4dd',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-        display: ['Space Grotesk', 'Inter', 'sans-serif']
+        display: ['"Host Grotesk"', 'sans-serif'],
+        sans: ['"Instrument Sans"', 'Inter', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      borderRadius: {
+        panel: '12px',
+      },
+      boxShadow: {
+        panel: '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)',
+        'panel-elevated': '0 10px 25px -5px rgba(22, 25, 31, 0.06), 0 8px 10px -6px rgba(22, 25, 31, 0.04)',
+        accent: '0 4px 14px 0 rgba(7, 76, 224, 0.25)',
+      },
+      transitionTimingFunction: {
+        'dp-ease': 'ease-out',
+      },
+      transitionDuration: {
+        'dp-motion': '160ms',
       }
     },
   },

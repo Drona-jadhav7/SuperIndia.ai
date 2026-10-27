@@ -29,6 +29,382 @@
       "spare_mva_margin": 95.0,
       "proposed_it_load_mw": 80.0,
       "renewable_open_access_score": 78.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 34.5,
+      "relative_humidity_pct": 72.0,
+      "annual_cooling_degree_days": 2850.0,
+      "air_quality_pm25": 48.0,
+      "extreme_heat_days": 8.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 0.8,
+      "rtt_to_landing_station_ms": 1.8,
+      "nixi_distance_km": 14.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 4
+    },
+    "disaster_params": {
+      "seismic_zone": "III",
+      "elevation_above_hfl_m": 3.8,
+      "cyclone_wind_speed_ms": 39.0,
+      "landslide_risk_index": 5.0,
+      "industrial_hazard_distance_km": 6.5
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 1.2,
+      "soil_bearing_capacity_kpa": 240.0,
+      "contiguous_parcel_acres": 18.0,
+      "slope_gradient_pct": 1.2
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 7.6,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 12.0,
+      "stamp_duty_exemption_pct": 75.0,
+      "electricity_duty_exemption_years": 10,
+      "land_cost_inr_crore_per_acre": 8.5
+    }
+  },
+  {
+    "site_id": "site_dholera_sir",
+    "site_name": "Dholera SIR (Special Investment Region)",
+    "state": "Gujarat",
+    "district": "Ahmedabad / Dholera",
+    "latitude": 22.2530,
+    "longitude": 72.1950,
+    "elevation_m": 12.0,
+    "proposed_it_load_mw": 200.0,
+    "water_params": {
+      "groundwater_extraction_pct": 52.0,
+      "water_quality_tds": 310.0,
+      "demand_stress_score": 85.0,
+      "data_center_demand_mld": 3.5,
+      "local_aquifer_stress_pct": 42.0,
+      "industrial_density_index": 45.0,
+      "stp_distance_km": 1.5,
+      "tertiary_supply_mld": 45.0,
+      "assured_supply_mld": 6.0,
+      "on_site_storage_hours": 96.0,
+      "elevation_m": 12.0,
+      "drought_risk_index": 28.0,
+      "flood_zone_risk": 15.0
+    },
+    "power_params": {
+      "substation_distance_km": 0.8,
+      "voltage_class_kv": 400.0,
+      "spare_mva_margin": 320.0,
+      "proposed_it_load_mw": 200.0,
+      "renewable_open_access_score": 98.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 38.0,
+      "relative_humidity_pct": 42.0,
+      "annual_cooling_degree_days": 2700.0,
+      "air_quality_pm25": 32.0,
+      "extreme_heat_days": 24.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 1.0,
+      "rtt_to_landing_station_ms": 4.2,
+      "nixi_distance_km": 35.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 3
+    },
+    "disaster_params": {
+      "seismic_zone": "III",
+      "elevation_above_hfl_m": 4.5,
+      "cyclone_wind_speed_ms": 36.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 12.0
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 1.5,
+      "soil_bearing_capacity_kpa": 210.0,
+      "contiguous_parcel_acres": 120.0,
+      "slope_gradient_pct": 0.8
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 6.2,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 25.0,
+      "stamp_duty_exemption_pct": 100.0,
+      "electricity_duty_exemption_years": 10,
+      "land_cost_inr_crore_per_acre": 1.2
+    }
+  },
+  {
+    "site_id": "site_hyderabad_fabcity",
+    "site_name": "Fab City / Shamshabad Corridor",
+    "state": "Telangana",
+    "district": "Ranga Reddy / Hyderabad",
+    "latitude": 17.1850,
+    "longitude": 78.4820,
+    "elevation_m": 585.0,
+    "proposed_it_load_mw": 120.0,
+    "water_params": {
+      "groundwater_extraction_pct": 68.0,
+      "water_quality_tds": 380.0,
+      "demand_stress_score": 78.0,
+      "data_center_demand_mld": 2.8,
+      "local_aquifer_stress_pct": 62.0,
+      "industrial_density_index": 60.0,
+      "stp_distance_km": 2.2,
+      "tertiary_supply_mld": 30.0,
+      "assured_supply_mld": 4.5,
+      "on_site_storage_hours": 72.0,
+      "elevation_m": 585.0,
+      "drought_risk_index": 35.0,
+      "flood_zone_risk": 5.0
+    },
+    "power_params": {
+      "substation_distance_km": 1.2,
+      "voltage_class_kv": 400.0,
+      "spare_mva_margin": 180.0,
+      "proposed_it_load_mw": 120.0,
+      "renewable_open_access_score": 90.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 36.5,
+      "relative_humidity_pct": 45.0,
+      "annual_cooling_degree_days": 2450.0,
+      "air_quality_pm25": 38.0,
+      "extreme_heat_days": 18.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 0.9,
+      "rtt_to_landing_station_ms": 6.8,
+      "nixi_distance_km": 18.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 3
+    },
+    "disaster_params": {
+      "seismic_zone": "II",
+      "elevation_above_hfl_m": 25.0,
+      "cyclone_wind_speed_ms": 33.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 15.0
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 2.0,
+      "soil_bearing_capacity_kpa": 280.0,
+      "contiguous_parcel_acres": 45.0,
+      "slope_gradient_pct": 1.5
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 7.1,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 20.0,
+      "stamp_duty_exemption_pct": 100.0,
+      "electricity_duty_exemption_years": 10,
+      "land_cost_inr_crore_per_acre": 3.8
+    }
+  },
+  {
+    "site_id": "site_noida_sec132",
+    "site_name": "Sector 132 / Yamuna Corridor",
+    "state": "Uttar Pradesh",
+    "district": "Gautam Buddha Nagar / Noida",
+    "latitude": 28.5020,
+    "longitude": 77.3820,
+    "elevation_m": 202.0,
+    "proposed_it_load_mw": 100.0,
+    "water_params": {
+      "groundwater_extraction_pct": 86.0,
+      "water_quality_tds": 520.0,
+      "demand_stress_score": 55.0,
+      "data_center_demand_mld": 2.5,
+      "local_aquifer_stress_pct": 82.0,
+      "industrial_density_index": 80.0,
+      "stp_distance_km": 2.5,
+      "tertiary_supply_mld": 35.0,
+      "assured_supply_mld": 3.5,
+      "on_site_storage_hours": 60.0,
+      "elevation_m": 202.0,
+      "drought_risk_index": 30.0,
+      "flood_zone_risk": 20.0
+    },
+    "power_params": {
+      "substation_distance_km": 1.4,
+      "voltage_class_kv": 220.0,
+      "spare_mva_margin": 140.0,
+      "proposed_it_load_mw": 100.0,
+      "renewable_open_access_score": 75.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 41.5,
+      "relative_humidity_pct": 38.0,
+      "annual_cooling_degree_days": 3100.0,
+      "air_quality_pm25": 82.0,
+      "extreme_heat_days": 32.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 0.5,
+      "rtt_to_landing_station_ms": 14.5,
+      "nixi_distance_km": 12.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 4
+    },
+    "disaster_params": {
+      "seismic_zone": "IV",
+      "elevation_above_hfl_m": 4.2,
+      "cyclone_wind_speed_ms": 33.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 9.0
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 0.8,
+      "soil_bearing_capacity_kpa": 190.0,
+      "contiguous_parcel_acres": 25.0,
+      "slope_gradient_pct": 0.5
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 7.0,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 25.0,
+      "stamp_duty_exemption_pct": 100.0,
+      "electricity_duty_exemption_years": 10,
+      "land_cost_inr_crore_per_acre": 4.5
+    }
+  },
+  {
+    "site_id": "site_bengaluru_aerospace",
+    "site_name": "KIADB Aerospace Park (Devanahalli)",
+    "state": "Karnataka",
+    "district": "Bengaluru Rural",
+    "latitude": 13.2040,
+    "longitude": 77.7080,
+    "elevation_m": 915.0,
+    "proposed_it_load_mw": 75.0,
+    "water_params": {
+      "groundwater_extraction_pct": 92.0,
+      "water_quality_tds": 610.0,
+      "demand_stress_score": 52.0,
+      "data_center_demand_mld": 1.9,
+      "local_aquifer_stress_pct": 89.0,
+      "industrial_density_index": 75.0,
+      "stp_distance_km": 3.8,
+      "tertiary_supply_mld": 18.0,
+      "assured_supply_mld": 2.4,
+      "on_site_storage_hours": 48.0,
+      "elevation_m": 915.0,
+      "drought_risk_index": 45.0,
+      "flood_zone_risk": 5.0
+    },
+    "power_params": {
+      "substation_distance_km": 2.1,
+      "voltage_class_kv": 220.0,
+      "spare_mva_margin": 85.0,
+      "proposed_it_load_mw": 75.0,
+      "renewable_open_access_score": 82.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 31.0,
+      "relative_humidity_pct": 55.0,
+      "annual_cooling_degree_days": 1850.0,
+      "air_quality_pm25": 34.0,
+      "extreme_heat_days": 4.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 1.2,
+      "rtt_to_landing_station_ms": 7.2,
+      "nixi_distance_km": 22.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 3
+    },
+    "disaster_params": {
+      "seismic_zone": "II",
+      "elevation_above_hfl_m": 35.0,
+      "cyclone_wind_speed_ms": 33.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 14.0
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 1.8,
+      "soil_bearing_capacity_kpa": 260.0,
+      "contiguous_parcel_acres": 30.0,
+      "slope_gradient_pct": 1.8
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 8.2,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 7.0,
+      "stamp_duty_exemption_pct": 100.0,
+      "electricity_duty_exemption_years": 5,
+      "land_cost_inr_crore_per_acre": 5.2
+    }
+  },
+  {
+    "site_id": "site_chennai_siruseri",
+    "site_name": "Siruseri SIPCOT (OMR Corridor)",
+    "state": "Tamil Nadu",
+    "district": "Chengalpattu / Chennai",
+    "latitude": 12.8280,
+    "longitude": 80.2180,
+    "elevation_m": 18.0,
+    "proposed_it_load_mw": 80.0,
+    "water_params": {
+      "groundwater_extraction_pct": 78.0,
+      "water_quality_tds": 750.0,
+      "demand_stress_score": 62.0,
+      "data_center_demand_mld": 2.1,
+      "local_aquifer_stress_pct": 75.0,
+      "industrial_density_index": 82.0,
+      "stp_distance_km": 2.6,
+      "tertiary_supply_mld": 22.0,
+      "assured_supply_mld": 3.0,
+      "on_site_storage_hours": 60.0,
+      "elevation_m": 18.0,
+      "drought_risk_index": 38.0,
+      "flood_zone_risk": 40.0
+    },
+    "power_params": {
+      "substation_distance_km": 1.8,
+      "voltage_class_kv": 230.0,
+      "spare_mva_margin": 105.0,
+      "proposed_it_load_mw": 80.0,
+      "renewable_open_access_score": 85.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 37.0,
+      "relative_humidity_pct": 75.0,
+      "annual_cooling_degree_days": 3200.0,
+      "air_quality_pm25": 42.0,
+      "extreme_heat_days": 16.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 0.6,
+      "rtt_to_landing_station_ms": 1.9,
+      "nixi_distance_km": 16.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 4
+    },
+    "disaster_params": {
+      "seismic_zone": "III",
+      "elevation_above_hfl_m": 2.8,
+      "cyclone_wind_speed_ms": 47.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 10.0
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 0.5,
+      "soil_bearing_capacity_kpa": 210.0,
+      "contiguous_parcel_acres": 22.0,
+      "slope_gradient_pct": 0.6
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 7.8,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 15.0,
+      "stamp_duty_exemption_pct": 75.0,
+      "electricity_duty_exemption_years": 5,
+      "land_cost_inr_crore_per_acre": 4.8
     }
   },
   {
@@ -58,169 +434,113 @@
     "power_params": {
       "substation_distance_km": 2.2,
       "voltage_class_kv": 220.0,
-      "spare_mva_margin": 70.0,
+      "spare_mva_margin": 65.0,
       "proposed_it_load_mw": 60.0,
-      "renewable_open_access_score": 72.0
+      "renewable_open_access_score": 70.0
+    },
+    "climate_params": {
+      "dry_bulb_temp_c": 35.0,
+      "relative_humidity_pct": 70.0,
+      "annual_cooling_degree_days": 2880.0,
+      "air_quality_pm25": 65.0,
+      "extreme_heat_days": 10.0
+    },
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 2.2,
+      "rtt_to_landing_station_ms": 3.5,
+      "nixi_distance_km": 25.0,
+      "carrier_neutral_providers_count": 3,
+      "dark_fiber_routes_count": 2
+    },
+    "disaster_params": {
+      "seismic_zone": "III",
+      "elevation_above_hfl_m": 3.2,
+      "cyclone_wind_speed_ms": 39.0,
+      "landslide_risk_index": 8.0,
+      "industrial_hazard_distance_km": 2.5
+    },
+    "land_params": {
+      "is_notified_it_industrial_zone": true,
+      "distance_to_national_highway_km": 2.5,
+      "soil_bearing_capacity_kpa": 195.0,
+      "contiguous_parcel_acres": 15.0,
+      "slope_gradient_pct": 1.4
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 7.6,
+      "state_has_dc_policy": true,
+      "capital_subsidy_pct": 12.0,
+      "stamp_duty_exemption_pct": 75.0,
+      "electricity_duty_exemption_years": 10,
+      "land_cost_inr_crore_per_acre": 4.2
     }
   },
   {
-    "site_id": "site_coastal_south_mumbai",
+    "site_id": "site_south_mumbai_port",
     "site_name": "Coastal South Mumbai (Port Trust / Nariman Point)",
     "state": "Maharashtra",
     "district": "Mumbai City",
-    "latitude": 18.9220,
-    "longitude": 72.8340,
+    "latitude": 18.9280,
+    "longitude": 72.8350,
     "elevation_m": 4.2,
     "proposed_it_load_mw": 40.0,
     "water_params": {
-      "groundwater_extraction_pct": 92.0,
-      "water_quality_tds": 880.0,
-      "demand_stress_score": 46.0,
-      "data_center_demand_mld": 1.2,
-      "local_aquifer_stress_pct": 80.0,
-      "industrial_density_index": 85.0,
-      "stp_distance_km": 7.5,
-      "tertiary_supply_mld": 15.0,
-      "assured_supply_mld": 1.3,
-      "on_site_storage_hours": 24.0,
+      "groundwater_extraction_pct": 60.0,
+      "water_quality_tds": 350.0,
+      "demand_stress_score": 68.0,
+      "data_center_demand_mld": 1.1,
+      "local_aquifer_stress_pct": 55.0,
+      "industrial_density_index": 40.0,
+      "stp_distance_km": 5.2,
+      "tertiary_supply_mld": 10.0,
+      "assured_supply_mld": 1.5,
+      "on_site_storage_hours": 36.0,
       "elevation_m": 4.2,
       "drought_risk_index": 20.0,
-      "flood_zone_risk": 75.0
+      "flood_zone_risk": 85.0
     },
     "power_params": {
-      "substation_distance_km": 2.8,
+      "substation_distance_km": 3.5,
       "voltage_class_kv": 110.0,
       "spare_mva_margin": 30.0,
       "proposed_it_load_mw": 40.0,
-      "renewable_open_access_score": 65.0
-    }
-  },
-  {
-    "site_id": "site_noida",
-    "site_name": "Noida - Sector 132 / Yamuna Corridor",
-    "state": "Uttar Pradesh",
-    "district": "Gautam Buddha Nagar",
-    "latitude": 28.5135,
-    "longitude": 77.3820,
-    "elevation_m": 198.0,
-    "proposed_it_load_mw": 60.0,
-    "water_params": {
-      "groundwater_extraction_pct": 94.0,
-      "water_quality_tds": 780.0,
-      "demand_stress_score": 58.0,
-      "data_center_demand_mld": 1.8,
-      "local_aquifer_stress_pct": 88.0,
-      "industrial_density_index": 70.0,
-      "stp_distance_km": 4.5,
-      "tertiary_supply_mld": 35.0,
-      "assured_supply_mld": 2.4,
-      "on_site_storage_hours": 60.0,
-      "elevation_m": 198.0,
-      "drought_risk_index": 38.0,
-      "flood_zone_risk": 22.0
+      "renewable_open_access_score": 50.0
     },
-    "power_params": {
-      "substation_distance_km": 1.2,
-      "voltage_class_kv": 400.0,
-      "spare_mva_margin": 140.0,
-      "proposed_it_load_mw": 60.0,
-      "renewable_open_access_score": 82.0
-    }
-  },
-  {
-    "site_id": "site_bengaluru",
-    "site_name": "Bengaluru - KIADB Aerospace Park (Devanahalli)",
-    "state": "Karnataka",
-    "district": "Bengaluru Rural",
-    "latitude": 13.2185,
-    "longitude": 77.6890,
-    "elevation_m": 915.0,
-    "proposed_it_load_mw": 50.0,
-    "water_params": {
-      "groundwater_extraction_pct": 118.0,
-      "water_quality_tds": 540.0,
-      "demand_stress_score": 38.0,
-      "data_center_demand_mld": 1.5,
-      "local_aquifer_stress_pct": 92.0,
-      "industrial_density_index": 78.0,
-      "stp_distance_km": 6.8,
-      "tertiary_supply_mld": 18.0,
-      "assured_supply_mld": 1.65,
-      "on_site_storage_hours": 72.0,
-      "elevation_m": 915.0,
-      "drought_risk_index": 42.0,
-      "flood_zone_risk": 8.0
+    "climate_params": {
+      "dry_bulb_temp_c": 33.5,
+      "relative_humidity_pct": 82.0,
+      "annual_cooling_degree_days": 2920.0,
+      "air_quality_pm25": 40.0,
+      "extreme_heat_days": 4.0
     },
-    "power_params": {
-      "substation_distance_km": 2.4,
-      "voltage_class_kv": 220.0,
-      "spare_mva_margin": 75.0,
-      "proposed_it_load_mw": 50.0,
-      "renewable_open_access_score": 92.0
-    }
-  },
-  {
-    "site_id": "site_chennai",
-    "site_name": "Chennai - Siruseri SIPCOT (OMR Corridor)",
-    "state": "Tamil Nadu",
-    "district": "Chengalpattu",
-    "latitude": 12.8250,
-    "longitude": 80.2220,
-    "elevation_m": 6.2,
-    "proposed_it_load_mw": 70.0,
-    "water_params": {
-      "groundwater_extraction_pct": 84.0,
-      "water_quality_tds": 920.0,
-      "demand_stress_score": 52.0,
-      "data_center_demand_mld": 2.0,
-      "local_aquifer_stress_pct": 80.0,
-      "industrial_density_index": 75.0,
-      "stp_distance_km": 2.1,
-      "tertiary_supply_mld": 40.0,
-      "assured_supply_mld": 3.2,
-      "on_site_storage_hours": 40.0,
-      "elevation_m": 6.2,
-      "drought_risk_index": 35.0,
-      "flood_zone_risk": 68.0
+    "connectivity_params": {
+      "fiber_backbone_distance_km": 0.4,
+      "rtt_to_landing_station_ms": 0.8,
+      "nixi_distance_km": 8.0,
+      "carrier_neutral_providers_count": 4,
+      "dark_fiber_routes_count": 4
     },
-    "power_params": {
-      "substation_distance_km": 3.1,
-      "voltage_class_kv": 230.0,
-      "spare_mva_margin": 60.0,
-      "proposed_it_load_mw": 70.0,
-      "renewable_open_access_score": 86.0
-    }
-  },
-  {
-    "site_id": "site_hyderabad",
-    "site_name": "Hyderabad - Fab City / Shamshabad Hub",
-    "state": "Telangana",
-    "district": "Ranga Reddy",
-    "latitude": 17.1950,
-    "longitude": 78.4750,
-    "elevation_m": 565.0,
-    "proposed_it_load_mw": 100.0,
-    "water_params": {
-      "groundwater_extraction_pct": 62.0,
-      "water_quality_tds": 340.0,
-      "demand_stress_score": 78.0,
-      "data_center_demand_mld": 2.5,
-      "local_aquifer_stress_pct": 45.0,
-      "industrial_density_index": 50.0,
-      "stp_distance_km": 4.0,
-      "tertiary_supply_mld": 30.0,
-      "assured_supply_mld": 5.25,
-      "on_site_storage_hours": 96.0,
-      "elevation_m": 565.0,
-      "drought_risk_index": 22.0,
-      "flood_zone_risk": 12.0
+    "disaster_params": {
+      "seismic_zone": "III",
+      "elevation_above_hfl_m": 0.6,
+      "cyclone_wind_speed_ms": 44.0,
+      "landslide_risk_index": 0.0,
+      "industrial_hazard_distance_km": 5.0
     },
-    "power_params": {
-      "substation_distance_km": 1.4,
-      "voltage_class_kv": 400.0,
-      "spare_mva_margin": 180.0,
-      "proposed_it_load_mw": 100.0,
-      "renewable_open_access_score": 88.0
+    "land_params": {
+      "is_notified_it_industrial_zone": false,
+      "distance_to_national_highway_km": 8.5,
+      "soil_bearing_capacity_kpa": 140.0,
+      "contiguous_parcel_acres": 2.5,
+      "slope_gradient_pct": 0.2
+    },
+    "economics_params": {
+      "electricity_tariff_inr_per_kwh": 8.4,
+      "state_has_dc_policy": false,
+      "capital_subsidy_pct": 0.0,
+      "stamp_duty_exemption_pct": 0.0,
+      "electricity_duty_exemption_years": 0,
+      "land_cost_inr_crore_per_acre": 28.0
     }
   }
 ]

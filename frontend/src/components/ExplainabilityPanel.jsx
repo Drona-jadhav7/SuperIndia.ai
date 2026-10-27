@@ -1,179 +1,233 @@
 import React, { useState } from 'react';
-import { Droplet, Zap, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
+import { 
+  Droplet, 
+  Zap, 
+  Thermometer, 
+  Wifi, 
+  Shield, 
+  Layers, 
+  Coins, 
+  AlertTriangle, 
+  Info,
+  CheckCircle2
+} from 'lucide-react';
 
 export default function ExplainabilityPanel({ site }) {
-  const [activeTab, setActiveTab] = useState('water'); // 'water' | 'power' | 'all'
+  const [activeDomain, setActiveDomain] = useState('water');
 
   if (!site) return null;
 
-  const waterMetrics = site.water_assessment?.sub_metrics || [];
-  const powerMetrics = site.power_assessment?.sub_metrics || [];
+  const domains = [
+    {
+      id: 'water',
+      label: '💧 Water',
+      score: site.water_score,
+      sub_metrics: site.water_assessment?.sub_metrics || [],
+      summary: site.water_assessment?.summary || '',
+      color: '#074ce0',
+      standard: 'CGWB & BIS 10500 Guidelines (7 Models)',
+    },
+    {
+      id: 'power',
+      label: '⚡ Power',
+      score: site.power_score,
+      sub_metrics: site.power_assessment?.sub_metrics || [],
+      summary: site.power_assessment?.summary || '',
+      color: '#d97706',
+      standard: 'CEA Grid Transmission Criteria',
+    },
+    {
+      id: 'climate',
+      label: '🌡️ Climate',
+      score: site.climate_score,
+      sub_metrics: site.climate_assessment?.sub_metrics || [],
+      summary: site.climate_assessment?.summary || '',
+      color: '#4f46e5',
+      standard: 'ASHRAE TC 9.9 & IMD Normals',
+    },
+    {
+      id: 'connectivity',
+      label: '🌐 Fiber & CLS',
+      score: site.connectivity_score,
+      sub_metrics: site.connectivity_assessment?.sub_metrics || [],
+      summary: site.connectivity_assessment?.summary || '',
+      color: '#059669',
+      standard: 'NIXI Peering & Subsea Route Density',
+    },
+    {
+      id: 'disaster',
+      label: '🌊 Disaster Risk',
+      score: site.disaster_score,
+      sub_metrics: site.disaster_assessment?.sub_metrics || [],
+      summary: site.disaster_assessment?.summary || '',
+      color: '#e11d48',
+      standard: 'IS 1893:2016 Seismic & NDMA Wind Hazard',
+    },
+    {
+      id: 'land',
+      label: '🏗️ Land & Civil',
+      score: site.land_score,
+      sub_metrics: site.land_assessment?.sub_metrics || [],
+      summary: site.land_assessment?.summary || '',
+      color: '#7c3aed',
+      standard: 'State Industrial Master Plan & IS 1904 SBC',
+    },
+    {
+      id: 'economics',
+      label: '💰 Economics & Policy',
+      score: site.economics_score,
+      sub_metrics: site.economics_assessment?.sub_metrics || [],
+      summary: site.economics_assessment?.summary || '',
+      color: '#0891b2',
+      standard: 'State SERC Tariff & Data Centre Policies',
+    },
+  ];
+
+  const currentDomain = domains.find(d => d.id === activeDomain) || domains[0];
 
   const getScoreColor = (score, isFlagged) => {
-    if (isFlagged || score < 50) return '#EF4444'; // Red
-    if (score < 75) return '#F59E0B'; // Amber
-    return '#10B981'; // Emerald
-  };
-
-  const renderMetricCard = (metric, domainColor = 'sky') => {
-    const isFlagged = metric.flagged || false;
-    const scoreColor = getScoreColor(metric.score, isFlagged);
-
-    return (
-      <div 
-        key={metric.key} 
-        className={`p-3.5 rounded-lg border transition-all ${
-          isFlagged 
-            ? 'bg-rose-950/20 border-rose-500/40' 
-            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
-        }`}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white tracking-wide">
-              {metric.name}
-            </span>
-            <span className="text-[10px] font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded">
-              wt: {(metric.weight * 100).toFixed(0)}%
-            </span>
-            {isFlagged && (
-              <span className="flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                <AlertTriangle className="w-3 h-3" />
-                STRESS FLAG
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] font-mono text-slate-400">
-              Contribution: <strong className="text-slate-200">{metric.weighted_score.toFixed(1)} pts</strong>
-            </span>
-            <span 
-              className="text-base font-bold font-display"
-              style={{ color: scoreColor }}
-            >
-              {metric.score.toFixed(1)}
-              <span className="text-xs text-slate-500 font-mono">/100</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="w-full bg-slate-800/80 rounded-full h-2 mb-2 overflow-hidden">
-          <div 
-            className="h-2 rounded-full transition-all duration-500"
-            style={{ 
-              width: `${Math.min(100, Math.max(0, metric.score))}%`,
-              backgroundColor: scoreColor,
-            }}
-          />
-        </div>
-
-        {/* Details & Category */}
-        <div className="flex flex-wrap items-start justify-between gap-2 text-xs">
-          <span className="text-slate-300 flex-1">
-            {metric.details}
-          </span>
-          <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-800/90 text-slate-300 border border-slate-700/60 shrink-0">
-            {metric.category}
-          </span>
-        </div>
-      </div>
-    );
+    if (isFlagged || score < 50) return '#e11d48'; // Red
+    if (score < 75) return '#d97706'; // Amber
+    return '#059669'; // Emerald
   };
 
   return (
-    <div className="glass-panel p-6 rounded-xl border border-slate-800 shadow-xl">
-      {/* Header and Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+    <div className="bg-white p-6 rounded-2xl border border-[#dde0e6] shadow-sm">
+      
+      {/* Header and Domain Selector */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[#dde0e6]">
         <div>
-          <h3 className="text-lg font-bold font-display text-white flex items-center gap-2">
-            <Info className="w-5 h-5 text-cyan-400" />
-            Deterministic Granular Explainability (7+4 Engine)
+          <h3 className="text-lg font-bold font-display text-[#16191f] flex items-center gap-2">
+            <Info className="w-5 h-5 text-[#074ce0]" />
+            Deterministic Granular Explainability (7 Domains • 31 Sub-Metrics)
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Transparent breakdown of individual CGWA water sub-models and CEA electrical transmission metrics.
+          <p className="text-xs text-[#454c58] mt-0.5">
+            Zero black-box logic. Every sub-score is mathematically grounded in verified standards.
           </p>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center p-1 bg-slate-900 rounded-lg border border-slate-800 text-xs font-medium">
-          <button
-            onClick={() => setActiveTab('water')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all ${
-              activeTab === 'water' 
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm' 
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Droplet className="w-3.5 h-3.5" />
-            7 Water Sub-models
-          </button>
-          <button
-            onClick={() => setActiveTab('power')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all ${
-              activeTab === 'power' 
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm' 
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Zap className="w-3.5 h-3.5" />
-            4 Power Metrics
-          </button>
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`px-3 py-1.5 rounded-md transition-all ${
-              activeTab === 'all' 
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm' 
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            All 11 Metrics
-          </button>
+        <div className="flex flex-wrap items-center gap-1 bg-[#f3f4f6] p-1 rounded-xl border border-[#dde0e6]">
+          {domains.map((dom) => {
+            const active = activeDomain === dom.id;
+            return (
+              <button
+                key={dom.id}
+                onClick={() => setActiveDomain(dom.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                  active 
+                    ? 'bg-white text-[#16191f] font-bold shadow-sm border border-[#dde0e6]' 
+                    : 'text-[#454c58] hover:text-[#16191f]'
+                }`}
+              >
+                <span>{dom.label}</span>
+                <span 
+                  className="text-[10px] px-1.5 py-0.2 rounded font-bold"
+                  style={{ color: dom.color, backgroundColor: `${dom.color}15` }}
+                >
+                  {(dom.score || 0).toFixed(0)}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Water Sub-models Section */}
-      {(activeTab === 'water' || activeTab === 'all') && (
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-              <h4 className="text-sm font-semibold uppercase tracking-wider font-mono text-sky-400">
-                7-Model Water Engine (CGWA Thresholds)
-              </h4>
-            </div>
-            <span className="text-xs font-mono text-slate-400">
-              Score: <strong className="text-sky-300">{site.water_score.toFixed(1)}</strong> / 100
-            </span>
-          </div>
+      {/* Domain Header Banner */}
+      <div className="mb-4 p-3.5 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <div 
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ backgroundColor: currentDomain.color }}
+          />
+          <span className="text-xs font-mono text-[#454c58]">
+            Standard: <strong className="text-[#16191f] font-sans">{currentDomain.standard}</strong>
+          </span>
+        </div>
+        <div className="text-xs font-mono text-[#454c58]">
+          Domain Sub-Score: <strong style={{ color: currentDomain.color }}>{(currentDomain.score || 0).toFixed(1)}/100</strong>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 gap-2.5">
-            {waterMetrics.map((m) => renderMetricCard(m, 'sky'))}
-          </div>
+      {/* Granular Sub-Metrics Grid */}
+      <div className="space-y-3">
+        {currentDomain.sub_metrics.map((metric, idx) => {
+          const isFlagged = metric.flagged || false;
+          const score = metric.score || 0;
+          const scoreColor = getScoreColor(score, isFlagged);
+          const weightPct = ((metric.weight || 0) * 100).toFixed(0);
+
+          return (
+            <div 
+              key={metric.key || idx}
+              className={`p-4 rounded-xl border transition-all ${
+                isFlagged 
+                  ? 'bg-rose-50/50 border-rose-200' 
+                  : 'bg-white border-[#dde0e6] hover:border-[#074ce0]/40 shadow-sm'
+              }`}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-sm font-bold font-display text-[#16191f]">
+                    {metric.name}
+                  </span>
+                  <span className="text-[10px] font-mono bg-[#f3f4f6] text-[#454c58] px-2 py-0.5 rounded border border-[#dde0e6]">
+                    wt: {weightPct}%
+                  </span>
+                  {isFlagged && (
+                    <span className="flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-800 border border-rose-300">
+                      <AlertTriangle className="w-3 h-3 text-rose-600" />
+                      CRITICAL RISK FLAG
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3 font-mono">
+                  <span className="text-xs text-[#454c58]">
+                    Contribution: <strong className="text-[#16191f]">{(metric.weighted_score || 0).toFixed(1)} pts</strong>
+                  </span>
+                  <span 
+                    className="text-base font-bold"
+                    style={{ color: scoreColor }}
+                  >
+                    {score.toFixed(1)}
+                    <span className="text-xs text-[#454c58] font-normal">/100</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="w-full bg-[#f3f4f6] rounded-full h-1.5 mb-2 overflow-hidden border border-[#dde0e6]">
+                <div 
+                  className="h-1.5 rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${Math.min(100, Math.max(0, score))}%`,
+                    backgroundColor: scoreColor,
+                  }}
+                />
+              </div>
+
+              {/* Details and category badge */}
+              <div className="flex flex-wrap items-start justify-between gap-2 text-xs">
+                <span className="text-[#454c58] flex-1">
+                  {metric.details}
+                </span>
+                <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#f3f4f6] text-[#16191f] border border-[#dde0e6] shrink-0 font-medium">
+                  {metric.category}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Summary Note */}
+      {currentDomain.summary && (
+        <div className="mt-4 p-3 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] text-xs font-mono text-[#454c58]">
+          <strong className="text-[#074ce0]">Engine Verdict:</strong> {currentDomain.summary}
         </div>
       )}
 
-      {/* Power Sub-models Section */}
-      {(activeTab === 'power' || activeTab === 'all') && (
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-              <h4 className="text-sm font-semibold uppercase tracking-wider font-mono text-amber-400">
-                4-Metric Electrical Grid Pipeline (CEA Planning)
-              </h4>
-            </div>
-            <span className="text-xs font-mono text-slate-400">
-              Score: <strong className="text-amber-300">{site.power_score.toFixed(1)}</strong> / 100
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-2.5">
-            {powerMetrics.map((m) => renderMetricCard(m, 'amber'))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

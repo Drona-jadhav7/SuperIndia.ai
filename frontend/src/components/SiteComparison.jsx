@@ -1,46 +1,45 @@
 import React from 'react';
-import { BarChart3, Trophy, ArrowRight, ShieldAlert, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { BarChart3, Trophy, ArrowRight, ShieldAlert } from 'lucide-react';
 
 export default function SiteComparison({ sites = [], selectedSite = null, onSelectSite }) {
   if (!sites || sites.length === 0) return null;
 
-  // Sort sites descending by composite score
   const sortedSites = [...sites].sort((a, b) => (b.composite_score || 0) - (a.composite_score || 0));
   const topSite = sortedSites[0];
 
   const getTierBadgeClass = (tierBadge) => {
     switch (tierBadge) {
       case 'VIABLE':
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
+        return 'bg-emerald-50 text-emerald-800 border-emerald-200';
       case 'CONDITIONAL':
-        return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
+        return 'bg-amber-50 text-amber-800 border-amber-200';
       case 'UNVIABLE':
-        return 'bg-rose-500/15 text-rose-400 border-rose-500/30';
+        return 'bg-rose-50 text-rose-800 border-rose-200';
       default:
-        return 'bg-slate-800 text-slate-400 border-slate-700';
+        return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
 
   return (
-    <div className="glass-panel p-6 rounded-xl border border-slate-800 shadow-xl space-y-5">
+    <div className="bg-white p-6 rounded-2xl border border-[#dde0e6] shadow-sm space-y-5">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#dde0e6]">
         <div>
-          <h3 className="text-lg font-bold font-display text-white flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-cyan-400" />
-            National AI Infrastructure Multi-Site Audit Matrix
+          <h3 className="text-lg font-bold font-display text-[#16191f] flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-[#074ce0]" />
+            National AI Infrastructure Multi-Site Audit Matrix (7 Domains)
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Comparative evaluation across 5 strategic hubs ranked by deterministic composite viability.
+          <p className="text-xs text-[#454c58] mt-0.5">
+            Comparative evaluation across all strategic candidate hubs ranked by deterministic composite feasibility.
           </p>
         </div>
 
         {topSite && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-xs">
-            <Trophy className="w-4 h-4 text-emerald-400" />
-            <span className="text-slate-300">Top Ranked:</span>
-            <strong className="text-emerald-300 font-semibold">{topSite.site_name}</strong>
-            <span className="font-mono text-emerald-400">({topSite.composite_score.toFixed(1)})</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+            <Trophy className="w-4 h-4 text-emerald-600" />
+            <span className="text-emerald-900 font-medium">Top Ranked Hub:</span>
+            <strong className="text-emerald-950 font-bold">{topSite.site_name}</strong>
+            <span className="font-mono text-emerald-700 font-bold">({topSite.composite_score.toFixed(1)}/100)</span>
           </div>
         )}
       </div>
@@ -49,23 +48,28 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="border-b border-slate-800 text-slate-400 font-mono text-[11px] uppercase tracking-wider bg-slate-900/60">
+            <tr className="border-b border-[#dde0e6] text-[#454c58] font-mono text-[11px] uppercase tracking-wider bg-[#f3f4f6]">
               <th className="py-3 px-3">Rank</th>
               <th className="py-3 px-3">Candidate Hub</th>
-              <th className="py-3 px-3">State / District</th>
-              <th className="py-3 px-3">Composite Score</th>
-              <th className="py-3 px-3">Classification</th>
-              <th className="py-3 px-3">Water Score (45%)</th>
-              <th className="py-3 px-3">Power Score (55%)</th>
-              <th className="py-3 px-3">Risk Flags</th>
+              <th className="py-3 px-3">State</th>
+              <th className="py-3 px-3">Composite</th>
+              <th className="py-3 px-3">Tier</th>
+              <th className="py-3 px-2 text-center text-[#074ce0]">Water</th>
+              <th className="py-3 px-2 text-center text-amber-600">Power</th>
+              <th className="py-3 px-2 text-center text-indigo-600">Climate</th>
+              <th className="py-3 px-2 text-center text-emerald-600">Fiber</th>
+              <th className="py-3 px-2 text-center text-rose-600">Risk</th>
+              <th className="py-3 px-2 text-center text-purple-600">Land</th>
+              <th className="py-3 px-2 text-center text-cyan-600">Econ</th>
+              <th className="py-3 px-3 text-center">Flags</th>
               <th className="py-3 px-3 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-[#dde0e6] font-mono">
             {sortedSites.map((site, index) => {
               const isSelected = selectedSite && selectedSite.site_id === site.site_id;
               const rank = index + 1;
-              const hasFlags = site.risk_flags && site.risk_flags.length > 0;
+              const flagsCount = site.risk_flags ? site.risk_flags.length : 0;
 
               return (
                 <tr 
@@ -73,14 +77,14 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
                   onClick={() => onSelectSite && onSelectSite(site)}
                   className={`cursor-pointer transition-colors ${
                     isSelected 
-                      ? 'bg-cyan-950/30 text-white font-medium' 
-                      : 'hover:bg-slate-900/40 text-slate-300'
+                      ? 'bg-blue-50/60 text-[#16191f] font-medium' 
+                      : 'hover:bg-[#f3f4f6] text-[#454c58]'
                   }`}
                 >
                   {/* Rank */}
-                  <td className="py-3 px-3 font-mono font-bold">
-                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
-                      rank === 1 ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-slate-800 text-slate-400'
+                  <td className="py-3 px-3 font-bold">
+                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-mono ${
+                      rank === 1 ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-[#f3f4f6] text-[#454c58] border border-[#dde0e6]'
                     }`}>
                       {rank}
                     </span>
@@ -88,71 +92,65 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
 
                   {/* Hub Name */}
                   <td className="py-3 px-3">
-                    <div className="font-semibold text-white font-display text-sm">
+                    <div className="font-bold text-[#16191f] font-display text-xs">
                       {site.site_name}
                     </div>
-                    <div className="text-[10px] text-slate-500 font-mono">
-                      Elev: {site.elevation_m}m • Load: {site.proposed_it_load_mw}MW
+                    <div className="text-[10px] text-[#454c58]">
+                      {site.district} • {site.proposed_it_load_mw}MW
                     </div>
                   </td>
 
                   {/* State */}
-                  <td className="py-3 px-3 font-mono text-[11px] text-slate-400">
+                  <td className="py-3 px-3 text-[11px] text-[#454c58] font-sans">
                     {site.state}
                   </td>
 
                   {/* Composite Score */}
                   <td className="py-3 px-3">
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className="font-bold font-display text-sm"
-                        style={{ color: site.tier_color || '#10B981' }}
-                      >
-                        {site.composite_score.toFixed(1)}
-                      </span>
-                      <div className="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div 
-                          className="h-1.5 rounded-full"
-                          style={{ 
-                            width: `${site.composite_score}%`, 
-                            backgroundColor: site.tier_color || '#10B981' 
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </td>
-
-                  {/* Tier Badge */}
-                  <td className="py-3 px-3">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono border ${getTierBadgeClass(site.tier_badge)}`}>
-                      {site.tier_badge}
+                    <span className="text-sm font-bold font-display text-[#16191f]">
+                      {site.composite_score.toFixed(1)}
                     </span>
                   </td>
 
-                  {/* Water Score */}
-                  <td className="py-3 px-3 font-mono">
-                    <span className="text-sky-400 font-bold">{site.water_score.toFixed(1)}</span>
-                    <span className="text-[10px] text-slate-500 ml-1">/100</span>
-                  </td>
-
-                  {/* Power Score */}
-                  <td className="py-3 px-3 font-mono">
-                    <span className="text-amber-400 font-bold">{site.power_score.toFixed(1)}</span>
-                    <span className="text-[10px] text-slate-500 ml-1">/100</span>
-                  </td>
-
-                  {/* Flags */}
+                  {/* Classification Tier */}
                   <td className="py-3 px-3">
-                    {hasFlags ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                        <ShieldAlert className="w-3 h-3" />
-                        {site.risk_flags.length} flag{site.risk_flags.length > 1 ? 's' : ''}
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getTierBadgeClass(site.tier_badge)}`}>
+                      {site.tier_badge || 'VIABLE'}
+                    </span>
+                  </td>
+
+                  {/* 7 Domain Sub-Scores */}
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.water_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.power_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.climate_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.connectivity_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.disaster_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.land_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.economics_score || 0).toFixed(0)}
+                  </td>
+
+                  {/* Risk Flags Count */}
+                  <td className="py-3 px-3 text-center">
+                    {flagsCount > 0 ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
+                        <ShieldAlert className="w-3 h-3 text-rose-600" />
+                        {flagsCount}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400">
-                        <CheckCircle2 className="w-3 h-3" />
-                        Nominal
-                      </span>
+                      <span className="text-[10px] text-emerald-600 font-semibold">0</span>
                     )}
                   </td>
 
@@ -161,24 +159,21 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        onSelectSite && onSelectSite(site);
+                        if (onSelectSite) onSelectSite(site);
                       }}
-                      className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors inline-flex items-center gap-1 ${
-                        isSelected 
-                          ? 'bg-cyan-500 text-slate-950 font-bold' 
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
-                      }`}
+                      className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#074ce0] hover:text-white text-[#16191f] border border-[#dde0e6] font-mono text-[10px] font-semibold transition-colors shadow-sm"
                     >
-                      {isSelected ? 'Active' : 'Inspect'}
-                      <ArrowRight className="w-3 h-3" />
+                      Inspect
                     </button>
                   </td>
+
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 }
