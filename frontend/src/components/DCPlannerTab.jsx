@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Server, 
   Cpu, 
@@ -24,7 +24,25 @@ export default function DCPlannerTab({ selectedSite }) {
   const [gpuCount, setGpuCount] = useState(8192);
   const [coolingMode, setCoolingMode] = useState('DIRECT_TO_CHIP_LIQUID');
   const [tariff, setTariff] = useState(selectedSite?.economics_params?.electricity_tariff_inr_per_kwh || 7.5);
-  const [wetBulb, setWetBulb] = useState(selectedSite?.climate_params?.dry_bulb_temp_c ? 26.5 : 26.5);
+  const [wetBulb, setWetBulb] = useState(
+    selectedSite?.climate_assessment?.wet_bulb_temp_c 
+    ?? selectedSite?.climate_params?.dry_bulb_temp_c 
+    ?? 26.5
+  );
+
+  const debounceTimerRef = useRef(null);
+
+  // Sync state whenever selectedSite changes
+  useEffect(() => {
+    if (selectedSite) {
+      if (selectedSite.economics_params?.electricity_tariff_inr_per_kwh) {
+        setTariff(selectedSite.economics_params.electricity_tariff_inr_per_kwh);
+      }
+      const siteWb = selectedSite.climate_assessment?.wet_bulb_temp_c 
+        ?? (selectedSite.climate_params?.dry_bulb_temp_c ? selectedSite.climate_params.dry_bulb_temp_c * 0.78 : 26.5);
+      setWetBulb(parseFloat(Number(siteWb).toFixed(1)));
+    }
+  }, [selectedSite]);
 
   useEffect(() => {
     const loadHardware = async () => {
@@ -47,8 +65,8 @@ export default function DCPlannerTab({ selectedSite }) {
         gpu_model: gpuModel,
         target_gpu_count: parseInt(gpuCount),
         cooling_mode: coolingMode,
-        electricity_tariff_inr_per_kwh: parseFloat(tariff),
-        ambient_wet_bulb_c: parseFloat(wetBulb),
+        electricity_tariff_inr_per_kwh: parseFloat(tariff) || 7.5,
+        ambient_wet_bulb_c: parseFloat(wetBulb) || 26.5,
       };
       const res = await calculateDCPlan(payload);
       setPlanResult(res);
@@ -59,8 +77,20 @@ export default function DCPlannerTab({ selectedSite }) {
     }
   };
 
+  // Debounced auto-calculation when any parameter changes
   useEffect(() => {
-    runCalculation();
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      runCalculation();
+    }, 250);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, [gpuModel, gpuCount, coolingMode, tariff, wetBulb, selectedSite]);
 
   return (
@@ -148,9 +178,10 @@ export default function DCPlannerTab({ selectedSite }) {
               className="w-full bg-[#f3f4f6] border border-[#dde0e6] rounded-xl px-3 py-2 text-xs text-[#16191f] font-mono focus:outline-none focus:border-[#074ce0]"
             >
               <option value="DIRECT_TO_CHIP_LIQUID">Direct-to-Chip (D2C) Liquid Cooling (ASHRAE W40)</option>
+              <option value="TOTAL_IMMERSION">Single/Two-Phase Immersion Tank (Warm-Water Loop)</option>
               <option value="REAR_DOOR_HEAT_EXCHANGER">Rear Door Heat Exchanger (RDHx) + Chilled Water</option>
-              <option value="AIR_COOLED_CRAH">Traditional Air-Cooled Perimeter CRAH</option>
-              <option value="TOTAL_IMMERSION">Two-Phase / Single-Phase Immersion Tank</option>
+              <option value="AIR_COOLED_CRAH">Traditional Air-Cooled CRAH + Dry Chillers (Zero Water)</option>
+              <option value="EVAPORATIVE_WET_TOWER">Water-Cooled Chiller + Evaporative Wet Cooling Towers</option>
             </select>
           </div>
 
@@ -222,7 +253,7 @@ export default function DCPlannerTab({ selectedSite }) {
                 <div className="p-4 rounded-xl bg-white border border-[#dde0e6] shadow-sm">
                   <div className="text-[11px] font-mono text-[#454c58] uppercase tracking-wider mb-1 flex items-center gap-1 font-semibold">
                     <Layers className="w-3.5 h-3.5 text-purple-600" />
-                    Liquid Racks
+                    Compute Racks
                   </div>
                   <div className="text-2xl font-bold font-display text-[#16191f]">
                     {planResult.rack_count} <span className="text-xs text-purple-600 font-mono">Racks</span>

@@ -12,7 +12,8 @@ import {
   ArrowRight,
   ShieldAlert,
   Building2,
-  GraduationCap
+  GraduationCap,
+  AlertCircle
 } from 'lucide-react';
 import { fetchMarketplaceNodes, allocateWorkload } from '../services/api';
 
@@ -21,6 +22,7 @@ export default function MarketplaceTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [allocationResult, setAllocationResult] = useState(null);
   const [isAllocating, setIsAllocating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Workload Form
   const [workloadName, setWorkloadName] = useState('Indic Multi-Modal Foundation Model');
@@ -50,6 +52,7 @@ export default function MarketplaceTab() {
   const handleAllocate = async (e) => {
     if (e) e.preventDefault();
     setIsAllocating(true);
+    setErrorMessage(null);
     try {
       const payload = {
         workload_name: workloadName,
@@ -64,7 +67,7 @@ export default function MarketplaceTab() {
       setAllocationResult(res);
     } catch (err) {
       console.error('Allocation error:', err);
-      alert('Failed to optimize workload allocation.');
+      setErrorMessage(err.response?.data?.detail || 'Failed to optimize workload allocation. Please ensure the backend engine is running.');
     } finally {
       setIsAllocating(false);
     }
@@ -76,7 +79,7 @@ export default function MarketplaceTab() {
       {/* Intro Header */}
       <div className="bg-white p-6 rounded-xl border border-[#dde0e6] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#074ce0] uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#074ce0] uppercase tracking-wider mb-1 font-bold">
             <Cpu className="w-4 h-4 text-[#074ce0]" />
             Module 3: Cross-Institution GPU Marketplace & Allocation Engine
           </div>
@@ -105,6 +108,13 @@ export default function MarketplaceTab() {
             <Sparkles className="w-4 h-4 text-[#074ce0]" />
             Workload Allocation Optimizer
           </h3>
+
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-sans text-rose-800 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
           <form onSubmit={handleAllocate} className="space-y-4">
             <div>
@@ -221,7 +231,7 @@ export default function MarketplaceTab() {
             <button
               type="submit"
               disabled={isAllocating}
-              className="w-full py-2.5 rounded-lg bg-[#074ce0] hover:bg-[#053cb3] text-white font-sans font-semibold text-xs tracking-wider uppercase transition-all shadow-sm flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-lg bg-[#074ce0] hover:bg-[#053cb3] text-white font-sans font-semibold text-xs tracking-wider uppercase transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isAllocating ? 'Solving Optimization Matrix...' : 'Run Allocation Optimizer'}
               <ArrowRight className="w-4 h-4" />

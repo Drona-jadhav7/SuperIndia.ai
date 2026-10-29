@@ -388,7 +388,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite,
   };
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-slate-800 bg-[#0B111A] shadow-2xl">
+    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dde0e6] bg-[#0B111A] shadow-lg ring-1 ring-black/5">
       
       {/* Map Header Overlay with Basemap & Layer Toggles */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-wrap items-center justify-between gap-2 pointer-events-none">

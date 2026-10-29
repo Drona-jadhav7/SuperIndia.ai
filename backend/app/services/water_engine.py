@@ -18,29 +18,29 @@ WATER_WEIGHTS: Dict[str, float] = {
 def evaluate_water_availability(params: WaterInput) -> SubMetricResult:
     """
     Sub-model 1: Water Availability (Weight: 0.15)
-    Derived from Central Ground Water Authority (CGWA) Stage of Groundwater Extraction.
+    Derived from Central Ground Water Authority (CGWA) Stage of Groundwater Extraction (SOE):
+      - Safe: <= 70%
+      - Semi-Critical: 70% to 90%
+      - Critical: 90% to 100%
+      - Over-Exploited: > 100%
     """
     gw_pct = params.groundwater_extraction_pct
-    if gw_pct <= 65.0:
-        score = 95.0 - (gw_pct / 65.0) * 10.0
+    if gw_pct <= 70.0:
+        score = 98.0 - (gw_pct / 70.0) * 16.0
         category = "Safe (CGWA Zone)"
-        details = f"Aquifer extraction at {gw_pct:.1f}% (Safe CGWA category, high recharge headroom)."
-    elif gw_pct <= 70.0:
-        score = 85.0 - ((gw_pct - 65.0) / 5.0) * 10.0
-        category = "Safe / Moderate"
-        details = f"Aquifer extraction at {gw_pct:.1f}% (Approaching semi-critical CGWA boundary)."
+        details = f"Aquifer extraction at {gw_pct:.1f}% (Safe CGWA category <= 70%, high recharge headroom)."
     elif gw_pct <= 90.0:
-        score = 75.0 - ((gw_pct - 70.0) / 20.0) * 20.0
+        score = 78.0 - ((gw_pct - 70.0) / 20.0) * 23.0
         category = "Semi-Critical (CGWA Zone)"
-        details = f"Aquifer extraction at {gw_pct:.1f}% (Semi-critical; NOC permits required from CGWA)."
+        details = f"Aquifer extraction at {gw_pct:.1f}% (Semi-critical 70-90%; NOC permits required from CGWA)."
     elif gw_pct <= 100.0:
-        score = 55.0 - ((gw_pct - 90.0) / 10.0) * 20.0
+        score = 54.0 - ((gw_pct - 90.0) / 10.0) * 19.0
         category = "Critical (CGWA Zone)"
-        details = f"Aquifer extraction at {gw_pct:.1f}% (Critical extraction zone; strict extraction ceilings)."
+        details = f"Aquifer extraction at {gw_pct:.1f}% (Critical extraction zone 90-100%; strict extraction ceilings)."
     else:
-        score = max(10.0, 35.0 - (gw_pct - 100.0) * 1.2)
+        score = max(10.0, 34.0 - (gw_pct - 100.0) * 1.2)
         category = "Over-Exploited (CGWA Zone)"
-        details = f"Aquifer extraction at {gw_pct:.1f}% (Over-exploited; commercial groundwater extraction prohibited)."
+        details = f"Aquifer extraction at {gw_pct:.1f}% (Over-exploited > 100%; commercial groundwater extraction prohibited)."
 
     score = round(max(0.0, min(100.0, score)), 2)
     weight = WATER_WEIGHTS["water_availability"]
@@ -105,7 +105,6 @@ def evaluate_demand_stress(params: WaterInput) -> SubMetricResult:
     if params.demand_stress_score is not None:
         score = float(params.demand_stress_score)
     else:
-        # Calculate from composite industrial and aquifer draw
         composite_stress = 0.55 * params.local_aquifer_stress_pct + 0.45 * params.industrial_density_index
         score = 100.0 - (composite_stress - 20.0) * 1.15
 
@@ -161,7 +160,6 @@ def evaluate_reuse_effluent_proximity(params: WaterInput) -> SubMetricResult:
         base_score = max(10.0, 36.0 - (dist - 15.0) * 1.5)
         cat = "Unviable Dual-Pipe Distance"
 
-    # Volume adequacy adjustment (boost if tertiary supply > 10 MLD)
     volume_bonus = min(5.0, (supply / 20.0) * 5.0)
     score = round(max(0.0, min(100.0, base_score + volume_bonus)), 2)
 
@@ -266,7 +264,6 @@ def evaluate_climate_resilience(params: WaterInput) -> SubMetricResult:
     drought = params.drought_risk_index
     flood = params.flood_zone_risk
 
-    # Penalty for low elevation coastal storm surge (< 10m)
     coastal_penalty = 22.0 if elev < 10.0 else (10.0 if elev < 15.0 else 0.0)
     raw_resilience = 100.0 - (0.42 * drought + 0.38 * flood + coastal_penalty)
     score = round(max(10.0, min(100.0, raw_resilience)), 2)
@@ -298,7 +295,7 @@ def evaluate_climate_resilience(params: WaterInput) -> SubMetricResult:
 
 def calculate_water_assessment(params: WaterInput) -> WaterAssessmentOutput:
     """
-    Runs the 7-model water pipeline and aggregates scores according to Hackathon specifications:
+    Runs the 7-model water pipeline and aggregates scores:
     Water Score = sum(Score_i * Weight_i)
     """
     sub_metrics: List[SubMetricResult] = [
@@ -314,7 +311,6 @@ def calculate_water_assessment(params: WaterInput) -> WaterAssessmentOutput:
     total_weighted_score = sum(sm.weighted_score for sm in sub_metrics)
     water_score = round(total_weighted_score, 2)
 
-    # Check automated stress flag on demand stress
     demand_metric = next(sm for sm in sub_metrics if sm.key == "demand_stress")
     stress_flag_triggered = demand_metric.flagged
 

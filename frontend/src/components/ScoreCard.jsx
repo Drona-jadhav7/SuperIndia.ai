@@ -11,7 +11,8 @@ import {
   Wifi,
   Shield,
   Layers,
-  Coins
+  Coins,
+  Activity
 } from 'lucide-react';
 
 export default function ScoreCard({ site }) {
@@ -43,7 +44,7 @@ export default function ScoreCard({ site }) {
       score: site.water_score || 0,
       weight: "20%",
       icon: <Droplet className="w-4 h-4 text-[#074ce0]" />,
-      subtext: "7 Models (CGWB / BIS 10500)",
+      subtext: "7 Models (CGWA / BIS)",
     },
     {
       name: "Power & Grid",
@@ -89,8 +90,28 @@ export default function ScoreCard({ site }) {
     },
   ];
 
+  // Radar Chart Calculations for 7 Domains
+  const radarRadius = 75;
+  const radarCenter = 100;
+  const numAxes = domainCards.length;
+  
+  const getRadarCoordinates = (index, value) => {
+    const angle = (Math.PI * 2 / numAxes) * index - Math.PI / 2;
+    const r = (value / 100) * radarRadius;
+    const x = radarCenter + r * Math.cos(angle);
+    const y = radarCenter + r * Math.sin(angle);
+    return { x, y, angle };
+  };
+
+  const radarPolygonPoints = domainCards.map((d, i) => {
+    const coords = getRadarCoordinates(i, d.score);
+    return `${coords.x},${coords.y}`;
+  }).join(' ');
+
+  const gridRings = [0.25, 0.5, 0.75, 1.0];
+
   return (
-    <div className="bg-white p-6 rounded-2xl border border-[#dde0e6] shadow-sm flex flex-col justify-between h-full">
+    <div className="bg-white p-6 rounded-2xl border border-[#dde0e6] shadow-sm flex flex-col justify-between h-full space-y-5">
       
       {/* Header with Site Name and Badge */}
       <div>
@@ -124,28 +145,121 @@ export default function ScoreCard({ site }) {
           </div>
         </div>
 
-        {/* Central Composite Gauge Hero Box */}
-        <div className="p-4 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] flex items-center justify-between gap-4 mb-5">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-white border border-[#dde0e6] flex items-center justify-center text-[#074ce0] shadow-sm">
-              <Gauge className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-[11px] font-mono uppercase tracking-wider text-[#454c58] font-bold">
-                Composite 7-Domain Site Score
+        {/* Central Composite Gauge & Radar Hero Box */}
+        <div className="p-4 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+          
+          {/* Left: Composite Score Box */}
+          <div className="md:col-span-6 flex items-center justify-between gap-3 bg-white p-4 rounded-xl border border-[#dde0e6] shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#074ce0]">
+                <Gauge className="w-6 h-6" />
               </div>
-              <div className="text-xs text-[#454c58]">
-                Normalized multi-criteria physical synthesis
+              <div>
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[#454c58] font-bold">
+                  Composite Score
+                </div>
+                <div className="text-xs text-[#454c58]">
+                  7-Domain Siting Index
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-baseline gap-1">
+              <span className="text-4xl font-black font-display text-[#16191f] tracking-tight">
+                {compositeScore.toFixed(1)}
+              </span>
+              <span className="text-[#454c58] font-mono text-xs">/100</span>
+            </div>
+          </div>
+
+          {/* Right: Interactive 7-Axis Radar Spider Chart */}
+          <div className="md:col-span-6 flex items-center justify-center bg-white p-2.5 rounded-xl border border-[#dde0e6] shadow-sm">
+            <div className="flex items-center gap-3">
+              <svg width="180" height="180" viewBox="0 0 200 200" className="overflow-visible">
+                {/* Background Concentric Polygon Grid Rings */}
+                {gridRings.map((scale, ringIdx) => {
+                  const ringPoints = domainCards.map((_, i) => {
+                    const coords = getRadarCoordinates(i, scale * 100);
+                    return `${coords.x},${coords.y}`;
+                  }).join(' ');
+                  return (
+                    <polygon
+                      key={ringIdx}
+                      points={ringPoints}
+                      fill="none"
+                      stroke="#dde0e6"
+                      strokeWidth={ringIdx === gridRings.length - 1 ? "1.5" : "1"}
+                      strokeDasharray={ringIdx < gridRings.length - 1 ? "2,2" : "none"}
+                    />
+                  );
+                })}
+
+                {/* Axis Spokes */}
+                {domainCards.map((_, i) => {
+                  const outer = getRadarCoordinates(i, 100);
+                  return (
+                    <line
+                      key={i}
+                      x1={radarCenter}
+                      y1={radarCenter}
+                      x2={outer.x}
+                      y2={outer.y}
+                      stroke="#dde0e6"
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+
+                {/* Data Polygon */}
+                <polygon
+                  points={radarPolygonPoints}
+                  fill={`${tierColor}33`}
+                  stroke={tierColor}
+                  strokeWidth="2.5"
+                  className="transition-all duration-300"
+                />
+
+                {/* Vertex Points & Labels */}
+                {domainCards.map((d, i) => {
+                  const coords = getRadarCoordinates(i, d.score);
+                  const labelCoords = getRadarCoordinates(i, 118);
+                  return (
+                    <g key={i}>
+                      <circle
+                        cx={coords.x}
+                        cy={coords.y}
+                        r="3.5"
+                        fill={tierColor}
+                        stroke="#ffffff"
+                        strokeWidth="1.5"
+                      />
+                      <text
+                        x={labelCoords.x}
+                        y={labelCoords.y}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        className="text-[9px] font-mono fill-[#454c58] font-bold"
+                      >
+                        {d.name.split(' ')[0]}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+
+              <div className="text-[10px] font-mono text-[#454c58] space-y-1">
+                <div className="flex items-center gap-1 font-bold text-[#16191f]">
+                  <Activity className="w-3.5 h-3.5 text-[#074ce0]" />
+                  <span>Domain Balance</span>
+                </div>
+                <div>Water: <strong>{(site.water_score || 0).toFixed(0)}</strong></div>
+                <div>Power: <strong>{(site.power_score || 0).toFixed(0)}</strong></div>
+                <div>Climate: <strong>{(site.climate_score || 0).toFixed(0)}</strong></div>
+                <div>Fiber: <strong>{(site.connectivity_score || 0).toFixed(0)}</strong></div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-baseline gap-1">
-            <span className="text-4xl sm:text-5xl font-black font-display text-[#16191f] tracking-tight">
-              {compositeScore.toFixed(1)}
-            </span>
-            <span className="text-[#454c58] font-mono text-xs">/100</span>
-          </div>
         </div>
       </div>
 

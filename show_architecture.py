@@ -33,7 +33,7 @@ def print_tree(path: Path, prefix: str = ""):
 
 print()
 print("=" * 70)
-print("                 INDIA AI GRID ARCHITECTURE")
+print("                 SUPERINDIA.AI PLATFORM ARCHITECTURE")
 print("=" * 70)
 print()
 

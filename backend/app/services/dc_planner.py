@@ -56,26 +56,33 @@ COOLING_MODES = {
         "wue_l_kwh": 0.12,
         "capex_premium_pct": 15.0,
     },
-    "REAR_DOOR_HEAT_EXCHANGER": {
-        "name": "Rear Door Heat Exchanger (RDHx) + Closed Loop Chilled Water",
-        "base_pue": 1.28,
-        "max_rack_density_kw": 45.0,
-        "wue_l_kwh": 0.45,
-        "capex_premium_pct": 8.0,
-    },
-    "AIR_COOLED_CRAH": {
-        "name": "Traditional Air-Cooled Perimeter CRAH + Chiller",
-        "base_pue": 1.45,
-        "max_rack_density_kw": 18.0,
-        "wue_l_kwh": 1.85,
-        "capex_premium_pct": 0.0,
-    },
     "TOTAL_IMMERSION": {
-        "name": "Two-Phase / Single-Phase Immersion Tank",
-        "base_pue": 1.09,
+        "name": "Single/Two-Phase Immersion Tank (Warm-Water Loop)",
+        "base_pue": 1.08,
         "max_rack_density_kw": 120.0,
         "wue_l_kwh": 0.02,
         "capex_premium_pct": 25.0,
+    },
+    "REAR_DOOR_HEAT_EXCHANGER": {
+        "name": "Rear Door Heat Exchanger (RDHx) + Chilled Water Loop",
+        "base_pue": 1.28,
+        "max_rack_density_kw": 45.0,
+        "wue_l_kwh": 0.35,
+        "capex_premium_pct": 8.0,
+    },
+    "AIR_COOLED_CRAH": {
+        "name": "Traditional Air-Cooled CRAH + Dry Chillers (Zero Water)",
+        "base_pue": 1.48,
+        "max_rack_density_kw": 18.0,
+        "wue_l_kwh": 0.00, # Air cooled systems consume 0.00 L/kWh on-site operational water
+        "capex_premium_pct": 0.0,
+    },
+    "EVAPORATIVE_WET_TOWER": {
+        "name": "Water-Cooled Chiller + Evaporative Wet Cooling Towers",
+        "base_pue": 1.32,
+        "max_rack_density_kw": 25.0,
+        "wue_l_kwh": 1.85, # Evaporative wet cooling tower consumption baseline
+        "capex_premium_pct": 5.0,
     },
 }
 
@@ -145,15 +152,23 @@ def plan_data_center(req: DCPlannerRequest) -> DCPlannerResponse:
         rack_count = server_count
         avg_rack_kw = server_draw_kw
     else:
-        # Number of 10.2kW servers per rack
+        # Number of servers per rack
         servers_per_rack = max(1, math.floor(max_rack_kw / server_draw_kw))
         rack_count = math.ceil(server_count / servers_per_rack)
         avg_rack_kw = round((server_count * server_draw_kw) / max(1, rack_count), 1)
 
-    # 3. Dynamic PUE based on ambient wet-bulb temp
-    # Higher wet-bulb increases chiller assist hours
+    # 3. Dynamic PUE based on cooling physics & ambient wet-bulb
     wb = req.ambient_wet_bulb_c
-    wb_penalty = max(0.0, (wb - 24.0) * 0.012)
+    if req.cooling_mode == "TOTAL_IMMERSION":
+        # Warm fluid loop (45-50°C) is decoupled from ambient wet bulb
+        wb_penalty = max(0.0, (wb - 28.0) * 0.003)
+    elif req.cooling_mode == "AIR_COOLED_CRAH":
+        # Dry chillers lift penalty under elevated ambient
+        wb_penalty = max(0.0, (wb - 24.0) * 0.008)
+    else:
+        # Evaporative & hybrid D2C cooling tower assist
+        wb_penalty = max(0.0, (wb - 24.0) * 0.012)
+
     computed_pue = round(cooling_spec["base_pue"] + wb_penalty, 3)
 
     # 4. Total Facility Power & Substation Sizing
@@ -180,11 +195,14 @@ def plan_data_center(req: DCPlannerRequest) -> DCPlannerResponse:
     cost_per_gpu_lakh = gpu_spec["approx_cost_inr_lakh"]
     capex_gpu_cr = round((num_gpus * cost_per_gpu_lakh) / 100.0, 2)
 
+    # High-density rack scaling factor (CDUs, heavy busways, seismic structural anchorages)
+    density_scaling = 1.0 + max(0.0, (avg_rack_kw - 20.0) / 100.0) * 0.25
+
     # Facility Electrical (Transformers, Generators, UPS, GIS): ~₹1.75 Cr per Facility MW
-    capex_electrical_cr = round(total_facility_power_mw * 1.75, 2)
+    capex_electrical_cr = round(total_facility_power_mw * 1.75 * density_scaling, 2)
 
     # Facility Mechanical & Liquid Cooling: ~₹1.20 Cr per Facility MW * cooling capex factor
-    cooling_factor = 1.0 + (cooling_spec["capex_premium_pct"] / 100.0)
+    cooling_factor = (1.0 + (cooling_spec["capex_premium_pct"] / 100.0)) * density_scaling
     capex_mechanical_cr = round(total_facility_power_mw * 1.20 * cooling_factor, 2)
 
     # Civil Building & Shell: ~₹0.95 Cr per Facility MW

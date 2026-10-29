@@ -322,7 +322,7 @@ export default function App() {
                   <MapView 
                     sites={sites} 
                     selectedSite={selectedSite} 
-                    onSelectSite={(site) => setSelectedSite(site)} 
+                    onSelectSite={(site) => { setSelectedSite(site); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
                   />
                 </div>
 
@@ -347,7 +347,7 @@ export default function App() {
               <SiteComparison 
                 sites={sites} 
                 selectedSite={selectedSite} 
-                onSelectSite={(site) => setSelectedSite(site)} 
+                onSelectSite={(site) => { setSelectedSite(site); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
               />
 
             </div>
