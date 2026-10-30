@@ -20,6 +20,13 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
     }
   };
 
+  const handleSelectAndScroll = (site) => {
+    if (onSelectSite) {
+      onSelectSite(site);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-[#dde0e6] shadow-sm space-y-5">
       {/* Header */}
@@ -27,7 +34,7 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
         <div>
           <h3 className="text-lg font-bold font-display text-[#16191f] flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-[#074ce0]" />
-            National AI Infrastructure Multi-Site Audit Matrix (7 Domains)
+            National AI Infrastructure Multi-Site Audit Matrix (8 Domains)
           </h3>
           <p className="text-xs text-[#454c58] mt-0.5">
             Comparative evaluation across all strategic candidate hubs ranked by deterministic composite feasibility.
@@ -60,6 +67,7 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
               <th className="py-3 px-2 text-center text-emerald-600">Fiber</th>
               <th className="py-3 px-2 text-center text-rose-600">Risk</th>
               <th className="py-3 px-2 text-center text-purple-600">Land</th>
+              <th className="py-3 px-2 text-center text-emerald-600">Eco/Forest</th>
               <th className="py-3 px-2 text-center text-cyan-600">Econ</th>
               <th className="py-3 px-3 text-center">Flags</th>
               <th className="py-3 px-3 text-right">Action</th>
@@ -74,10 +82,10 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
               return (
                 <tr 
                   key={site.site_id || index}
-                  onClick={() => onSelectSite && onSelectSite(site)}
+                  onClick={() => handleSelectAndScroll(site)}
                   className={`cursor-pointer transition-colors ${
                     isSelected 
-                      ? 'bg-blue-50/60 text-[#16191f] font-medium' 
+                      ? 'bg-blue-50/70 text-[#16191f] font-medium' 
                       : 'hover:bg-[#f3f4f6] text-[#454c58]'
                   }`}
                 >
@@ -138,6 +146,14 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
                   <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
                     {(site.land_score || 0).toFixed(0)}
                   </td>
+                  <td className="py-3 px-2 text-center">
+                    <span className="font-semibold text-emerald-700">
+                      {(site.eco_score || site.eco_assessment?.score || 88.0).toFixed(0)}
+                    </span>
+                    <div className="text-[9px] text-[#454c58] font-sans">
+                      {(site.eco_assessment?.estimated_trees_to_cut ?? 0) === 0 ? '0 Cut' : `${site.eco_assessment?.estimated_trees_to_cut} Cut`}
+                    </div>
+                  </td>
                   <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
                     {(site.economics_score || 0).toFixed(0)}
                   </td>
@@ -159,7 +175,7 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (onSelectSite) onSelectSite(site);
+                        handleSelectAndScroll(site);
                       }}
                       className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#074ce0] hover:text-white text-[#16191f] border border-[#dde0e6] font-mono text-[10px] font-semibold transition-colors shadow-sm"
                     >

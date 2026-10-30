@@ -103,7 +103,7 @@ class TestLiveTelemetryIntegration(unittest.TestCase):
         self.assertGreaterEqual(score, 0.0)
         self.assertLessEqual(score, 100.0)
 
-        # Check all 7 domain scores
+        # Check all 8 domain scores
         self.assertGreaterEqual(assessment.water_score, 0.0)
         self.assertGreaterEqual(assessment.power_score, 0.0)
         self.assertGreaterEqual(assessment.climate_score, 0.0)
@@ -111,6 +111,7 @@ class TestLiveTelemetryIntegration(unittest.TestCase):
         self.assertGreaterEqual(assessment.disaster_score, 0.0)
         self.assertGreaterEqual(assessment.land_score, 0.0)
         self.assertGreaterEqual(assessment.economics_score, 0.0)
+        self.assertGreaterEqual(assessment.eco_score, 0.0)
 
         # Check engineering mandates and risk flags
         self.assertIsInstance(assessment.engineering_mandates, list)

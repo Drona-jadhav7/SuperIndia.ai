@@ -117,6 +117,18 @@ class EconomicsInput(BaseModel):
     land_cost_inr_crore_per_acre: float = Field(4.0, description="Land acquisition circle rate in ₹ Cr/acre")
 
 # ==========================================
+# Domain 8: Ecology, Forest & Tree Protection Schema
+# ==========================================
+class EcoInput(BaseModel):
+    tree_canopy_cover_pct: float = Field(3.0, description="Tree canopy density percentage from FSI/GFW")
+    is_notified_non_forest: bool = Field(True, description="Certified master-planned industrial non-forest land (MIDC, GIDC, SEZ)")
+    campus_area_acres: float = Field(25.0, description="Total planned campus land parcel in acres")
+    cooling_mode: str = Field("DIRECT_TO_CHIP_LIQUID", description="Planned cooling loop architecture")
+    solar_rooftop_mw: float = Field(2.5, description="Onsite solar rooftop capacity in MW")
+    offsite_solar_ppa_mw: float = Field(45.0, description="Contracted clean energy PPA in MW")
+    distance_to_protected_forest_km: float = Field(18.0, description="Distance to nearest national park / wildlife sanctuary / ESZ in km")
+
+# ==========================================
 # Unified Site Input Schema
 # ==========================================
 class SiteInput(BaseModel):
@@ -129,7 +141,7 @@ class SiteInput(BaseModel):
     elevation_m: float = Field(25.0, description="Ground elevation in meters")
     proposed_it_load_mw: float = Field(50.0, description="Target IT load in MW")
     
-    # 7 Domain Inputs
+    # 8 Domain Inputs
     water_params: WaterInput = Field(default_factory=WaterInput)
     power_params: PowerInput = Field(default_factory=PowerInput)
     climate_params: ClimateInput = Field(default_factory=ClimateInput)
@@ -137,6 +149,7 @@ class SiteInput(BaseModel):
     disaster_params: DisasterInput = Field(default_factory=DisasterInput)
     land_params: LandInput = Field(default_factory=LandInput)
     economics_params: EconomicsInput = Field(default_factory=EconomicsInput)
+    eco_params: EcoInput = Field(default_factory=EcoInput)
 
 # ==========================================
 # Output Schemas
@@ -193,6 +206,7 @@ class SiteAssessmentResponse(BaseModel):
     disaster_score: float
     land_score: float
     economics_score: float
+    eco_score: float = 85.0
     
     # Subsystem Assessment Details
     water_assessment: WaterAssessmentOutput
@@ -202,6 +216,7 @@ class SiteAssessmentResponse(BaseModel):
     disaster_assessment: Dict[str, Any]
     land_assessment: Dict[str, Any]
     economics_assessment: Dict[str, Any]
+    eco_assessment: Optional[Dict[str, Any]] = None
     
     # Diagnostics & Engineering Mandates
     risk_flags: List[str]
@@ -237,3 +252,21 @@ class LiveTelemetryResponse(BaseModel):
     provenance: Dict[str, Any]
     api_statuses: Dict[str, str]
     summary: str
+
+# ==========================================
+# Module 8: Eco-Friendly DC & ESG Schemas
+# ==========================================
+class EcoAssessmentRequest(BaseModel):
+    latitude: float
+    longitude: float
+    site_name: Optional[str] = "Candidate Eco Hub"
+    district: Optional[str] = "Thane"
+    state: Optional[str] = "Maharashtra"
+    it_load_mw: Optional[float] = 50.0
+    cooling_mode: Optional[str] = "DIRECT_TO_CHIP_LIQUID"
+    solar_rooftop_mw: Optional[float] = 2.5
+    offsite_solar_ppa_mw: Optional[float] = 45.0
+    aquifer_soe_pct: Optional[float] = 74.0
+    solar_ghi: Optional[float] = 5.4
+    wind_speed: Optional[float] = 5.2
+

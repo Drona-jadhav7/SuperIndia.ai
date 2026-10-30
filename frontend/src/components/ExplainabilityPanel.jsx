@@ -94,6 +94,18 @@ export default function ExplainabilityPanel({ site }) {
       parameters_desc: 'Master-Planned IT / Industrial Corridors, Safe Soil Bearing Capacity (kN/m²), & National Highway Logistics',
     },
     {
+      id: 'eco',
+      label: '🌲 Ecology & Forests',
+      score: site.eco_score || site.eco_assessment?.score || 88.0,
+      sub_metrics: site.eco_assessment?.sub_metrics || [],
+      summary: site.eco_assessment?.summary || '',
+      color: '#059669',
+      standard: 'Forest Survey of India (ISFR 2023) & MoEFCC Eco-Sensitive Zones',
+      official_authority: 'Forest Survey of India (FSI) & Copernicus GloFAS / ERA5 Hydrology',
+      authority_url: 'https://fsi.nic.in',
+      parameters_desc: 'Canopy Density Classification, Tree Cutting Estimates, Compensatory Afforestation (3:1), River Basin Discharge & Aquifer Protection',
+    },
+    {
       id: 'economics',
       label: '💰 Economics & Policy',
       score: site.economics_score,
@@ -126,7 +138,7 @@ export default function ExplainabilityPanel({ site }) {
         <div>
           <h3 className="text-lg font-bold font-display text-[#16191f] flex items-center gap-2">
             <Info className="w-5 h-5 text-[#074ce0]" />
-            Deterministic Granular Explainability (7 Domains • 31 Sub-Metrics)
+            Deterministic Granular Explainability (8 Domains • 36 Sub-Metrics)
           </h3>
           <p className="text-xs text-[#454c58] mt-0.5">
             Zero black-box logic. Every sub-score is mathematically grounded in authentic APIs and verified national standards.

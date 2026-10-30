@@ -24,7 +24,9 @@ import {
   ExternalLink,
   ShieldCheck,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  TreePine,
+  Leaf
 } from 'lucide-react';
 import { STRATEGIC_INDIAN_PLACES } from '../data/indianPlaces';
 import { fetchLiveTelemetry, assessLiveSite } from '../services/api';
@@ -113,6 +115,16 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
       stamp_duty_exemption_pct: 100.0,
       electricity_duty_exemption_years: 10,
       land_cost_inr_crore_per_acre: 3.5,
+    },
+
+    // Domain 8: Ecology & Forests
+    eco_params: {
+      tree_canopy_cover_pct: 3.5,
+      is_notified_non_forest: true,
+      campus_acres: 25.0,
+      cooling_mode: 'closed_loop_dlc',
+      solar_ppa_mw: 35.0,
+      distance_to_esz_km: 18.0,
     },
   });
 
@@ -294,11 +306,12 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
           disaster_params: { ...prev.disaster_params, ...(inp.disaster_params || {}) },
           land_params: { ...prev.land_params, ...(inp.land_params || {}) },
           economics_params: { ...prev.economics_params, ...(inp.economics_params || {}) },
+          eco_params: { ...prev.eco_params, ...(inp.eco_params || {}) },
         }));
 
         setTelemetryResult(res);
         setIsLiveEvaluated(true);
-        setAppliedPlaceMessage(`Successfully loaded verified telemetry from NASA POWER, NASA SRTM, CAMS AQI, USGS & CGWB!`);
+        setAppliedPlaceMessage(`Successfully loaded verified telemetry from NASA POWER, NASA SRTM, CAMS AQI, USGS, CGWB & FSI ISFR!`);
       }
     } catch (err) {
       console.error("Live telemetry error:", err);
@@ -333,6 +346,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
     { id: 'connectivity', label: '🌐 Network', icon: <Wifi className="w-3.5 h-3.5 text-emerald-500" /> },
     { id: 'disaster', label: '🛡️ Disaster', icon: <Shield className="w-3.5 h-3.5 text-rose-500" /> },
     { id: 'land_econ', label: '🏗️ Land & Econ', icon: <Layers className="w-3.5 h-3.5 text-purple-500" /> },
+    { id: 'eco', label: '🌲 Ecology & Forest', icon: <TreePine className="w-3.5 h-3.5 text-emerald-600" /> },
   ];
 
   return (
@@ -359,7 +373,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                 )}
               </div>
               <p className="text-xs text-[#454c58] font-mono">
-                Authentic 7-Domain Ingestion: NASA POWER, NASA SRTM, CAMS ECMWF, USGS, CGWB & CEA
+                Authentic 8-Domain Ingestion: NASA POWER, NASA SRTM, CAMS ECMWF, USGS, CGWB, CEA & FSI ISFR
               </p>
             </div>
           </div>
@@ -1058,6 +1072,131 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                     />
                     <label htmlFor="notifiedZone" className="text-xs text-[#16191f] cursor-pointer font-sans font-medium">
                       Notified IT / Industrial Master Plan Zone (MIDC, GIDC, YEIDA, SIPCOT)
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 7. Ecology & Forest Domain */}
+            {activeDomainTab === 'eco' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-emerald-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <TreePine className="w-4 h-4" />
+                    Forest Survey of India (FSI ISFR 2023) & Tree Protection
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Source: FSI ISFR 2023 & GloFAS Hydrology
+                  </span>
+                </div>
+
+                {/* Tree Impact Live Estimation Callout */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-xs shadow-2xs">
+                  <div className="flex items-center justify-between font-mono mb-1">
+                    <span className="font-bold text-emerald-950 flex items-center gap-1.5">
+                      <Leaf className="w-3.5 h-3.5 text-emerald-600" />
+                      Estimated Tree Felling Impact:
+                    </span>
+                    <span className="text-sm font-bold text-emerald-800">
+                      {formData.eco_params.is_notified_non_forest 
+                        ? '0 Trees Cut (100% Tree Preservation)' 
+                        : `${Math.round(formData.eco_params.campus_acres * formData.eco_params.tree_canopy_cover_pct * 4.2)} Trees to Fulfill Campus`}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-emerald-800 font-sans">
+                    {formData.eco_params.is_notified_non_forest 
+                      ? '✓ Notified Non-Forest Industrial Land: Zero tree cutting required. No deforestation penalty applied to composite score.' 
+                      : `⚠️ Greenfield Forest Transition: Statutory 3:1 Compensatory Afforestation required (${Math.round(formData.eco_params.campus_acres * formData.eco_params.tree_canopy_cover_pct * 4.2 * 3)} replacement saplings).`}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      FSI Baseline Tree Canopy Cover (%): <strong>{formData.eco_params.tree_canopy_cover_pct}%</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="0.5"
+                      max="40"
+                      step="0.5"
+                      value={formData.eco_params.tree_canopy_cover_pct}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        eco_params: { ...formData.eco_params, tree_canopy_cover_pct: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Distance to Eco-Sensitive Zone (ESZ / Sanctuary): <strong>{formData.eco_params.distance_to_esz_km} km</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="50"
+                      step="1"
+                      value={formData.eco_params.distance_to_esz_km}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        eco_params: { ...formData.eco_params, distance_to_esz_km: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Cooling Architecture Mode:
+                    </label>
+                    <select
+                      value={formData.eco_params.cooling_mode}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        eco_params: { ...formData.eco_params, cooling_mode: e.target.value }
+                      })}
+                      className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f]"
+                    >
+                      <option value="closed_loop_dlc">Closed-Loop Direct-to-Chip (0 Water Loss)</option>
+                      <option value="hybrid_adiab">Hybrid Adiabatic Chillers (Low Water)</option>
+                      <option value="evaporative">Evaporative Cooling Towers (High Water Consumption)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Dedicated Solar/Wind PPA Capacity: <strong>{formData.eco_params.solar_ppa_mw} MW</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="150"
+                      step="5"
+                      value={formData.eco_params.solar_ppa_mw}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        eco_params: { ...formData.eco_params, solar_ppa_mw: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-emerald-500"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 md:col-span-2">
+                    <input
+                      type="checkbox"
+                      id="nonForestCert"
+                      checked={formData.eco_params.is_notified_non_forest}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        eco_params: { ...formData.eco_params, is_notified_non_forest: e.target.checked }
+                      })}
+                      className="w-4 h-4 accent-emerald-600"
+                    />
+                    <label htmlFor="nonForestCert" className="text-xs text-[#16191f] cursor-pointer font-sans font-medium">
+                      Site is Certified Non-Forest Industrial Land (Exempt from tree cutting penalties)
                     </label>
                   </div>
                 </div>

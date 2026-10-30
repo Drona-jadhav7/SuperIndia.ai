@@ -10,9 +10,11 @@ from backend.app.models.schemas import (
     SiteComparisonResponse,
     LiveTelemetryRequest,
     LiveTelemetryResponse,
+    EcoAssessmentRequest,
 )
 from backend.app.services.aggregator import assess_site
 from backend.app.services.live_telemetry_service import evaluate_live_site_telemetry
+from backend.app.services.eco_telemetry_service import run_eco_assessment
 from backend.app.services.dc_planner import (
     HARDWARE_SPECS,
     COOLING_MODES,
@@ -305,3 +307,36 @@ def get_state_policies_endpoint():
 def get_india_ai_endpoint():
     """Retrieve overview and pillars of the national IndiaAI mission."""
     return get_india_ai_mission_summary()
+
+# ==========================================
+# 8. Module 8: Eco-Friendly DC & ESG Engine
+# ==========================================
+@router.post("/eco/assess", tags=["Environmental ESG"])
+def assess_eco_friendly_dc_endpoint(req: EcoAssessmentRequest):
+    """
+    Run authentic multi-parameter environmental assessment:
+    - Open-Meteo GloFAS river discharge & basin surface hydrology
+    - Open-Meteo ERA5-Land soil moisture & drought
+    - Global Forest Watch / FSI tree canopy & zero-deforestation compliance
+    - CGWB zero-water-shortage & closed-loop DLC cooling savings
+    - CEA grid baseline carbon abatement & 100% renewable PPA sizing
+    - Generates statutory ESG compliance checklist & engineering mandates
+    """
+    try:
+        return run_eco_assessment(
+            lat=req.latitude,
+            lon=req.longitude,
+            site_name=req.site_name,
+            district=req.district,
+            state=req.state,
+            it_load_mw=req.it_load_mw,
+            cooling_mode=req.cooling_mode,
+            solar_rooftop_mw=req.solar_rooftop_mw,
+            offsite_solar_ppa_mw=req.offsite_solar_ppa_mw,
+            aquifer_soe_pct=req.aquifer_soe_pct,
+            solar_ghi=req.solar_ghi,
+            wind_speed=req.wind_speed,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Eco assessment error: {str(e)}")
+

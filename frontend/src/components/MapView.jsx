@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import { Layers, MapPin, Cpu, Radio, ShieldAlert, Key, Settings } from 'lucide-react';
+import { Layers, MapPin, Cpu, Radio, ShieldAlert, Key, Settings, Globe, Maximize2 } from 'lucide-react';
 
 // Tile Providers (100% Free, No API Key Mandatory + Optional Custom Key Support)
 const TILE_PROVIDERS = {
@@ -98,196 +98,191 @@ const SUBSEA_LANDING_STATIONS = [
     cables: "BBG, FALCON, MENA, FLAG Europe-Asia",
     lat: 19.0144,
     lng: 72.8277,
-    latency_singapore_ms: 34.0,
-    latency_marseille_ms: 52.0,
+    latency_singapore_ms: 31.5,
+    latency_marseille_ms: 53.8,
   },
   {
     name: "Chennai Santhome CLS",
-    cables: "SMW4, i2i (Tata-Singtel), Chennai-Andaman, MIST",
-    lat: 13.0330,
-    lng: 80.2780,
-    latency_singapore_ms: 22.5,
+    cables: "SMW4, Bharat Lanka, Chennai-Andaman, i2i",
+    lat: 13.0333,
+    lng: 80.2785,
+    latency_singapore_ms: 22.0,
     latency_marseille_ms: 68.0,
   },
   {
-    name: "Dighi Port Subsea Gateway (Upcoming)",
-    cables: "2Africa Pearl & India-Europe Express (IEX)",
-    lat: 18.1750,
-    lng: 72.9850,
-    latency_singapore_ms: 33.0,
-    latency_marseille_ms: 51.0,
+    name: "Kochi Marine Drive CLS",
+    cables: "SAFE, SEA-ME-WE 3",
+    lat: 9.9816,
+    lng: 76.2764,
+    latency_singapore_ms: 28.0,
+    latency_marseille_ms: 51.5,
   },
 ];
 
-export default function MapView({ sites = [], selectedSite = null, onSelectSite, onMapClick }) {
+export default function MapView({ sites = [], selectedSite = null, onSelectSite }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const currentTileLayerRef = useRef(null);
-  const siteMarkersLayerRef = useRef(null);
-  const supercomputerLayerRef = useRef(null);
-  const subseaLayerRef = useRef(null);
+  const isFirstMountRef = useRef(true);
+  const layersRef = useRef({
+    tileLayer: null,
+    sitesLayer: null,
+    supercomputersLayer: null,
+    subseaLayer: null,
+  });
 
-  // Layer Visibility Toggles
+  // State
+  const [selectedBasemap, setSelectedBasemap] = useState('carto_dark');
   const [showSites, setShowSites] = useState(true);
   const [showSupercomputers, setShowSupercomputers] = useState(true);
   const [showSubsea, setShowSubsea] = useState(true);
-
-  // Basemap Selector (Default: carto_dark, fallback: osm_standard)
-  const [selectedBasemap, setSelectedBasemap] = useState('carto_dark');
   const [customKeyModalOpen, setCustomKeyModalOpen] = useState(false);
-  const [customMapboxKey, setCustomMapboxKey] = useState(localStorage.getItem('SUPERINDIA_MAP_KEY') || '');
+  const [customMapboxKey, setCustomMapboxKey] = useState('');
 
-  // Initialize Leaflet Map
+  // 1. Initialize Leaflet Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
-    if (mapInstanceRef.current) return;
 
-    const map = L.map(mapContainerRef.current, {
-      center: [20.5937, 78.9629], // Center of India
-      zoom: 5,
-      minZoom: 4,
-      maxZoom: 18,
-      zoomControl: false,
-    });
+    if (!mapInstanceRef.current) {
+      // Default view: full Indian subcontinent at zoom 5
+      const map = L.map(mapContainerRef.current, {
+        center: [21.5, 78.96],
+        zoom: 5,
+        zoomControl: false,
+        attributionControl: true,
+      });
 
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Initial tile layer
-    const initialProvider = TILE_PROVIDERS[selectedBasemap] || TILE_PROVIDERS.carto_dark;
-    const tileLayer = L.tileLayer(initialProvider.url, initialProvider.options).addTo(map);
-    currentTileLayerRef.current = tileLayer;
+      // Create Layer Groups
+      const sitesLayer = L.layerGroup().addTo(map);
+      const supercomputersLayer = L.layerGroup().addTo(map);
+      const subseaLayer = L.layerGroup().addTo(map);
 
-    // Layer groups for markers
-    siteMarkersLayerRef.current = L.layerGroup().addTo(map);
-    supercomputerLayerRef.current = L.layerGroup().addTo(map);
-    subseaLayerRef.current = L.layerGroup().addTo(map);
+      layersRef.current.sitesLayer = sitesLayer;
+      layersRef.current.supercomputersLayer = supercomputersLayer;
+      layersRef.current.subseaLayer = subseaLayer;
 
-    mapInstanceRef.current = map;
+      mapInstanceRef.current = map;
 
-    // Fix map container size on render
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 200);
+      // Invalidate size shortly after mount to ensure smooth tile rendering
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 250);
 
-    const handleResize = () => {
+      // Check saved custom Mapbox token in localStorage
+      const savedKey = localStorage.getItem('SUPERINDIA_MAP_KEY');
+      if (savedKey) {
+        setCustomMapboxKey(savedKey);
+      }
+    }
+  }, []);
+
+  // ResizeObserver to automatically invalidate Leaflet map size on container resize
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    const ro = new ResizeObserver(() => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
       }
-    };
-    window.addEventListener('resize', handleResize);
-
-    map.on('click', (e) => {
-      if (onMapClick) {
-        onMapClick({ lat: e.latlng.lat, lon: e.latlng.lng });
-      }
     });
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      map.remove();
-      mapInstanceRef.current = null;
-    };
+    ro.observe(mapContainerRef.current);
+    return () => ro.disconnect();
   }, []);
 
-  // Handle Basemap Change
+  // 2. Manage Tile Provider Layer
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    if (currentTileLayerRef.current) {
-      map.removeLayer(currentTileLayerRef.current);
+    // Remove existing tile layer if any
+    if (layersRef.current.tileLayer) {
+      map.removeLayer(layersRef.current.tileLayer);
     }
 
-    let url = TILE_PROVIDERS[selectedBasemap]?.url || TILE_PROVIDERS.carto_dark.url;
-    let options = TILE_PROVIDERS[selectedBasemap]?.options || TILE_PROVIDERS.carto_dark.options;
+    let newTileLayer = null;
 
-    // If custom Mapbox key exists
-    if (customMapboxKey && selectedBasemap === 'mapbox_custom') {
-      url = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${customMapboxKey}`;
-      options = {
-        attribution: '&copy; Mapbox &copy; OpenStreetMap',
-        tileSize: 512,
-        zoomOffset: -1,
-        maxZoom: 20,
-      };
+    if (selectedBasemap === 'mapbox_custom' && customMapboxKey) {
+      newTileLayer = L.tileLayer(
+        `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${customMapboxKey}`,
+        {
+          attribution: '&copy; Mapbox &copy; OpenStreetMap',
+          tileSize: 512,
+          zoomOffset: -1,
+          maxZoom: 22,
+        }
+      );
+    } else {
+      const provider = TILE_PROVIDERS[selectedBasemap] || TILE_PROVIDERS.carto_dark;
+      newTileLayer = L.tileLayer(provider.url, provider.options);
     }
 
-    const newLayer = L.tileLayer(url, options).addTo(map);
-    currentTileLayerRef.current = newLayer;
-
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
+    newTileLayer.addTo(map);
+    layersRef.current.tileLayer = newTileLayer;
   }, [selectedBasemap, customMapboxKey]);
 
-  // Sync Siting Hub Markers
+  // 3. Render Candidate AI Siting Hubs
   useEffect(() => {
-    const layer = siteMarkersLayerRef.current;
+    const layer = layersRef.current.sitesLayer;
     if (!layer) return;
 
     layer.clearLayers();
-    if (!showSites) return;
+
+    if (!showSites || !sites || sites.length === 0) return;
 
     sites.forEach((site) => {
+      const lat = site.latitude || site.coordinates?.lat || 20.0;
+      const lon = site.longitude || site.coordinates?.lon || 78.0;
       const isSelected = selectedSite && selectedSite.site_id === site.site_id;
       const score = site.composite_score || 0;
-      const color = site.tier_color || '#10B981';
 
-      const customIcon = L.divIcon({
-        className: 'custom-map-marker',
-        html: `
-          <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; transform: translate(-50%, -100%);">
-            <div style="
-              background: #0B111A; 
-              border: 2px solid ${color}; 
-              color: #FFFFFF; 
-              border-radius: 9999px; 
-              padding: 4px 8px; 
-              font-family: monospace; 
-              font-size: 11px; 
-              font-weight: 700; 
-              display: flex; 
-              align-items: center; 
-              gap: 4px;
-              box-shadow: 0 4px 14px ${color}66;
-              ${isSelected ? `box-shadow: 0 0 25px ${color}; transform: scale(1.18);` : ''}
-              transition: all 0.2s ease-in-out;
-            ">
-              <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
-              <span>${score.toFixed(1)}</span>
-            </div>
-            <div style="width: 2px; height: 10px; background: ${color}; margin-top: -1px;"></div>
-            <div style="width: 8px; height: 8px; background: ${color}; border-radius: 50%; opacity: 0.8; box-shadow: 0 0 10px ${color};"></div>
-          </div>
-        `,
-        iconSize: [60, 42],
-        iconAnchor: [30, 42],
-      });
+      // Color coding per classification tier
+      let markerColor = '#10B981'; // Viable (Green)
+      if (score < 50.0) {
+        markerColor = '#EF4444'; // Unviable (Red)
+      } else if (score < 75.0) {
+        markerColor = '#F59E0B'; // Conditional (Amber)
+      }
 
-      const marker = L.marker([site.latitude, site.longitude], { icon: customIcon });
-
-      const popupContent = `
-        <div style="font-family: sans-serif; min-width: 220px; color: #F1F5F9; background: #0F172A; padding: 12px; border-radius: 8px; border: 1px solid #334155;">
-          <div style="font-size: 10px; text-transform: uppercase; color: #94A3B8; font-weight: 700;">Strategic AI Infrastructure Hub</div>
-          <div style="font-size: 14px; font-weight: 700; color: #FFFFFF; margin: 2px 0 6px 0;">${site.site_name}</div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 12px; color: #CBD5E1;">Composite Score: <strong>${score.toFixed(1)}/100</strong></span>
-            <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: ${color}22; color: ${color}; border: 1px solid ${color}66;">${site.tier_badge || 'VIABLE'}</span>
+      const iconHtml = `
+        <div class="relative flex items-center justify-center">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-transform ${isSelected ? 'scale-125 ring-4 ring-white' : 'hover:scale-110'}" style="background-color: ${markerColor}; border: 2.5px solid #0B111A;">
+            <div class="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></div>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; color: #94A3B8; border-top: 1px solid #1E293B; padding-top: 6px;">
-            <div>💧 Water: <strong style="color: #38BDF8;">${(site.water_score || 0).toFixed(1)}</strong></div>
-            <div>⚡ Power: <strong style="color: #FBBF24;">${(site.power_score || 0).toFixed(1)}</strong></div>
-            <div>🌡️ Climate: <strong style="color: #A78BFA;">${(site.climate_score || 0).toFixed(1)}</strong></div>
-            <div>🌐 Fiber: <strong style="color: #34D399;">${(site.connectivity_score || 0).toFixed(1)}</strong></div>
-          </div>
-          <div style="font-size: 10px; color: #64748B; margin-top: 6px;">Click to view 7-domain telemetry.</div>
+          ${isSelected ? `<div class="absolute -inset-1.5 rounded-full animate-ping opacity-75" style="background-color: ${markerColor};"></div>` : ''}
         </div>
       `;
 
-      marker.bindPopup(popupContent, {
-        className: 'dark-leaflet-popup',
-        closeButton: false,
+      const customIcon = L.divIcon({
+        className: 'custom-site-marker',
+        html: iconHtml,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
       });
+
+      const marker = L.marker([lat, lon], { icon: customIcon });
+
+      // Interactive Popup
+      const popupContent = `
+        <div style="font-family: inherit; min-width: 200px; padding: 4px;">
+          <div style="font-size: 10px; font-weight: bold; color: ${markerColor}; text-transform: uppercase; margin-bottom: 2px;">
+            ${site.tier || 'VIABLE'} (${score.toFixed(1)}/100)
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #16191f; margin-bottom: 4px;">
+            ${site.site_name}
+          </div>
+          <div style="font-size: 11px; color: #454c58; margin-bottom: 6px;">
+            ${site.district ? `${site.district}, ` : ''}${site.state}
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px; background: #f3f4f6; padding: 6px; border-radius: 6px;">
+            <div>Water: <strong>${site.water_score ? site.water_score.toFixed(0) : 'N/A'}</strong></div>
+            <div>Power: <strong>${site.power_score ? site.power_score.toFixed(0) : 'N/A'}</strong></div>
+            <div>Climate: <strong>${site.climate_score ? site.climate_score.toFixed(0) : 'N/A'}</strong></div>
+            <div>Fiber: <strong>${site.connectivity_score ? site.connectivity_score.toFixed(0) : 'N/A'}</strong></div>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent);
 
       marker.on('click', () => {
         if (onSelectSite) onSelectSite(site);
@@ -295,87 +290,120 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite,
 
       layer.addLayer(marker);
     });
-  }, [sites, selectedSite, showSites]);
+  }, [sites, selectedSite, showSites, onSelectSite]);
 
-  // Sync National Supercomputer Cluster Markers
+  // 4. Render National Supercomputers & AI Clusters
   useEffect(() => {
-    const layer = supercomputerLayerRef.current;
+    const layer = layersRef.current.supercomputersLayer;
     if (!layer) return;
 
     layer.clearLayers();
+
     if (!showSupercomputers) return;
 
-    NATIONAL_SUPERCOMPUTERS.forEach((node) => {
+    NATIONAL_SUPERCOMPUTERS.forEach((cluster) => {
+      const iconHtml = `
+        <div class="flex items-center justify-center w-6 h-6 rounded-lg bg-[#0F172A] border border-indigo-400 shadow-md hover:scale-125 transition-transform">
+          <div class="w-2.5 h-2.5 rounded-sm bg-indigo-400"></div>
+        </div>
+      `;
+
       const customIcon = L.divIcon({
         className: 'supercomputer-marker',
-        html: `
-          <div style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #0B111A; border: 2px solid ${node.color}; box-shadow: 0 0 12px ${node.color}88; cursor: pointer;">
-            <div style="width: 10px; height: 10px; border-radius: 50%; background: ${node.color};"></div>
-          </div>
-        `,
-        iconSize: [26, 26],
-        iconAnchor: [13, 13],
+        html: iconHtml,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
       });
 
-      const marker = L.marker([node.lat, node.lng], { icon: customIcon });
-      marker.bindPopup(`
-        <div style="font-family: sans-serif; min-width: 190px; color: #F1F5F9; background: #0F172A; padding: 10px; border-radius: 8px; border: 1px solid #334155;">
-          <div style="font-size: 10px; text-transform: uppercase; color: #38BDF8; font-weight: 700;">National AI Supercomputer</div>
-          <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin: 2px 0;">${node.name}</div>
-          <div style="font-size: 11px; color: #CBD5E1; margin-top: 4px;">Capacity: <strong>${node.capacity}</strong></div>
-        </div>
-      `, { className: 'dark-leaflet-popup', closeButton: false });
+      const marker = L.marker([cluster.lat, cluster.lng], { icon: customIcon });
 
+      const popup = `
+        <div style="font-family: inherit; min-width: 190px; padding: 4px;">
+          <div style="font-size: 10px; font-weight: bold; color: #818CF8; text-transform: uppercase;">
+            ${cluster.type}
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #16191f; margin-bottom: 2px;">
+            ${cluster.name}
+          </div>
+          <div style="font-size: 11px; color: #454c58; font-family: monospace;">
+            ${cluster.capacity}
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popup);
       layer.addLayer(marker);
     });
   }, [showSupercomputers]);
 
-  // Sync Subsea Landing Station Markers
+  // 5. Render Subsea Cable Landing Stations
   useEffect(() => {
-    const layer = subseaLayerRef.current;
+    const layer = layersRef.current.subseaLayer;
     if (!layer) return;
 
     layer.clearLayers();
+
     if (!showSubsea) return;
 
     SUBSEA_LANDING_STATIONS.forEach((cls) => {
+      const iconHtml = `
+        <div class="flex items-center justify-center w-6 h-6 rounded-full bg-[#0F172A] border border-amber-400 shadow-md hover:scale-125 transition-transform">
+          <div class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></div>
+        </div>
+      `;
+
       const customIcon = L.divIcon({
         className: 'subsea-marker',
-        html: `
-          <div style="display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px; background: #0F172A; border: 2px solid #F59E0B; box-shadow: 0 0 10px #F59E0B88; cursor: pointer;">
-            <div style="font-size: 11px;">🌐</div>
-          </div>
-        `,
+        html: iconHtml,
         iconSize: [24, 24],
         iconAnchor: [12, 12],
       });
 
       const marker = L.marker([cls.lat, cls.lng], { icon: customIcon });
-      marker.bindPopup(`
-        <div style="font-family: sans-serif; min-width: 210px; color: #F1F5F9; background: #0F172A; padding: 10px; border-radius: 8px; border: 1px solid #334155;">
-          <div style="font-size: 10px; text-transform: uppercase; color: #F59E0B; font-weight: 700;">Submarine Cable Gateway</div>
-          <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin: 2px 0;">${cls.name}</div>
-          <div style="font-size: 11px; color: #94A3B8; margin-top: 4px;">Cables: <span style="color: #CBD5E1;">${cls.cables}</span></div>
-          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-top: 6px; border-top: 1px solid #1E293B; padding-top: 4px;">
-            <span>To Singapore: <strong style="color: #34D399;">${cls.latency_singapore_ms} ms</strong></span>
-            <span>To Europe: <strong style="color: #38BDF8;">${cls.latency_marseille_ms} ms</strong></span>
+
+      const popup = `
+        <div style="font-family: inherit; min-width: 200px; padding: 4px;">
+          <div style="font-size: 10px; font-weight: bold; color: #F59E0B; text-transform: uppercase;">
+            Subsea Cable Landing Station (CLS)
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #16191f; margin-bottom: 2px;">
+            ${cls.name}
+          </div>
+          <div style="font-size: 10px; color: #454c58; margin-bottom: 4px;">
+            Cables: <strong>${cls.cables}</strong>
+          </div>
+          <div style="font-size: 10px; font-family: monospace; color: #074ce0;">
+            Singapore RTT: ${cls.latency_singapore_ms}ms • Marseille: ${cls.latency_marseille_ms}ms
           </div>
         </div>
-      `, { className: 'dark-leaflet-popup', closeButton: false });
+      `;
 
+      marker.bindPopup(popup);
       layer.addLayer(marker);
     });
   }, [showSubsea]);
 
-  // Center on selected site
+  // 6. Smooth Pan on Site Selection (Keep national overview on mount, flyTo on user selection)
   useEffect(() => {
-    if (!mapInstanceRef.current || !selectedSite) return;
-    mapInstanceRef.current.flyTo([selectedSite.latitude, selectedSite.longitude], 8, {
-      duration: 1.2,
-      easeLinearity: 0.25,
-    });
+    if (!selectedSite || !mapInstanceRef.current) return;
+    
+    // Prevent auto-zooming into Mumbai on initial page load
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+
+    const lat = selectedSite.latitude || selectedSite.coordinates?.lat;
+    const lon = selectedSite.longitude || selectedSite.coordinates?.lon;
+    if (lat && lon) {
+      mapInstanceRef.current.flyTo([lat, lon], 8, {
+        animate: true,
+        duration: 1.2,
+      });
+    }
   }, [selectedSite]);
 
+  // Save Custom Key
   const saveCustomKey = (key) => {
     setCustomMapboxKey(key);
     localStorage.setItem('SUPERINDIA_MAP_KEY', key);
@@ -387,76 +415,99 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite,
     setCustomKeyModalOpen(false);
   };
 
+  const resetToAllIndia = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo([21.5, 78.96], 5, {
+        animate: true,
+        duration: 1.0,
+      });
+    }
+  };
+
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dde0e6] bg-[#0B111A] shadow-lg ring-1 ring-black/5">
+    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dde0e6] bg-[#0B111A] shadow-lg ring-1 ring-black/5 flex flex-col">
       
-      {/* Map Header Overlay with Basemap & Layer Toggles */}
-      <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+      {/* Sleek Floating Map Command Toolbar */}
+      <div className="absolute top-3 left-3 right-3 z-[1000] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
         
-        {/* Title & Basemap Switcher */}
-        <div className="pointer-events-auto flex items-center gap-2 bg-[#0B111A]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/80 shadow-lg">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span className="text-xs font-mono font-bold tracking-wide text-white">India AI Geospatial Mesh</span>
+        {/* Left: Brand & Basemap Selector */}
+        <div className="pointer-events-auto flex items-center gap-1.5 bg-[#0B111A]/90 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-slate-700/80 shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
+          <span className="text-[11px] font-mono font-bold tracking-wide text-white hidden sm:inline">Geospatial Mesh</span>
+
+          <span className="text-slate-600 font-mono hidden sm:inline">|</span>
+
+          {/* Reset to All India Button */}
+          <button
+            onClick={resetToAllIndia}
+            title="Reset to All-India View"
+            className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono text-cyan-300 hover:text-white bg-cyan-950/70 border border-cyan-700/60 transition-colors"
+          >
+            <span>🇮🇳 Pan-India</span>
+          </button>
 
           {/* Tile Layer Selector */}
           <select
             value={selectedBasemap}
             onChange={(e) => setSelectedBasemap(e.target.value)}
-            className="bg-slate-900 border border-slate-700 text-slate-300 text-[11px] font-mono rounded-lg px-2 py-0.5 focus:outline-none focus:border-cyan-400 cursor-pointer ml-1"
+            className="bg-slate-900 border border-slate-700 text-slate-300 text-[10px] font-mono rounded-lg px-2 py-0.5 focus:outline-none focus:border-cyan-400 cursor-pointer"
           >
             <option value="carto_dark">🌙 Carto Dark</option>
-            <option value="osm_standard">🗺️ OpenStreetMap (No Key)</option>
-            <option value="esri_satellite">🛰️ Satellite Terrain</option>
-            {customMapboxKey && <option value="mapbox_custom">🔑 Mapbox Custom</option>}
+            <option value="osm_standard">🗺️ OSM Clean</option>
+            <option value="esri_satellite">🛰️ Satellite</option>
+            {customMapboxKey && <option value="mapbox_custom">🔑 Custom Mapbox</option>}
           </select>
 
           {/* API Key Modal Button */}
           <button
             onClick={() => setCustomKeyModalOpen(true)}
-            title="Configure Map API Key (Optional)"
+            title="Configure Mapbox Token"
             className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
           >
-            <Key className="w-3.5 h-3.5" />
+            <Key className="w-3 h-3" />
           </button>
         </div>
 
-        {/* Feature Layer Switches */}
-        <div className="pointer-events-auto flex items-center gap-1.5 bg-[#0B111A]/90 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-lg">
+        {/* Right: Layer Switches */}
+        <div className="pointer-events-auto flex items-center gap-1 bg-[#0B111A]/90 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-lg">
           
           <button
             onClick={() => setShowSites(!showSites)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
+            title="Toggle Candidate AI Siting Hubs"
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-mono transition-all ${
               showSites 
                 ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' 
                 : 'text-slate-500 hover:text-slate-300'
             }`}
           >
             <MapPin className="w-3 h-3 text-cyan-400" />
-            <span>AI Siting Hubs</span>
+            <span>Hubs ({sites.length})</span>
           </button>
 
           <button
             onClick={() => setShowSupercomputers(!showSupercomputers)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
+            title="Toggle National Supercomputers & AI Clusters"
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-mono transition-all ${
               showSupercomputers 
                 ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-bold' 
                 : 'text-slate-500 hover:text-slate-300'
             }`}
           >
             <Cpu className="w-3 h-3 text-indigo-400" />
-            <span>Supercomputers</span>
+            <span>HPC ({NATIONAL_SUPERCOMPUTERS.length})</span>
           </button>
 
           <button
             onClick={() => setShowSubsea(!showSubsea)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
+            title="Toggle Subsea Cable Landing Stations"
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-mono transition-all ${
               showSubsea 
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold' 
                 : 'text-slate-500 hover:text-slate-300'
             }`}
           >
             <Radio className="w-3 h-3 text-amber-400" />
-            <span>Subsea CLS</span>
+            <span>CLS ({SUBSEA_LANDING_STATIONS.length})</span>
           </button>
 
         </div>
@@ -464,19 +515,19 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite,
       </div>
 
       {/* Leaflet Map Div */}
-      <div ref={mapContainerRef} className="w-full h-full min-h-[480px]" />
+      <div ref={mapContainerRef} className="w-full flex-1 min-h-[500px]" />
 
       {/* Legend Footer */}
       <div className="absolute bottom-3 left-3 z-[1000] hidden sm:flex items-center gap-3 bg-[#0B111A]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-[10px] font-mono text-slate-400 shadow-md">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span>Viable (≥75)</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-          <span>Conditional (50-74.9)</span>
+          <span>Conditional (50–74.9)</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-rose-400"></span>
           <span>Unviable (&lt;50)</span>
         </div>

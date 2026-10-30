@@ -114,7 +114,15 @@ export const fetchIndiaAIMission = async () => {
 };
 
 // ==========================================
-// 8. System Health API
+// 8. Module 8: Eco-Friendly DC & ESG APIs
+// ==========================================
+export const assessEcoFriendlyDC = async (payload) => {
+  const response = await apiClient.post('/eco/assess', payload);
+  return response.data;
+};
+
+// ==========================================
+// 9. System Health API
 // ==========================================
 export const checkApiHealth = async () => {
   try {
