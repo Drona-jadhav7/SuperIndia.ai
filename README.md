@@ -175,6 +175,22 @@ flowchart TD
 
 ---
 
+### F. Authentic Real-Data Telemetry Architecture (Zero Guessing Policy)
+
+To eliminate simulated guesses and ground every evaluation in genuine physical telemetry, SuperIndia.ai integrates directly with official public and statutory Indian Government APIs:
+
+| Domain | Integrated Authentic API & Statutory Source | Live Telemetry & Parameters Ingested |
+| :--- | :--- | :--- |
+| **Climate & Psychrometrics** | **NASA POWER Climatology API** (`https://power.larc.nasa.gov`) | 30-year dry bulb temperature (`T2M`), relative humidity (`RH2M`), cooling degree days (`CDD18_3`), Stull wet-bulb formula calculation |
+| **Terrain & Elevation** | **NASA SRTM 30m Global Elevation Model** | Ground truth terrain elevation in meters above sea level (ASL) for flood margin & psychrometric density corrections |
+| **Air Quality** | **Open-Meteo / CAMS ECMWF** | Real-time PM2.5 and PM10 atmospheric particulates mapped to CPCB National Ambient Air Quality Standards |
+| **Hydrology & Water** | **Central Ground Water Board (CGWB) & Ministry of Jal Shakti** | Dynamic Ground Water Resources Assessment 2023: Stage of Groundwater Extraction (SOE %) and regional TDS (mg/L) |
+| **Electrical Transmission Grid** | **Central Electricity Authority (CEA) & State TRANSCOs** | Transmission Planning Criteria, EHV 220kV/400kV substation proximity, N-1 transformer margin |
+| **Network & Subsea Transit** | **National Internet Exchange of India (NIXI) & TRAI** | Subsea Cable Landing Station (CLS) geodesic latency (SMF-28 glass index) and NIXI Peering mesh |
+| **Disaster Resilience** | **Bureau of Indian Standards (BIS IS 1893:2016) & USGS** | Statutory Indian seismic zonation (Zones II–V) and USGS earthquake hazard catalog within 250km radius |
+
+---
+
 ## 4. Strategic Benchmark Demonstration Hubs
 
 SuperIndia.ai comes pre-seeded with 8 verified Indian AI and data center hubs:
@@ -210,6 +226,7 @@ SuperIndia.ai/
 │   │   │   ├── schemas.py                   # Pydantic v2 domain schemas and response models
 │   │   │   └── __init__.py
 │   │   ├── services/
+│   │   │   ├── live_telemetry_service.py    # Authentic live ingestion from NASA & Indian Gov APIs
 │   │   │   ├── aggregator.py                # 7-domain composite scoring & mitigation engine
 │   │   │   ├── water_engine.py              # 7-model CGWA & BIS water assessment pipeline
 │   │   │   ├── power_engine.py              # 4-metric CEA electrical transmission pipeline
@@ -281,6 +298,8 @@ The FastAPI backend exposes interactive OpenAPI documentation at `http://127.0.0
 | `GET` | `/api/sites` | Retrieve calculated assessments for all 8 national benchmark hubs |
 | `GET` | `/api/sites/{site_id}` | Retrieve comprehensive telemetry and mandates for a single benchmark hub |
 | `POST` | `/api/assess` | Execute the deterministic 7-domain assessment on an arbitrary custom greenfield payload |
+| `POST` | `/api/telemetry/fetch-real-data` | Ingest real-time physical telemetry from NASA POWER, NASA SRTM, CAMS, USGS, & CGWB for any Indian coordinate |
+| `POST` | `/api/assess/live` | One-click assessment evaluating an arbitrary coordinate directly with verified live NASA/Gov telemetry |
 | `POST` | `/api/compare` | Multi-site ranking and comparative analysis matrix |
 
 ### 3. Data Center Engineering Planner

@@ -9,7 +9,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 20000,
+  timeout: 25000,
 });
 
 // ==========================================
@@ -36,7 +36,20 @@ export const compareSites = async (payload = {}) => {
 };
 
 // ==========================================
-// 2. Data Center Engineering Planner APIs
+// 2. Authentic Live Telemetry & NASA/Gov APIs
+// ==========================================
+export const fetchLiveTelemetry = async (payload) => {
+  const response = await apiClient.post('/telemetry/fetch-real-data', payload);
+  return response.data;
+};
+
+export const assessLiveSite = async (payload) => {
+  const response = await apiClient.post('/assess/live', payload);
+  return response.data;
+};
+
+// ==========================================
+// 3. Data Center Engineering Planner APIs
 // ==========================================
 export const fetchDCHardwareOptions = async () => {
   const response = await apiClient.get('/dc/hardware');
@@ -49,7 +62,7 @@ export const calculateDCPlan = async (payload) => {
 };
 
 // ==========================================
-// 3. GPU Marketplace & Allocation APIs
+// 4. GPU Marketplace & Allocation APIs
 // ==========================================
 export const fetchMarketplaceNodes = async () => {
   const response = await apiClient.get('/marketplace/nodes');
@@ -62,7 +75,7 @@ export const allocateWorkload = async (payload) => {
 };
 
 // ==========================================
-// 4. National AI Demand Forecasting APIs
+// 5. National AI Demand Forecasting APIs
 // ==========================================
 export const fetchDemandForecast = async () => {
   const response = await apiClient.get('/demand/forecast');
@@ -75,7 +88,7 @@ export const simulateDemand = async (payload) => {
 };
 
 // ==========================================
-// 5. Citizen Financing Simulation APIs
+// 6. Citizen Financing Simulation APIs
 // ==========================================
 export const fetchCitizenProjects = async () => {
   const response = await apiClient.get('/citizen/projects');
@@ -88,7 +101,7 @@ export const simulateCitizenParticipation = async (payload) => {
 };
 
 // ==========================================
-// 6. Government Policy Intelligence APIs
+// 7. Government Policy Intelligence APIs
 // ==========================================
 export const fetchStatePolicies = async () => {
   const response = await apiClient.get('/policy/states');
@@ -101,7 +114,7 @@ export const fetchIndiaAIMission = async () => {
 };
 
 // ==========================================
-// 7. System Health API
+// 8. System Health API
 // ==========================================
 export const checkApiHealth = async () => {
   try {

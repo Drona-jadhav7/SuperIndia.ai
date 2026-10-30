@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Dict, Any
 from backend.app.models.schemas import (
     SiteInput,
     SiteAssessmentResponse,
@@ -12,7 +12,7 @@ from backend.app.services.disaster_engine import calculate_disaster_assessment
 from backend.app.services.land_engine import calculate_land_assessment
 from backend.app.services.economics_engine import calculate_economics_assessment
 
-def assess_site(site: SiteInput) -> SiteAssessmentResponse:
+def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is_live_evaluated: bool = False) -> SiteAssessmentResponse:
     """
     Core Architecture Axiom:
     'One model -> one responsibility -> domain aggregator -> composite site assessment.'
@@ -205,4 +205,6 @@ def assess_site(site: SiteInput) -> SiteAssessmentResponse:
         engineering_mandates=engineering_mandates,
         diagnostics=diagnostics,
         timestamp=timestamp,
+        is_live_evaluated=is_live_evaluated,
+        data_provenance=provenance,
     )

@@ -209,6 +209,10 @@ class SiteAssessmentResponse(BaseModel):
     diagnostics: List[str]
     timestamp: str
 
+    # Authentic Telemetry & Data Provenance
+    is_live_evaluated: bool = False
+    data_provenance: Optional[Dict[str, Any]] = None
+
 class SiteComparisonRequest(BaseModel):
     site_ids: Optional[List[str]] = None
     custom_sites: Optional[List[SiteInput]] = None
@@ -218,3 +222,18 @@ class SiteComparisonResponse(BaseModel):
     ranked_sites: List[Dict[str, Any]]
     best_site: Optional[str]
     comparison_summary: str
+
+
+class LiveTelemetryRequest(BaseModel):
+    latitude: float
+    longitude: float
+    state: Optional[str] = "Maharashtra"
+    district: Optional[str] = None
+    site_name: Optional[str] = "Live Candidate Hub"
+    proposed_it_load_mw: Optional[float] = 50.0
+
+class LiveTelemetryResponse(BaseModel):
+    site_input: SiteInput
+    provenance: Dict[str, Any]
+    api_statuses: Dict[str, str]
+    summary: str

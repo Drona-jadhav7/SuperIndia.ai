@@ -140,8 +140,41 @@ def run_tests():
     nodes = json.loads(req6.read().decode())
     print(f"\n[PASS] 6. GET /marketplace/nodes: Retrieved {len(nodes)} federated compute nodes across India.")
 
+    # 7. Test POST /telemetry/fetch-real-data (NASA & Gov Live Telemetry)
+    telemetry_payload = {
+        'latitude': 19.0330,
+        'longitude': 73.0297,
+        'state': 'Maharashtra',
+        'district': 'Thane',
+        'site_name': 'Navi Mumbai AI Hub',
+        'proposed_it_load_mw': 80.0
+    }
+    req7 = urllib.request.Request(
+        f'{BASE}/telemetry/fetch-real-data',
+        data=json.dumps(telemetry_payload).encode('utf-8'),
+        headers={'Content-Type': 'application/json'}
+    )
+    res7 = urllib.request.urlopen(req7)
+    telem_data = json.loads(res7.read().decode())
+    print(f"\n[PASS] 7. POST /telemetry/fetch-real-data: Live Ingestion from NASA & Gov APIs")
+    print(f"  - Elevation (NASA SRTM): {telem_data['site_input']['elevation_m']}m ASL")
+    print(f"  - Climate (NASA POWER): {telem_data['site_input']['climate_params']['dry_bulb_temp_c']}°C, RH: {telem_data['site_input']['climate_params']['relative_humidity_pct']}%")
+    print(f"  - Provenance: {list(telem_data['provenance'].keys())}")
+
+    # 8. Test POST /assess/live (One-Click Authentic Assessment)
+    req8 = urllib.request.Request(
+        f'{BASE}/assess/live',
+        data=json.dumps(telemetry_payload).encode('utf-8'),
+        headers={'Content-Type': 'application/json'}
+    )
+    res8 = urllib.request.urlopen(req8)
+    live_eval = json.loads(res8.read().decode())
+    print(f"\n[PASS] 8. POST /assess/live: Evaluated with Live Physical Telemetry")
+    print(f"  - Composite: {live_eval['composite_score']} [{live_eval['tier']}] | is_live_evaluated: {live_eval['is_live_evaluated']}")
+    print(f"  - Water: {live_eval['water_score']} | Power: {live_eval['power_score']} | Climate: {live_eval['climate_score']}")
+
     print("\n" + "=" * 60)
-    print("   ALL 6 END-TO-END VERIFICATION CHECKS PASSED PERFECTLY!")
+    print("   ALL 8 END-TO-END VERIFICATION CHECKS PASSED PERFECTLY!")
     print("=" * 60)
 
 if __name__ == '__main__':

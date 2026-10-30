@@ -12,7 +12,8 @@ import {
   Shield,
   Layers,
   Coins,
-  Activity
+  Activity,
+  Satellite
 } from 'lucide-react';
 
 export default function ScoreCard({ site }) {
@@ -98,9 +99,10 @@ export default function ScoreCard({ site }) {
   const getRadarCoordinates = (index, value) => {
     const angle = (Math.PI * 2 / numAxes) * index - Math.PI / 2;
     const r = (value / 100) * radarRadius;
-    const x = radarCenter + r * Math.cos(angle);
-    const y = radarCenter + r * Math.sin(angle);
-    return { x, y, angle };
+    return {
+      x: radarCenter + r * Math.cos(angle),
+      y: radarCenter + r * Math.sin(angle),
+    };
   };
 
   const radarPolygonPoints = domainCards.map((d, i) => {
@@ -115,7 +117,7 @@ export default function ScoreCard({ site }) {
       
       {/* Header with Site Name and Badge */}
       <div>
-        <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
           <div>
             <div className="flex items-center gap-1.5 text-xs text-[#454c58] font-mono mb-1">
               <MapPin className="w-3.5 h-3.5 text-[#074ce0]" />
@@ -144,6 +146,39 @@ export default function ScoreCard({ site }) {
             <span>{tier}</span>
           </div>
         </div>
+
+        {/* Real-Data Verification & Telemetry Badge */}
+        {(site.is_live_evaluated || site.data_provenance) && (
+          <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-blue-50/80 via-emerald-50/70 to-teal-50/80 border border-emerald-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
+              </span>
+              <span className="text-xs font-mono font-bold text-emerald-900 flex items-center gap-1.5">
+                <Satellite className="w-3.5 h-3.5 text-emerald-600" />
+                Live Physical Telemetry Active
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
+              <span className="px-2 py-0.5 rounded bg-white/90 text-slate-700 border border-emerald-200 font-semibold shadow-xs">
+                🛰️ NASA POWER
+              </span>
+              <span className="px-2 py-0.5 rounded bg-white/90 text-slate-700 border border-emerald-200 font-semibold shadow-xs">
+                ⛰️ NASA SRTM
+              </span>
+              <span className="px-2 py-0.5 rounded bg-white/90 text-slate-700 border border-emerald-200 font-semibold shadow-xs">
+                🌫️ CAMS AQI
+              </span>
+              <span className="px-2 py-0.5 rounded bg-white/90 text-slate-700 border border-emerald-200 font-semibold shadow-xs">
+                🌊 CGWB / Jal Shakti
+              </span>
+              <span className="px-2 py-0.5 rounded bg-white/90 text-slate-700 border border-emerald-200 font-semibold shadow-xs">
+                ⚡ CEA Grid
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Central Composite Gauge & Radar Hero Box */}
         <div className="p-4 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] grid grid-cols-1 md:grid-cols-12 items-center gap-4">

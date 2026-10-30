@@ -8,8 +8,11 @@ from backend.app.models.schemas import (
     SiteAssessmentResponse,
     SiteComparisonRequest,
     SiteComparisonResponse,
+    LiveTelemetryRequest,
+    LiveTelemetryResponse,
 )
 from backend.app.services.aggregator import assess_site
+from backend.app.services.live_telemetry_service import evaluate_live_site_telemetry
 from backend.app.services.dc_planner import (
     HARDWARE_SPECS,
     COOLING_MODES,
@@ -159,6 +162,63 @@ def compare_sites_endpoint(req: SiteComparisonRequest):
         best_site=best_site,
         comparison_summary=summary,
     )
+
+
+# ==========================================
+# 2b. Live Telemetry & Authentic Scoring Endpoints
+# ==========================================
+@router.post("/telemetry/fetch-real-data", response_model=LiveTelemetryResponse, tags=["Authentic Live Telemetry"])
+def fetch_real_data_telemetry(req: LiveTelemetryRequest):
+    """
+    Query real-time physical telemetry for any geographic coordinate (lat, lon) in India.
+    Connects to NASA POWER (climatology/psychrometrics), NASA SRTM 30m Global Elevation,
+    Open-Meteo/CAMS ECMWF (air quality), USGS & BIS IS 1893:2016 (seismic),
+    CGWB (groundwater extraction & TDS), CEA transmission grid, and NIXI transit.
+    Returns full physical parameters, provenance metadata, and official citations.
+    """
+    try:
+        result = evaluate_live_site_telemetry(
+            lat=req.latitude,
+            lon=req.longitude,
+            state=req.state or "Maharashtra",
+            district=req.district,
+            site_name=req.site_name or "Live Candidate Hub",
+            proposed_it_load_mw=req.proposed_it_load_mw or 50.0,
+        )
+        return LiveTelemetryResponse(
+            site_input=result["site_input"],
+            provenance=result["provenance"],
+            api_statuses=result["api_statuses"],
+            summary=result["summary"],
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Live telemetry fetch error: {str(e)}")
+
+@router.post("/assess/live", response_model=SiteAssessmentResponse, tags=["Authentic Live Telemetry"])
+def assess_live_site_endpoint(req: LiveTelemetryRequest):
+    """
+    One-click authentic site assessment:
+    Fetches genuine live physical parameters from NASA and Indian Government APIs,
+    then deterministically evaluates the candidate hub across all 7 infrastructure domains.
+    Returns composite score, domain radar, risk flags, engineering mandates, and verified provenance.
+    """
+    try:
+        telemetry = evaluate_live_site_telemetry(
+            lat=req.latitude,
+            lon=req.longitude,
+            state=req.state or "Maharashtra",
+            district=req.district,
+            site_name=req.site_name or f"Live Site ({req.latitude:.2f}°N, {req.longitude:.2f}°E)",
+            proposed_it_load_mw=req.proposed_it_load_mw or 50.0,
+        )
+        site_input = telemetry["site_input"]
+        return assess_site(
+            site=site_input,
+            provenance=telemetry["provenance"],
+            is_live_evaluated=True,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Live site assessment error: {str(e)}")
 
 # ==========================================
 # 3. Data Center Engineering Planner

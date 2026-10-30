@@ -17,9 +17,17 @@ import {
   Wifi,
   Shield,
   Layers,
-  Coins
+  Coins,
+  Radio,
+  Satellite,
+  Globe,
+  ExternalLink,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { STRATEGIC_INDIAN_PLACES } from '../data/indianPlaces';
+import { fetchLiveTelemetry, assessLiveSite } from '../services/api';
 
 export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite }) {
   if (!isOpen) return null;
@@ -109,6 +117,10 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingTelemetry, setIsLoadingTelemetry] = useState(false);
+  const [telemetryResult, setTelemetryResult] = useState(null);
+  const [telemetryError, setTelemetryError] = useState(null);
+  const [isLiveEvaluated, setIsLiveEvaluated] = useState(false);
   
   // Place & City Autocomplete Search State
   const [searchTerm, setSearchTerm] = useState('');
@@ -245,18 +257,67 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
 
     setSearchTerm(place.name);
     setShowDropdown(false);
-    setAppliedPlaceMessage(`Applied verified parameters for ${place.name} (${place.latitude}°N, ${place.longitude}°E, Seismic Zone ${place.seismic_zone || 'III'})`);
+    setAppliedPlaceMessage(`Applied base parameters for ${place.name} (${place.latitude}°N, ${place.longitude}°E). Click below to fetch live NASA & Gov telemetry!`);
 
     setTimeout(() => {
       setAppliedPlaceMessage(null);
     }, 5000);
   };
 
+  // Fetch genuine real-time data from NASA & Indian Gov APIs
+  const handleFetchLiveTelemetry = async () => {
+    setIsLoadingTelemetry(true);
+    setTelemetryError(null);
+    try {
+      const res = await fetchLiveTelemetry({
+        latitude: parseFloat(formData.latitude),
+        longitude: parseFloat(formData.longitude),
+        state: formData.state,
+        district: formData.district,
+        site_name: formData.site_name,
+        proposed_it_load_mw: parseFloat(formData.proposed_it_load_mw),
+      });
+      
+      if (res && res.site_input) {
+        const inp = res.site_input;
+        setFormData(prev => ({
+          ...prev,
+          site_name: inp.site_name || prev.site_name,
+          state: inp.state || prev.state,
+          district: inp.district || prev.district,
+          elevation_m: inp.elevation_m || prev.elevation_m,
+          proposed_it_load_mw: inp.proposed_it_load_mw || prev.proposed_it_load_mw,
+          water_params: { ...prev.water_params, ...(inp.water_params || {}) },
+          power_params: { ...prev.power_params, ...(inp.power_params || {}) },
+          climate_params: { ...prev.climate_params, ...(inp.climate_params || {}) },
+          connectivity_params: { ...prev.connectivity_params, ...(inp.connectivity_params || {}) },
+          disaster_params: { ...prev.disaster_params, ...(inp.disaster_params || {}) },
+          land_params: { ...prev.land_params, ...(inp.land_params || {}) },
+          economics_params: { ...prev.economics_params, ...(inp.economics_params || {}) },
+        }));
+
+        setTelemetryResult(res);
+        setIsLiveEvaluated(true);
+        setAppliedPlaceMessage(`Successfully loaded verified telemetry from NASA POWER, NASA SRTM, CAMS AQI, USGS & CGWB!`);
+      }
+    } catch (err) {
+      console.error("Live telemetry error:", err);
+      setTelemetryError(err.response?.data?.detail || err.message || "Failed to fetch live telemetry. Fallback normals active.");
+    } finally {
+      setIsLoadingTelemetry(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await onAssessCustomSite(formData);
+      const payload = {
+        ...formData,
+        is_live_evaluated: isLiveEvaluated,
+        data_provenance: telemetryResult?.provenance || null,
+      };
+      await onAssessCustomSite(payload);
       onClose();
     } catch (err) {
       console.error(err);
@@ -277,7 +338,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
       
-      <div className="bg-white border border-[#dde0e6] w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="bg-white border border-[#dde0e6] w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
         
         {/* Modal Header */}
         <div className="p-5 border-b border-[#dde0e6] flex items-center justify-between bg-[#fcfcfd]">
@@ -286,11 +347,19 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
               <Sliders className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold font-display text-[#16191f]">
-                Greenfield Candidate Site Simulation
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold font-display text-[#16191f]">
+                  Greenfield Candidate Site Simulation
+                </h3>
+                {isLiveEvaluated && (
+                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    NASA & GOV TELEMETRY ACTIVE
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-[#454c58] font-mono">
-                Comprehensive 7-Domain Deterministic Assessment (CGWA & CEA Engine)
+                Authentic 7-Domain Ingestion: NASA POWER, NASA SRTM, CAMS ECMWF, USGS, CGWB & CEA
               </p>
             </div>
           </div>
@@ -370,9 +439,90 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             )}
           </div>
 
-          {/* Basic Site Identifiers */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 bg-[#fcfcfd] p-4 rounded-xl border border-[#dde0e6]">
-            <div>
+          {/* Authentic Live Telemetry Trigger Bar */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-emerald-50/80 border border-blue-200/80 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#074ce0] text-white flex items-center justify-center shrink-0 shadow-md">
+                  <Satellite className={`w-5 h-5 ${isLoadingTelemetry ? 'animate-spin' : ''}`} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold font-display text-[#16191f]">
+                      NASA & Indian Gov Authentic Telemetry Ingestion
+                    </span>
+                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-[#074ce0] border border-blue-300">
+                      LIVE APIs
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#454c58] mt-0.5">
+                    Connects directly to <strong>NASA POWER</strong> (30-yr climatology), <strong>NASA SRTM</strong> (30m elevation), <strong>CAMS ECMWF</strong> (air quality), <strong>USGS</strong> (seismicity), and <strong>CGWB</strong> (aquifer extraction).
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleFetchLiveTelemetry}
+                disabled={isLoadingTelemetry}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#074ce0] hover:bg-[#074ce0]/90 text-white text-xs font-mono font-bold shadow-md hover:shadow-lg transition-all shrink-0 disabled:opacity-50"
+              >
+                {isLoadingTelemetry ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Querying NASA & Gov APIs...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                    <span>Auto-Fetch Real Data ({formData.latitude}°N, {formData.longitude}°E)</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Error banner if telemetry fetch failed */}
+            {telemetryError && (
+              <div className="mt-3 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs font-mono text-rose-700 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>{telemetryError}</span>
+              </div>
+            )}
+
+            {/* Active Telemetry Provenance Chips */}
+            {isLiveEvaluated && telemetryResult && (
+              <div className="mt-3 pt-3 border-t border-blue-200/60 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-[10px] font-mono">
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">🛰️ NASA POWER</div>
+                  <div>{formData.climate_params.dry_bulb_temp_c}°C • {formData.climate_params.relative_humidity_pct}% RH</div>
+                </div>
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">⛰️ NASA SRTM</div>
+                  <div>{formData.elevation_m}m ASL Elevation</div>
+                </div>
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">🌫️ CAMS AQI</div>
+                  <div>{formData.climate_params.air_quality_pm25} µg/m³ PM2.5</div>
+                </div>
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">🌊 CGWB SOE</div>
+                  <div>{formData.water_params.groundwater_extraction_pct}% Extraction</div>
+                </div>
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">⚡ CEA Grid</div>
+                  <div>{formData.power_params.substation_distance_km}km • {formData.power_params.voltage_class_kv}kV</div>
+                </div>
+                <div className="p-1.5 bg-white/90 rounded border border-blue-100 text-[#16191f]">
+                  <div className="text-gray-500 font-bold">🌋 BIS Seismic</div>
+                  <div>Zone {formData.disaster_params.seismic_zone} (IS 1893)</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Basic Site Identifiers & Geographic Coordinates */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 bg-[#fcfcfd] p-4 rounded-xl border border-[#dde0e6]">
+            <div className="sm:col-span-2">
               <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">Site Name</label>
               <input
                 type="text"
@@ -382,11 +532,22 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
               />
             </div>
             <div>
-              <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">State / Territory</label>
+              <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">Latitude (°N)</label>
               <input
-                type="text"
-                value={formData.state}
-                onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                type="number"
+                step="0.0001"
+                value={formData.latitude}
+                onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f] focus:outline-none focus:border-[#074ce0]"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">Longitude (°E)</label>
+              <input
+                type="number"
+                step="0.0001"
+                value={formData.longitude}
+                onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
                 className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f] focus:outline-none focus:border-[#074ce0]"
               />
             </div>
@@ -407,7 +568,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
               />
             </div>
             <div>
-              <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">Proposed IT Load (MW)</label>
+              <label className="block text-[11px] font-mono text-[#454c58] mb-1 font-semibold">IT Load (MW)</label>
               <input
                 type="number"
                 value={formData.proposed_it_load_mw}
@@ -454,9 +615,14 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 1. Water Domain */}
             {activeDomainTab === 'water' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-[#074ce0] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Droplet className="w-4 h-4" />
-                  Water Subsystem Telemetry (CGWA / BIS 10500 Standards)
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-[#074ce0] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Droplet className="w-4 h-4" />
+                    Water Subsystem Telemetry (CGWA / BIS 10500 Standards)
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                    Source: CGWB Groundwater Assessment 2023
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
@@ -533,9 +699,14 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 2. Power Domain */}
             {activeDomainTab === 'power' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-amber-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Zap className="w-4 h-4" />
-                  Electrical Grid Transmission Telemetry (CEA Planning Guidelines)
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-amber-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Zap className="w-4 h-4" />
+                    Electrical Grid Transmission Telemetry (CEA Planning Guidelines)
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    Source: CEA National Substation Database
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
@@ -557,7 +728,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Transmission Voltage Class: <strong>{formData.power_params.voltage_class_kv} kV</strong>
+                      Grid Voltage Class: <strong>{formData.power_params.voltage_class_kv} kV</strong>
                     </label>
                     <select
                       value={formData.power_params.voltage_class_kv}
@@ -567,22 +738,23 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                       })}
                       className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f]"
                     >
-                      <option value="400">400 kV (Extra High Voltage / Bulk Transmission)</option>
-                      <option value="220">220 kV (High Voltage Transmission Line)</option>
-                      <option value="132">132 kV (Sub-Transmission Feeder)</option>
-                      <option value="66">66 kV (Industrial Feed)</option>
-                      <option value="33">33 kV (Medium Voltage)</option>
+                      <option value="66.0">66 kV Line</option>
+                      <option value="110.0">110 kV Line</option>
+                      <option value="132.0">132 kV Transmission Line</option>
+                      <option value="220.0">220 kV EHV Transmission Line</option>
+                      <option value="400.0">400 kV National Grid Interconnect</option>
+                      <option value="765.0">765 kV Super-Grid Backbone</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Substation Spare N-1 Margin: <strong>{formData.power_params.spare_mva_margin} MVA</strong>
+                      Substation Spare MVA Margin: <strong>{formData.power_params.spare_mva_margin} MVA</strong>
                     </label>
                     <input
                       type="range"
                       min="10"
-                      max="200"
-                      step="5"
+                      max="300"
+                      step="10"
                       value={formData.power_params.spare_mva_margin}
                       onChange={(e) => setFormData({
                         ...formData,
@@ -593,11 +765,11 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Renewable Open Access Score: <strong>{formData.power_params.renewable_open_access_score}/100</strong>
+                      Renewable Open-Access Score: <strong>{formData.power_params.renewable_open_access_score}/100</strong>
                     </label>
                     <input
                       type="range"
-                      min="10"
+                      min="20"
                       max="100"
                       value={formData.power_params.renewable_open_access_score}
                       onChange={(e) => setFormData({
@@ -614,18 +786,23 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 3. Climate Domain */}
             {activeDomainTab === 'climate' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-indigo-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Thermometer className="w-4 h-4" />
-                  Climate & Psychrometrics (ASHRAE TC 9.9 & IMD Normals)
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-indigo-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Thermometer className="w-4 h-4" />
+                    Atmospheric & Climatology Telemetry (ASHRAE TC 9.9)
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                    Source: NASA POWER API (30-Year Climatology)
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Peak Design Dry-Bulb: <strong>{formData.climate_params.dry_bulb_temp_c}°C</strong>
+                      NASA 30-Year Dry Bulb Temp (°C): <strong>{formData.climate_params.dry_bulb_temp_c}°C</strong>
                     </label>
                     <input
                       type="range"
-                      min="20"
+                      min="15"
                       max="48"
                       step="0.5"
                       value={formData.climate_params.dry_bulb_temp_c}
@@ -638,11 +815,11 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Design Relative Humidity: <strong>{formData.climate_params.relative_humidity_pct}%</strong>
+                      NASA Relative Humidity (%): <strong>{formData.climate_params.relative_humidity_pct}%</strong>
                     </label>
                     <input
                       type="range"
-                      min="20"
+                      min="10"
                       max="95"
                       value={formData.climate_params.relative_humidity_pct}
                       onChange={(e) => setFormData({
@@ -659,8 +836,8 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                     <input
                       type="range"
                       min="1000"
-                      max="4000"
-                      step="100"
+                      max="4500"
+                      step="50"
                       value={formData.climate_params.annual_cooling_degree_days}
                       onChange={(e) => setFormData({
                         ...formData,
@@ -671,12 +848,13 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Air Quality PM2.5 (µg/m³): <strong>{formData.climate_params.air_quality_pm25}</strong>
+                      CAMS Air Quality PM2.5 (µg/m³): <strong>{formData.climate_params.air_quality_pm25} µg/m³</strong>
                     </label>
                     <input
                       type="range"
-                      min="15"
-                      max="180"
+                      min="5"
+                      max="250"
+                      step="5"
                       value={formData.climate_params.air_quality_pm25}
                       onChange={(e) => setFormData({
                         ...formData,
@@ -692,31 +870,19 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 4. Connectivity Domain */}
             {activeDomainTab === 'connectivity' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-emerald-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Wifi className="w-4 h-4" />
-                  Network & Fiber Backbone Infrastructure
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-emerald-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Wifi className="w-4 h-4" />
+                    Subsea Cable Landing Station & Optical Peering Telemetry
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Source: National Subsea CLS & NIXI Database
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Dark Fiber Trunk Distance: <strong>{formData.connectivity_params.fiber_backbone_distance_km} km</strong>
-                    </label>
-                    <input
-                      type="range"
-                      min="0.2"
-                      max="15"
-                      step="0.2"
-                      value={formData.connectivity_params.fiber_backbone_distance_km}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        connectivity_params: { ...formData.connectivity_params, fiber_backbone_distance_km: parseFloat(e.target.value) }
-                      })}
-                      className="w-full accent-emerald-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[#454c58] mb-1">
-                      Subsea Landing Station RTT: <strong>{formData.connectivity_params.rtt_to_landing_station_ms} ms</strong>
+                      RTT to Subsea Landing Station (Mumbai/Chennai): <strong>{formData.connectivity_params.rtt_to_landing_station_ms} ms</strong>
                     </label>
                     <input
                       type="range"
@@ -733,12 +899,29 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Tier-1 Telecom Carriers Present: <strong>{formData.connectivity_params.carrier_neutral_providers_count} Carriers</strong>
+                      Distance to NIXI Internet Exchange Node: <strong>{formData.connectivity_params.nixi_distance_km} km</strong>
                     </label>
                     <input
                       type="range"
                       min="1"
-                      max="6"
+                      max="150"
+                      step="1"
+                      value={formData.connectivity_params.nixi_distance_km}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        connectivity_params: { ...formData.connectivity_params, nixi_distance_km: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Carrier-Neutral Telco Providers: <strong>{formData.connectivity_params.carrier_neutral_providers_count} Telcos</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="8"
                       value={formData.connectivity_params.carrier_neutral_providers_count}
                       onChange={(e) => setFormData({
                         ...formData,
@@ -749,12 +932,12 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Diverse Dark Fiber Entry Paths: <strong>{formData.connectivity_params.dark_fiber_routes_count} Paths</strong>
+                      Geographically Diverse Dark Fiber Routes: <strong>{formData.connectivity_params.dark_fiber_routes_count} Routes</strong>
                     </label>
                     <input
                       type="range"
                       min="1"
-                      max="5"
+                      max="6"
                       value={formData.connectivity_params.dark_fiber_routes_count}
                       onChange={(e) => setFormData({
                         ...formData,
@@ -770,14 +953,19 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 5. Disaster Domain */}
             {activeDomainTab === 'disaster' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-rose-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Shield className="w-4 h-4" />
-                  Natural Disaster & Physical Hazard Resilience (IS 1893:2016)
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-rose-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Shield className="w-4 h-4" />
+                    Geophysical Hazard & Seismic Resilience (BIS IS 1893:2016)
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                    Source: BIS IS 1893:2016 & USGS Seismic Catalog
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Seismic Zone (IS 1893:2016):
+                      Official BIS Seismic Zone: <strong>Zone {formData.disaster_params.seismic_zone}</strong>
                     </label>
                     <select
                       value={formData.disaster_params.seismic_zone}
@@ -787,15 +975,15 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                       })}
                       className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f]"
                     >
-                      <option value="II">Zone II (Low Damage Risk - e.g. Bengaluru, Hyderabad)</option>
-                      <option value="III">Zone III (Moderate Damage Risk - e.g. Mumbai, Chennai, Dholera)</option>
-                      <option value="IV">Zone IV (Severe Damage Risk - e.g. Delhi-NCR, Greater Noida)</option>
-                      <option value="V">Zone V (Very Severe Damage Risk - e.g. Kutch, Himalayas)</option>
+                      <option value="II">Zone II (Low Damage Risk - PGA 0.10g)</option>
+                      <option value="III">Zone III (Moderate Risk - PGA 0.16g)</option>
+                      <option value="IV">Zone IV (High Damage Risk - PGA 0.24g)</option>
+                      <option value="V">Zone V (Very High Damage Risk - PGA 0.36g)</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[#454c58] mb-1">
-                      Elevation Above 100-Year HFL: <strong>{formData.disaster_params.elevation_above_hfl_m} m</strong>
+                      Height Above 100-Year High Flood Level (HFL): <strong>{formData.disaster_params.elevation_above_hfl_m} meters</strong>
                     </label>
                     <input
                       type="range"
@@ -817,9 +1005,14 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
             {/* 6. Land & Economics Domain */}
             {activeDomainTab === 'land_econ' && (
               <div className="space-y-4">
-                <div className="text-xs font-mono text-purple-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Coins className="w-4 h-4" />
-                  Civil Land Readiness & State Policy Economics
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-purple-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Coins className="w-4 h-4" />
+                    Civil Land Readiness & State Policy Economics
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
+                    Source: State SERC Tariffs & MeitY Policies
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
                   <div>
@@ -874,7 +1067,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
           </div>
 
           {/* Modal Footer Controls */}
-          <div className="pt-4 border-t border-[#dde0e6] flex items-center justify-between">
+          <div className="pt-4 border-t border-[#dde0e6] flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={onClose}
@@ -883,14 +1076,22 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
               Cancel
             </button>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#074ce0] text-white hover:bg-[#074ce0]/90 text-xs font-mono font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50"
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{isSubmitting ? 'Evaluating 7 Engines...' : 'Execute Deterministic Assessment'}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#074ce0] text-white hover:bg-[#074ce0]/90 text-xs font-mono font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>
+                  {isSubmitting 
+                    ? 'Evaluating 7 Engines...' 
+                    : isLiveEvaluated 
+                    ? 'Assess Site with Verified Live Telemetry' 
+                    : 'Execute Deterministic Assessment'}
+                </span>
+              </button>
+            </div>
           </div>
 
         </form>

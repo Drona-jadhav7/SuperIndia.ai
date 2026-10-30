@@ -8,6 +8,9 @@ set "PYTHON_EXE=python"
 if exist "%LOCALAPPDATA%\Python\pythoncore-3.14-64\python.exe" (
     set "PYTHON_EXE=%LOCALAPPDATA%\Python\pythoncore-3.14-64\python.exe"
 )
+if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
+    set "PYTHON_EXE=%LOCALAPPDATA%\Python\bin\python.exe"
+)
 
 set "PATH=C:\Program Files\nodejs;C:\Users\DRONA\nodejs;%PATH%"
 
