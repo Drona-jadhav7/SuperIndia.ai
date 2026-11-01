@@ -50,12 +50,17 @@ def calculate_climate_assessment(params: ClimateInput) -> ClimateAssessmentOutpu
     RH = params.relative_humidity_pct
     Tw = calculate_wet_bulb_stull(T, RH)
 
-    # 1. Wet-bulb score:
-    # Tw <= 24°C: Superb (100)
+    # 1. Wet-bulb & Thermal Operating Range score:
+    # Tw between 8°C and 23°C: Superb economizer headroom without freeze risk (100)
+    # Tw < 0°C: Sub-zero freeze-out hazard (cooling loop freezing, diesel gelling, heating demand)
     # Tw 24-27°C: Good (80)
     # Tw 27-29°C: Stressed (55)
     # Tw > 29°C: Extreme risk of evaporative cooling failure (< 35)
-    if Tw <= 23.0:
+    if Tw < 0.0:
+        wb_score = max(20.0, 60.0 - (abs(Tw) * 2.5))
+    elif Tw < 8.0:
+        wb_score = 75.0 + (Tw / 8.0) * 25.0
+    elif Tw <= 23.0:
         wb_score = 100.0
     elif Tw <= 26.0:
         wb_score = 100.0 - ((Tw - 23.0) / 3.0) * 20.0  # 100 -> 80

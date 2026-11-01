@@ -217,6 +217,7 @@ class SiteAssessmentResponse(BaseModel):
     land_assessment: Dict[str, Any]
     economics_assessment: Dict[str, Any]
     eco_assessment: Optional[Dict[str, Any]] = None
+    strategic_security_assessment: Optional[Dict[str, Any]] = None
     
     # Diagnostics & Engineering Mandates
     risk_flags: List[str]
@@ -227,6 +228,7 @@ class SiteAssessmentResponse(BaseModel):
     # Authentic Telemetry & Data Provenance
     is_live_evaluated: bool = False
     data_provenance: Optional[Dict[str, Any]] = None
+    fifty_factor_telemetry: Optional[Dict[str, Any]] = None
 
 class SiteComparisonRequest(BaseModel):
     site_ids: Optional[List[str]] = None
@@ -252,6 +254,7 @@ class LiveTelemetryResponse(BaseModel):
     provenance: Dict[str, Any]
     api_statuses: Dict[str, str]
     summary: str
+    fifty_factor_telemetry: Optional[Dict[str, Any]] = None
 
 # ==========================================
 # Module 8: Eco-Friendly DC & ESG Schemas

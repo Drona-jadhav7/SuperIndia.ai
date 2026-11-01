@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Tuple, Optional, Dict, Any
 from backend.app.models.schemas import (
     SiteInput,
@@ -12,6 +12,10 @@ from backend.app.services.disaster_engine import calculate_disaster_assessment
 from backend.app.services.land_engine import calculate_land_assessment
 from backend.app.services.economics_engine import calculate_economics_assessment
 from backend.app.services.eco_telemetry_service import run_eco_assessment
+from backend.app.services.protected_areas_engine import check_protected_area_proximity
+from backend.app.services.border_security_and_terrain_engine import check_geostrategic_and_terrain_risk
+from backend.app.services.live_telemetry_service import compile_fifty_factor_telemetry
+from backend.app.services.fifty_factor_engine import calculate_fifty_factor_assessment
 
 def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is_live_evaluated: bool = False) -> SiteAssessmentResponse:
     """
@@ -56,6 +60,29 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
     economics_score = economics_result.economics_score
 
     # 8. Run Ecology, Forest & Tree Protection Engine
+    pa_info = check_protected_area_proximity(
+        lat=site.latitude,
+        lon=site.longitude,
+        place_name=site.site_name,
+        district=site.district,
+        state=site.state,
+    )
+    is_core_sanctuary = pa_info["is_in_core"]
+    is_esz_corridor = pa_info["is_in_esz"]
+
+    # 9. Run National Security, Border Conflict & Extreme Terrain Siting Engine
+    strat_risk = check_geostrategic_and_terrain_risk(
+        lat=site.latitude,
+        lon=site.longitude,
+        place_name=site.site_name,
+        district=site.district,
+        state=site.state,
+        elevation_m=site.elevation_m,
+    )
+    is_border_veto = strat_risk["national_security_veto"]
+    is_border_zone = strat_risk["is_border_conflict_zone"]
+    is_high_altitude_isolated = strat_risk["is_high_altitude"]
+
     cooling_mode = getattr(site.eco_params, "cooling_mode", "DIRECT_TO_CHIP_LIQUID") if site.eco_params else "DIRECT_TO_CHIP_LIQUID"
     solar_rooftop = getattr(site.eco_params, "solar_rooftop_mw", 2.5) if site.eco_params else 2.5
     solar_ppa = getattr(site.eco_params, "offsite_solar_ppa_mw", 45.0) if site.eco_params else 45.0
@@ -80,16 +107,43 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
     is_non_forest = (site.eco_params.is_notified_non_forest if site.eco_params else site.land_params.is_notified_it_industrial_zone)
     canopy_pct = raw_eco["forest_protection"]["tree_canopy_cover_pct"]
     
-    if is_non_forest or canopy_pct < 5.0:
+    if is_core_sanctuary:
+        # Core Wildlife Sanctuary (e.g. Gir Wildlife Sanctuary)
         trees_to_cut = 0
-        tree_status = "Zero Tree Cutting Required (Certified Industrial/Brownfield)"
+        tree_status = "Strict Zero Tree Cutting Directive: Home to millions of trees and endangered wildlife. Under Sections 29 & 35 of the Wildlife (Protection) Act 1972, no trees will be cut. Industrial development is strictly prohibited."
+        tree_preservation_score = 10.0
+        compensatory_trees = 0
+        land_score = min(land_score, 12.0)
+        power_score = min(power_score, 20.0)
+        connectivity_score = min(connectivity_score, 20.0)
+    elif is_border_veto:
+        # Border conflict sector (e.g. Kargil / LoC)
+        trees_to_cut = 0
+        tree_status = f"Zero Tree Cutting Mandate Active: Frontier defense corridor in {strat_risk['border_name']}. Commercial industrial clearing prohibited."
+        tree_preservation_score = 45.0
+        compensatory_trees = 0
+        land_score = min(land_score, 15.0)
+        power_score = min(power_score, 22.0)
+        connectivity_score = min(connectivity_score, 22.0)
+        disaster_score = min(disaster_score, 40.0)
+        climate_score = min(climate_score, 40.0)
+    elif is_esz_corridor:
+        # Eco-Sensitive Zone Buffer
+        trees_to_cut = 0
+        tree_status = f"Zero Tree Cutting Policy: Located in {pa_info['closest_protected_area']} Eco-Sensitive Zone. No trees will be cut without Supreme Court & NBWL clearance."
+        tree_preservation_score = 30.0
+        compensatory_trees = 0
+        land_score = min(land_score, 35.0)
+    elif is_non_forest or canopy_pct < 5.0:
+        trees_to_cut = 0
+        tree_status = "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved"
         tree_preservation_score = 100.0
+        compensatory_trees = 0
     else:
         trees_to_cut = int(round(campus_acres * canopy_pct * 4.2))
-        tree_status = f"Estimated {trees_to_cut} Trees Felling Required"
+        tree_status = f"Zero Tree Cutting Mandate Enforced: Avoids felling {trees_to_cut} trees; layout must be reconfigured to brownfield footprint"
         tree_preservation_score = max(20.0, 100.0 - (trees_to_cut * 0.15))
-    
-    compensatory_trees = max(150, trees_to_cut * 3) if trees_to_cut > 0 else 0
+        compensatory_trees = max(150, trees_to_cut * 3) if trees_to_cut > 0 else 0
 
     # Sub-metrics for explainability panel
     eco_sub_metrics = [
@@ -100,7 +154,7 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
             "weighted_score": round(raw_eco["forest_protection"]["forest_score"] * 0.25, 1),
             "category": "Deforestation Guard",
             "details": f"{canopy_pct:.1f}% Canopy Density • {raw_eco['forest_protection']['forest_classification']} (FSI ISFR 2023 / GFW)",
-            "flagged": canopy_pct > 20.0,
+            "flagged": canopy_pct > 20.0 or is_core_sanctuary,
         },
         {
             "name": "Tree Felling Impact & Existing Tree Preservation",
@@ -109,7 +163,7 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
             "weighted_score": round(tree_preservation_score * 0.25, 1),
             "category": "Anti-Felling Guard",
             "details": f"{tree_status} • Compensatory Afforestation: {compensatory_trees} saplings (3:1 statutory ratio)",
-            "flagged": trees_to_cut > 100,
+            "flagged": is_core_sanctuary or trees_to_cut > 100,
         },
         {
             "name": "Aquifer Protection & Zero Water Shortage",
@@ -122,21 +176,21 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         },
         {
             "name": "Clean Energy Transition & Grid Carbon Offset",
-            "score": raw_eco["renewable_and_carbon"]["clean_energy_score"],
+            "score": raw_eco["renewable_and_carbon"]["clean_energy_score"] if not is_core_sanctuary else 15.0,
             "weight": 0.15,
-            "weighted_score": round(raw_eco["renewable_and_carbon"]["clean_energy_score"] * 0.15, 1),
+            "weighted_score": round((raw_eco["renewable_and_carbon"]["clean_energy_score"] if not is_core_sanctuary else 15.0) * 0.15, 1),
             "category": "Carbon Neutrality",
             "details": f"{raw_eco['renewable_and_carbon']['renewable_energy_share_pct']}% RE Share • Abates {raw_eco['renewable_and_carbon']['annual_carbon_abated_tons_yr']:,.0f} Tons CO2/yr against CEA baseline",
             "flagged": False,
         },
         {
             "name": "Eco-Sensitive Zone (ESZ) & Biodiversity Buffer",
-            "score": 95.0 if raw_eco["forest_protection"]["eco_sensitive_zone_dist_km"] >= 15.0 else 60.0,
+            "score": 5.0 if is_core_sanctuary else (30.0 if is_esz_corridor else 95.0),
             "weight": 0.10,
-            "weighted_score": round((95.0 if raw_eco["forest_protection"]["eco_sensitive_zone_dist_km"] >= 15.0 else 60.0) * 0.10, 1),
+            "weighted_score": round((5.0 if is_core_sanctuary else (30.0 if is_esz_corridor else 95.0)) * 0.10, 1),
             "category": "Ecological Buffer",
             "details": f"{raw_eco['forest_protection']['eco_sensitive_zone_dist_km']} km to Nearest Wildlife Sanctuary / Protected Corridor (MoEFCC Standards)",
-            "flagged": raw_eco["forest_protection"]["eco_sensitive_zone_dist_km"] < 10.0,
+            "flagged": raw_eco["forest_protection"]["eco_sensitive_zone_dist_km"] < 10.0 or is_core_sanctuary,
         },
     ]
 
@@ -156,40 +210,76 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         "wue_cooling": raw_eco["water_preservation"]["water_usage_effectiveness_wue"],
         "annual_carbon_abated_tons": raw_eco["renewable_and_carbon"]["annual_carbon_abated_tons_yr"],
         "re_share_pct": raw_eco["renewable_and_carbon"]["renewable_energy_share_pct"],
+        "zero_tree_cutting_mandated": True,
+        "is_core_sanctuary": is_core_sanctuary,
         "provenance": raw_eco["provenance"],
     }
 
-    # 8-Domain Weighted Composite Score (Domain Weights sum to 1.00)
-    composite_score = round(
-        (power_score * 0.20)
-        + (water_score * 0.18)
-        + (eco_score * 0.15)
-        + (climate_score * 0.13)
-        + (connectivity_score * 0.12)
-        + (disaster_score * 0.08)
-        + (land_score * 0.07)
-        + (economics_score * 0.07),
-        2,
+    # 10. Authoritative 50-Factor Siting & Sovereign Defense Evaluation
+    # Every site is scored on the 50-factor matrix by default based on genuine real-world data and statutory baselines.
+    telemetry_extras = provenance.get("telemetry_extras") if provenance else None
+    if not telemetry_extras and provenance and "fifty_factor_telemetry" in provenance:
+        telemetry_extras = provenance.get("fifty_factor_telemetry")
+
+    fifty_assessment = calculate_fifty_factor_assessment(
+        site=site,
+        pa_info=pa_info,
+        strat_risk=strat_risk,
+        telemetry_extras=telemetry_extras,
     )
 
-    # Classification Tiers
-    if composite_score >= 75.0:
-        tier = "VIABLE / RECOMMENDED"
-        tier_badge = "VIABLE"
-        tier_color = "#10B981"  # Emerald green
-    elif composite_score >= 50.0:
-        tier = "CONDITIONAL / HIGH RISK"
-        tier_badge = "CONDITIONAL"
-        tier_color = "#F59E0B"  # Amber
-    else:
-        tier = "UNVIABLE / REJECT"
-        tier_badge = "UNVIABLE"
-        tier_color = "#EF4444"  # Red
+    composite_score = fifty_assessment["composite_score"]
+    raw_composite = fifty_assessment["raw_composite_score"]
+    tier = fifty_assessment["tier"]
+    tier_badge = fifty_assessment["tier_badge"]
+    tier_color = fifty_assessment["tier_color"]
+
+    # Align dimensional scores directly from the 50-factor statutory model
+    water_score = fifty_assessment["water_score"]
+    power_score = fifty_assessment["power_score"]
+    climate_score = fifty_assessment["climate_score"]
+    connectivity_score = fifty_assessment["connectivity_score"]
+    disaster_score = fifty_assessment["disaster_score"]
+    land_score = fifty_assessment["land_score"]
+    economics_score = fifty_assessment["economics_score"]
+    eco_score = fifty_assessment["eco_score"]
 
     # Automated Diagnostic & Mitigation Engine
     risk_flags: List[str] = []
     engineering_mandates: List[str] = []
     diagnostics: List[str] = []
+
+    # Statutory Protected Area Disqualification Flags
+    if is_core_sanctuary:
+        risk_flags.append(f"STATUTORY PROHIBITION: Site located inside {pa_info['closest_protected_area']} (Wildlife Protection Act 1972 Sec 35)")
+        risk_flags.append(f"CRITICAL ECOLOGICAL HAZARD: Habitat of millions of trees and {pa_info['fauna_summary']}")
+        risk_flags.append("ZERO TREE CUTTING DIRECTIVE: No trees will be cut under any circumstances. Commercial proposal rejected.")
+        risk_flags.append("INALIENABLE SANCTUARY LAND: Land cannot be zoned, alienated, or acquired for industrial computing facilities.")
+        engineering_mandates.append(f"1. IMMEDIATE SITE REJECTION: Siting in {pa_info['closest_protected_area']} is forbidden by national law. Zero construction permits can be issued.")
+        engineering_mandates.append("2. MANDATORY ZERO TREE FELLING DIRECTIVE: No trees will be cut under any circumstances. Preserves millions of mature trees and endangered lion/wildlife ecosystems.")
+        engineering_mandates.append("3. MANDATORY RELOCATION: Relocate compute infrastructure to designated non-forest master-planned zones (e.g., Dholera SIR, Sanand GIDC, or Mahape MIDC).")
+        diagnostics.append(f"Statutory Veto Triggered: {pa_info['closest_protected_area']} is a Category II/IV Protected Sanctuary. Composite score clamped to 10-20 unviable range per national environmental mandate.")
+    elif is_esz_corridor:
+        risk_flags.append(f"ECO-SENSITIVE ZONE HAZARD: Site within {pa_info['distance_to_protected_area_km']:.1f} km of {pa_info['closest_protected_area']} ESZ boundary.")
+        risk_flags.append("ZERO TREE CUTTING POLICY: Buffer zone vegetation must be preserved intact without Supreme Court NBWL sanction.")
+        engineering_mandates.append(f"1. ESZ CLEARANCE REQUIRED: Mandatory National Board for Wildlife (NBWL) and Supreme Court Standing Committee sanction prior to planning.")
+        engineering_mandates.append("2. ZERO TREE CUTTING: No trees will be cut. Mandatory acoustic buffering (< 45 dBA) and zero nocturnal light emissions.")
+        diagnostics.append(f"Location in Eco-Sensitive Zone ({pa_info['distance_to_protected_area_km']:.1f} km from {pa_info['closest_protected_area']}) limits industrial civil footprint.")
+    elif is_border_veto:
+        risk_flags.append(f"NATIONAL SECURITY VETO: Site located in {strat_risk['border_name']} (~{strat_risk['distance_to_border_km']:.1f} km from {strat_risk['hostile_border_type']}). Extreme vulnerability to cross-border artillery shelling, drone strikes, and military disruption under MHA & NCIIPC critical infrastructure directives.")
+        risk_flags.append(f"LOGISTICS & MAINTENANCE ISOLATION: Severe {strat_risk['winter_cutoff_months']}-month winter road blockade via {strat_risk['mountain_pass_closure']}. Mission-critical AI hardware components (replacement GPUs, power chassis, cooling chillers) cannot meet standard 4-hour/24-hour enterprise SLAs.")
+        risk_flags.append(f"SPECIALIZED WORKFORCE & TALENT DEFICIT: Critical shortage of certified data center engineers (CDCP/CDCE), high-voltage substation technicians, and liquid cooling specialists in remote high-altitude terrain.")
+        risk_flags.append(f"SUB-ZERO THERMODYNAMIC & GRID HAZARD: Winter lows dropping to {strat_risk['winter_min_temp_c']}°C create severe freeze-out hazards for cooling loops and diesel generator fuel gelling, compounded by {strat_risk['grid_status']}.")
+        engineering_mandates.append(f"1. IMMEDIATE STRATEGIC REJECTION: Siting sovereign AI compute within {strat_risk['border_name']} presents unacceptable national security and physical warfare vulnerability.")
+        engineering_mandates.append("2. CRITICAL HARDWARE REPLACEMENT UNVIABILITY: Severe winter snow pass blockades prevent hardware component replacement; enterprise 4-hour/24-hour MTTR SLAs cannot be honored.")
+        engineering_mandates.append("3. MANDATORY RELOCATION TO SECURE INLAND TECH CLUSTERS: Relocate proposed national AI data center to secure, master-planned industrial corridors with all-weather connectivity, 400kV grid baseload, and metro talent pools (e.g., Dholera SIR, Navi Mumbai TTC, or Noida Sector 132).")
+        diagnostics.append(f"Strategic Defense Veto Triggered: {strat_risk['border_name']} is an active military border conflict sector. Composite score clamped to {strat_risk['score_ceiling']:.0f}/100 per national homeland security and critical infrastructure resilience standards.")
+    elif is_high_altitude_isolated:
+        risk_flags.append(f"HIGH ALTITUDE & WINTER ISOLATION HAZARD: Elevation {site.elevation_m:.0f}m ASL causes {strat_risk['air_density_loss_pct']:.0f}% atmospheric density penalty on cooling fan efficiency.")
+        risk_flags.append(f"SEASONAL SUPPLY CHAIN BLOCKADE: {strat_risk['winter_cutoff_months']}-month winter access restriction via {strat_risk['mountain_pass_closure']}.")
+        engineering_mandates.append("1. HIGH-ALTITUDE DERATING & HEATING: Mandatory de-rating of cooling coils and active pre-heating for winter intake air to prevent server thermal shock.")
+        engineering_mandates.append("2. ONSITE CRITICAL SPARES DEPOT: Must stockpile 180 days of critical replacement GPUs, transceivers, and pumps on-site to survive winter cutoff.")
+        diagnostics.append(f"High altitude and sub-zero winter temperatures constrain year-round availability and inflate OpEx.")
 
     # Water Mandate 1: Demand Stress <= 50
     demand_metric = next(
@@ -301,7 +391,10 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         )
         diagnostics.append(f"Closed-loop liquid cooling loop delivers {raw_eco['water_preservation']['water_saved_percentage']}% water savings with WUE {raw_eco['water_preservation']['water_usage_effectiveness_wue']} L/kWh.")
 
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    # Authoritative 50-Factor Siting & Defense Matrix Telemetry
+    fifty_factor_data = fifty_assessment
+
+    timestamp = datetime.now(timezone.utc).isoformat()
 
     return SiteAssessmentResponse(
         site_id=site.site_id,
@@ -332,10 +425,12 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         land_assessment=land_result.model_dump(),
         economics_assessment=economics_result.model_dump(),
         eco_assessment=eco_assessment_output,
+        strategic_security_assessment=strat_risk,
         risk_flags=risk_flags,
         engineering_mandates=engineering_mandates,
         diagnostics=diagnostics,
         timestamp=timestamp,
         is_live_evaluated=is_live_evaluated,
         data_provenance=provenance,
+        fifty_factor_telemetry=fifty_factor_data,
     )

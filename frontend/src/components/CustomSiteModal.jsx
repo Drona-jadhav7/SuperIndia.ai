@@ -357,8 +357,8 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
         {/* Modal Header */}
         <div className="p-5 border-b border-[#dde0e6] flex items-center justify-between bg-[#fcfcfd]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#074ce0] flex items-center justify-center text-white shadow-sm">
-              <Sliders className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 p-0.5 shadow-xs flex items-center justify-center shrink-0">
+              <img src="/logo.png" alt="SuperIndia.ai" className="w-full h-full object-contain rounded-lg" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -373,7 +373,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                 )}
               </div>
               <p className="text-xs text-[#454c58] font-mono">
-                Authentic 8-Domain Ingestion: NASA POWER, NASA SRTM, CAMS ECMWF, USGS, CGWB, CEA & FSI ISFR
+                Authentic 9-Domain 50-Factor Siting Matrix: NASA POWER, SRTM, CAMS AQI, USGS, CGWB, CEA, FSI ISFR & MHA
               </p>
             </div>
           </div>

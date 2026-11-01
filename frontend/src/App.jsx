@@ -111,12 +111,19 @@ export default function App() {
           
           {/* Brand Identity */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#074ce0] to-[#04339b] flex items-center justify-center text-white shadow-sm ring-1 ring-blue-500/30">
-              <Cpu className="w-5 h-5 font-bold" />
+            <div className="relative group cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
+              <div className="w-11 h-11 rounded-full p-0.5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                <img 
+                  src="/logo.png" 
+                  alt="SuperIndia.ai Official Insignia" 
+                  className="w-full h-full object-contain drop-shadow-xs" 
+                />
+              </div>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" title="National AI OS Active" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold font-display tracking-tight text-[#16191f]">
+                <h1 className="text-xl font-bold font-display tracking-tight text-[#16191f] cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
                   SuperIndia<span className="text-[#074ce0]">.ai</span>
                 </h1>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold flex items-center gap-1">
@@ -371,9 +378,9 @@ export default function App() {
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-3 md:col-span-2">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#074ce0] flex items-center justify-center text-white">
-                  <Cpu className="w-4 h-4 font-bold" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-white/10 p-0.5 border border-white/20 flex items-center justify-center">
+                  <img src="/logo.png" alt="SuperIndia.ai Logo" className="w-full h-full object-contain rounded-full" />
                 </div>
                 <h3 className="text-lg font-bold font-display text-white">
                   SuperIndia.ai

@@ -25,6 +25,14 @@ def fetch_with_retry(url, retries=8, delay=2):
             time.sleep(delay)
     raise last_err
 
+import os
+import pytest
+
+# Skip this test in standard automated test runs unless explicitly requested
+@pytest.mark.skipif(
+    os.environ.get("RUN_TUNNEL_TESTS") != "1",
+    reason="Requires active Vite dev server and cloudflared binary on host"
+)
 def test_tunnel():
     print("==================================================================")
     print(" SuperIndia.ai - Tunnel & Demonstration Sites Verification")

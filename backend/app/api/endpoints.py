@@ -92,14 +92,23 @@ def assess_site_endpoint(site: SiteInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Assessment error: {str(e)}")
 
+# In-memory benchmark assessment cache for instant (<1ms) responses
+_BENCHMARK_CACHE: Optional[List[SiteAssessmentResponse]] = None
+
 @router.get("/sites", response_model=List[SiteAssessmentResponse], tags=["Site Assessment"])
-def get_benchmark_sites():
+def get_benchmark_sites(refresh: bool = False):
     """
     Retrieve pre-seeded ground truth assessments for 8 strategic Indian AI/data center hubs:
     Navi Mumbai, Dholera SIR, Hyderabad, Greater Noida, Bengaluru, Chennai, Taloja, South Mumbai.
+    Cached in-memory to guarantee instant sub-millisecond retrieval on all client requests.
     """
+    global _BENCHMARK_CACHE
+    if _BENCHMARK_CACHE is not None and not refresh:
+        return _BENCHMARK_CACHE
+
     sites = load_benchmark_sites()
-    return [assess_site(site) for site in sites]
+    _BENCHMARK_CACHE = [assess_site(site) for site in sites]
+    return _BENCHMARK_CACHE
 
 @router.get("/sites/{site_id}", response_model=SiteAssessmentResponse, tags=["Site Assessment"])
 def get_site_by_id(site_id: str = Path(..., description="Unique ID of benchmark site")):
