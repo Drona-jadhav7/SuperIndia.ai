@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Layers, MapPin, Cpu, Radio, ShieldAlert, Key, Settings, Globe, Maximize2 } from 'lucide-react';
 
-// Tile Providers (100% Free, No API Key Mandatory + Optional Custom Key Support)
+// Tile Providers (100% Free, Zero API Key Mandatory + Optional Custom Mapbox Key Support)
 const TILE_PROVIDERS = {
-  carto_dark: {
-    name: 'Carto Dark Matter',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  esri_dark: {
+    name: 'Sovereign Dark',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
     options: {
-      attribution: '&copy; CARTO &copy; OpenStreetMap',
-      subdomains: 'abcd',
-      maxZoom: 20,
+      attribution: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors',
+      maxZoom: 16,
     },
   },
   osm_standard: {
@@ -25,7 +25,7 @@ const TILE_PROVIDERS = {
     name: 'Satellite Terrain',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     options: {
-      attribution: '&copy; Esri, Maxar, Earthstar',
+      attribution: '&copy; Esri, Maxar, Earthstar Geographics',
       maxZoom: 18,
     },
   },
@@ -131,7 +131,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
   });
 
   // State
-  const [selectedBasemap, setSelectedBasemap] = useState('carto_dark');
+  const [selectedBasemap, setSelectedBasemap] = useState('esri_dark');
   const [showSites, setShowSites] = useState(true);
   const [showSupercomputers, setShowSupercomputers] = useState(true);
   const [showSubsea, setShowSubsea] = useState(true);
@@ -197,6 +197,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
     // Remove existing tile layer if any
     if (layersRef.current.tileLayer) {
       map.removeLayer(layersRef.current.tileLayer);
+      layersRef.current.tileLayer = null;
     }
 
     let newTileLayer = null;
@@ -212,8 +213,17 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
         }
       );
     } else {
-      const provider = TILE_PROVIDERS[selectedBasemap] || TILE_PROVIDERS.carto_dark;
-      newTileLayer = L.tileLayer(provider.url, provider.options);
+      const provider = TILE_PROVIDERS[selectedBasemap] || TILE_PROVIDERS.esri_dark;
+      if (provider.referenceUrl) {
+        const baseLayer = L.tileLayer(provider.url, provider.options);
+        const refLayer = L.tileLayer(provider.referenceUrl, {
+          ...provider.options,
+          pane: 'overlayPane',
+        });
+        newTileLayer = L.layerGroup([baseLayer, refLayer]);
+      } else {
+        newTileLayer = L.tileLayer(provider.url, provider.options);
+      }
     }
 
     newTileLayer.addTo(map);
@@ -410,7 +420,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
     if (key) {
       setSelectedBasemap('mapbox_custom');
     } else {
-      setSelectedBasemap('carto_dark');
+      setSelectedBasemap('esri_dark');
     }
     setCustomKeyModalOpen(false);
   };
@@ -452,7 +462,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
             onChange={(e) => setSelectedBasemap(e.target.value)}
             className="bg-slate-900 border border-slate-700 text-slate-300 text-[10px] font-mono rounded-lg px-2 py-0.5 focus:outline-none focus:border-cyan-400 cursor-pointer"
           >
-            <option value="carto_dark">🌙 Carto Dark</option>
+            <option value="esri_dark">🌙 Sovereign Dark</option>
             <option value="osm_standard">🗺️ OSM Clean</option>
             <option value="esri_satellite">🛰️ Satellite</option>
             {customMapboxKey && <option value="mapbox_custom">🔑 Custom Mapbox</option>}
@@ -551,7 +561,7 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
             </div>
 
             <p className="text-xs text-slate-400">
-              By default, <strong>SuperIndia.ai uses free open tile providers</strong> (Carto Dark & OpenStreetMap) with zero API keys required. If you wish to use a custom Mapbox style token:
+              By default, <strong>SuperIndia.ai uses 100% free open-source tile providers</strong> (Sovereign Dark & OpenStreetMap Clean) with zero API keys required. If you wish to use a custom Mapbox style token:
             </p>
 
             <div>
