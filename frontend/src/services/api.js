@@ -1,5 +1,7 @@
 import axios from 'axios';
 import benchmarkSites from '../data/benchmarkSites.json';
+import { fetchDirectSovereignTelemetry } from './telemetryClient';
+import { evaluateCandidateSite } from './scoringEngine';
 
 // Default to relative '/api' so all requests pass transparently through the Vite proxy
 // on the same origin (preventing "Connection Refused: localhost:8000" on public tunnels)
@@ -49,15 +51,8 @@ export const assessCustomSite = async (sitePayload) => {
   } catch (err) {
     console.warn('Backend /assess serverless call timed out or unavailable, evaluating on sovereign model:', err.message);
   }
-  // Synthesize genuine deterministic score based on input parameters if cloud function times out
-  const fallback = { ...benchmarkSites[0] };
-  fallback.site_id = sitePayload.site_id || 'custom_site_' + Date.now();
-  fallback.site_name = sitePayload.site_name || 'Simulated Sovereign Facility';
-  fallback.state = sitePayload.state || 'Maharashtra';
-  fallback.latitude = sitePayload.latitude || 19.117;
-  fallback.longitude = sitePayload.longitude || 73.016;
-  fallback.proposed_it_load_mw = sitePayload.proposed_it_load_mw || 100.0;
-  return fallback;
+  // High-precision local evaluation with TOPSIS and bottleneck multipliers
+  return evaluateCandidateSite(sitePayload);
 };
 
 export const compareSites = async (payload = {}) => {
@@ -97,13 +92,28 @@ export const compareSites = async (payload = {}) => {
 // 2. Authentic Live Telemetry & NASA/Gov APIs
 // ==========================================
 export const fetchLiveTelemetry = async (payload) => {
-  const response = await apiClient.post('/telemetry/fetch-real-data', payload);
-  return response.data;
+  try {
+    const response = await apiClient.post('/telemetry/fetch-real-data', payload);
+    if (response.data && response.data.site_input) {
+      return response.data;
+    }
+  } catch (err) {
+    console.warn('Backend /api/telemetry/fetch-real-data unavailable or returned error, executing direct client-side sovereign telemetry:', err.message);
+  }
+  // Zero-downtime direct public API ingestion (NASA POWER, SRTM, CAMS, USGS, CGWB)
+  return await fetchDirectSovereignTelemetry(payload);
 };
 
 export const assessLiveSite = async (payload) => {
-  const response = await apiClient.post('/assess/live', payload);
-  return response.data;
+  try {
+    const response = await apiClient.post('/assess/live', payload);
+    if (response.data && response.data.composite_score) {
+      return response.data;
+    }
+  } catch (err) {
+    console.warn('Backend /assess/live call timed out or unavailable, evaluating on sovereign model:', err.message);
+  }
+  return evaluateCandidateSite(payload);
 };
 
 // ==========================================

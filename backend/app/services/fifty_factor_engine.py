@@ -10,6 +10,8 @@ and hard sovereign veto constraints (Wildlife Protection Act 1972 & MHA National
 import math
 from typing import Dict, Any, List, Optional, Tuple
 from backend.app.models.schemas import SiteInput
+from backend.app.services.ai_siting_model import calculate_topsis_score, calculate_bottleneck_multiplier, determine_precision_tier
+
 
 # ============================================================================
 # 1. Statutory Factor Weights Matrix (Total Sum = 1.000 / 100.0%)
@@ -586,8 +588,10 @@ def f44_land_cost(inr_cr: float) -> float:
         return 100.0 - ((inr_cr - 4.0) / 4.0) * 20.0
     elif inr_cr <= 15.0:
         return 80.0 - ((inr_cr - 8.0) / 7.0) * 30.0
+    elif inr_cr <= 25.0:
+        return 50.0 - ((inr_cr - 15.0) / 10.0) * 35.0
     else:
-        return max(20.0, 50.0 - ((inr_cr - 15.0) / 20.0) * 30.0)
+        return max(2.0, 15.0 - ((inr_cr - 25.0) / 25.0) * 13.0)
 
 def f45_dc_policy(has_policy: bool) -> float:
     """Factor 45: State Data Center Policy & Single-Window Clearance."""
@@ -810,9 +814,18 @@ def calculate_fifty_factor_assessment(
         weighted_sum = sum(scores[fid] * FACTOR_WEIGHTS[fid] for fid in factor_ids)
         dim_scores[dim_name] = round(weighted_sum / sub_weights, 1)
 
-    # 3. Compute Raw Composite Score (sum of all 50 weighted factor scores)
+    # 3. Compute Multi-Criteria Decision & AI Calibrated Composite Score
     raw_composite = sum(scores[fid] * FACTOR_WEIGHTS[fid] for fid in range(1, 51))
-    composite_score = round(raw_composite, 1)
+    
+    # 3a. TOPSIS Relative Closeness to Ideal Hyperscale Facility
+    topsis_score, d_plus, d_minus = calculate_topsis_score(scores, FACTOR_WEIGHTS)
+    
+    # 3b. Non-Linear Critical Pillar Bottleneck Multiplier
+    bottleneck_mult, bottleneck_penalties = calculate_bottleneck_multiplier(dim_scores)
+    
+    # 3c. Calibrated Precision Synthesis (65% TOPSIS geometric variance + 35% Weighted baseline * Bottleneck Multiplier)
+    calibrated_base = (0.65 * topsis_score) + (0.35 * raw_composite)
+    composite_score = round(calibrated_base * bottleneck_mult, 1)
 
     # 4. Apply Hard Sovereign Veto Constraints (Statutory Overrides)
     # VETO 1: Core Wildlife Sanctuary / National Park (e.g. Gir Wildlife Sanctuary)
@@ -839,18 +852,7 @@ def calculate_fifty_factor_assessment(
         dim_scores["land"] = min(dim_scores["land"], 35.0)
 
     # 5. Determine Classification Tier
-    if composite_score >= 75.0:
-        tier = "VIABLE / RECOMMENDED"
-        tier_badge = "VIABLE"
-        tier_color = "#10B981"
-    elif composite_score >= 50.0:
-        tier = "CONDITIONAL / HIGH RISK"
-        tier_badge = "CONDITIONAL"
-        tier_color = "#F59E0B"
-    else:
-        tier = "UNVIABLE / REJECT"
-        tier_badge = "UNVIABLE"
-        tier_color = "#EF4444"
+    tier, tier_badge, tier_color = determine_precision_tier(composite_score)
 
     # 6. Build Detailed Factor Output Records (1..50)
     meta_info: Dict[int, Dict[str, str]] = {
