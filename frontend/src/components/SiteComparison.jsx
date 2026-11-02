@@ -34,7 +34,7 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
         <div>
           <h3 className="text-lg font-bold font-display text-[#16191f] flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-[#074ce0]" />
-            National AI Infrastructure Multi-Site Audit Matrix (8 Domains)
+            National AI Infrastructure Multi-Site Audit Matrix (9 Dimensions • 50 Factors)
           </h3>
           <p className="text-xs text-[#454c58] mt-0.5">
             Comparative evaluation across all strategic candidate hubs ranked by deterministic composite feasibility.
@@ -69,6 +69,7 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
               <th className="py-3 px-2 text-center text-purple-600">Land</th>
               <th className="py-3 px-2 text-center text-emerald-600">Eco/Forest</th>
               <th className="py-3 px-2 text-center text-cyan-600">Econ</th>
+              <th className="py-3 px-2 text-center text-amber-700">Corrosivity</th>
               <th className="py-3 px-3 text-center">Flags</th>
               <th className="py-3 px-3 text-right">Action</th>
             </tr>
@@ -156,6 +157,9 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
                   </td>
                   <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
                     {(site.economics_score || 0).toFixed(0)}
+                  </td>
+                  <td className="py-3 px-2 text-center text-[#16191f] font-semibold">
+                    {(site.atmospheric_score || 90.0).toFixed(0)}
                   </td>
 
                   {/* Risk Flags Count */}

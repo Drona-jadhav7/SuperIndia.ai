@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { STRATEGIC_INDIAN_PLACES } from '../data/indianPlaces';
 import { fetchLiveTelemetry, assessLiveSite } from '../services/api';
+import { checkProtectedAreaProximityClient } from '../services/scoringEngine';
 
 export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite }) {
   if (!isOpen) return null;
@@ -126,6 +127,13 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
       solar_ppa_mw: 35.0,
       distance_to_esz_km: 18.0,
     },
+
+    // Domain 9: Atmospheric Corrosivity & Chemistry
+    atmospheric_params: {
+      isa_71_04_level: 'G1_Mild',
+      distance_to_refinery_km: 15.0,
+      so2_concentration_ug_m3: 12.0,
+    },
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,6 +141,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
   const [telemetryResult, setTelemetryResult] = useState(null);
   const [telemetryError, setTelemetryError] = useState(null);
   const [isLiveEvaluated, setIsLiveEvaluated] = useState(false);
+  const [protectedAreaAlert, setProtectedAreaAlert] = useState(null);
   
   // Place & City Autocomplete Search State
   const [searchTerm, setSearchTerm] = useState('');
@@ -230,6 +239,26 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
   const handleSelectPlace = (place) => {
     const elev = place.elevation_m || formData.elevation_m || 50.0;
     
+    const paCheck = checkProtectedAreaProximityClient(
+      place.latitude,
+      place.longitude,
+      place.name,
+      place.district || place.state,
+      place.state
+    );
+
+    if (paCheck.is_in_core || paCheck.is_in_esz) {
+      setProtectedAreaAlert(paCheck);
+    } else {
+      setProtectedAreaAlert(null);
+    }
+
+    const isInCore = paCheck.is_in_core;
+    const isInEsz = paCheck.is_in_esz;
+    const effectiveCanopy = isInCore ? (paCheck.canopy_pct || 68.5) : (isInEsz ? 35.0 : (place.canopy_pct || 3.5));
+    const distanceEsz = isInCore ? 0.0 : (isInEsz ? (paCheck.distance_km || 5.0) : 18.0);
+    const isNonForest = !isInCore && !isInEsz && effectiveCanopy <= 5.0;
+
     setFormData(prev => ({
       ...prev,
       site_name: place.name,
@@ -247,13 +276,13 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
       
       power_params: {
         ...prev.power_params,
-        voltage_class_kv: place.voltage_class_kv || prev.power_params.voltage_class_kv,
-        substation_distance_km: place.substation_dist_km || prev.power_params.substation_distance_km,
+        voltage_class_kv: isInCore ? 11.0 : (place.voltage_class_kv || prev.power_params.voltage_class_kv),
+        substation_distance_km: isInCore ? 18.0 : (place.substation_dist_km || prev.power_params.substation_distance_km),
       },
 
       connectivity_params: {
         ...prev.connectivity_params,
-        rtt_to_landing_station_ms: place.subsea_rtt_ms || prev.connectivity_params.rtt_to_landing_station_ms,
+        rtt_to_landing_station_ms: isInCore ? 24.0 : (place.subsea_rtt_ms || prev.connectivity_params.rtt_to_landing_station_ms),
       },
 
       disaster_params: {
@@ -261,9 +290,22 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
         seismic_zone: place.seismic_zone || prev.disaster_params.seismic_zone,
       },
 
+      land_params: {
+        ...prev.land_params,
+        is_notified_it_industrial_zone: isNonForest,
+        notified_industrial_zone: isNonForest,
+      },
+
       economics_params: {
         ...prev.economics_params,
         electricity_tariff_inr_per_kwh: place.tariff_inr || prev.economics_params.electricity_tariff_inr_per_kwh,
+      },
+
+      eco_params: {
+        ...prev.eco_params,
+        tree_canopy_cover_pct: effectiveCanopy,
+        distance_to_esz_km: distanceEsz,
+        is_notified_non_forest: isNonForest,
       }
     }));
 
@@ -347,6 +389,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
     { id: 'disaster', label: '🛡️ Disaster', icon: <Shield className="w-3.5 h-3.5 text-rose-500" /> },
     { id: 'land_econ', label: '🏗️ Land & Econ', icon: <Layers className="w-3.5 h-3.5 text-purple-500" /> },
     { id: 'eco', label: '🌲 Ecology & Forest', icon: <TreePine className="w-3.5 h-3.5 text-emerald-600" /> },
+    { id: 'corrosivity', label: '🧪 Corrosivity', icon: <Sparkles className="w-3.5 h-3.5 text-amber-600" /> },
   ];
 
   return (
@@ -415,6 +458,23 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                 </div>
               )}
             </div>
+
+            {/* Protected Area & Statutory Sanctuary Restricted Alert Banner */}
+            {protectedAreaAlert && (
+              <div className="mt-2.5 p-3 rounded-xl bg-rose-50 border border-rose-300 text-xs font-mono text-rose-900 flex items-start gap-2.5 animate-fadeIn shadow-sm">
+                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold flex items-center gap-1.5 text-rose-700 uppercase tracking-wide text-[11px]">
+                    {protectedAreaAlert.is_in_core ? '🚨 STATUTORY RESTRICTED ECOLOGICAL ZONE' : '⚠️ STATUTORY ECO-SENSITIVE BUFFER ZONE'}
+                  </div>
+                  <div className="text-[11px] text-rose-800 font-sans mt-0.5 leading-relaxed">
+                    {protectedAreaAlert.is_in_core 
+                      ? `Site is located inside ${protectedAreaAlert.closest_protected_area}. Under Sections 29 & 35 of the Wildlife (Protection) Act 1972, commercial data center development and tree felling are strictly illegal. Site score will be penalized to UNVIABLE.`
+                      : `Site is located within ${protectedAreaAlert.distance_km} km of ${protectedAreaAlert.closest_protected_area} Eco-Sensitive Zone buffer. Tree cutting and EHV transmission require NBWL clearance.`}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Notification Banner when place applied */}
             {appliedPlaceMessage && (
@@ -1119,13 +1179,24 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                     <input
                       type="range"
                       min="0.5"
-                      max="40"
+                      max="85"
                       step="0.5"
                       value={formData.eco_params.tree_canopy_cover_pct}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        eco_params: { ...formData.eco_params, tree_canopy_cover_pct: parseFloat(e.target.value) }
-                      })}
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        setFormData({
+                          ...formData,
+                          eco_params: { 
+                            ...formData.eco_params, 
+                            tree_canopy_cover_pct: val,
+                            is_notified_non_forest: val <= 5.0 ? formData.eco_params.is_notified_non_forest : false
+                          },
+                          land_params: {
+                            ...formData.land_params,
+                            is_notified_it_industrial_zone: val <= 10.0 ? formData.land_params.is_notified_it_industrial_zone : false
+                          }
+                        });
+                      }}
                       className="w-full accent-emerald-500"
                     />
                   </div>
@@ -1203,6 +1274,150 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
               </div>
             )}
 
+            {/* 8. Atmospheric Corrosivity & Chemistry Domain */}
+            {activeDomainTab === 'corrosivity' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-amber-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4" />
+                    Atmospheric Chemistry & ISA-71.04 Electronic Corrosion Standard
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    Source: ISA-71.04 & CPCB Air Standards
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      ISA-71.04 Environmental Severity Level:
+                    </label>
+                    <select
+                      value={formData.atmospheric_params?.isa_71_04_level || 'G1_Mild'}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, isa_71_04_level: e.target.value }
+                      })}
+                      className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f]"
+                    >
+                      <option value="G1_Mild">G1 - Mild (&lt;300 Å/month silver, optimal for GPU clusters)</option>
+                      <option value="G2_Moderate">G2 - Moderate (&lt;1000 Å/month, requires chemical filtration)</option>
+                      <option value="G3_Harsh">G3 - Harsh (&lt;2000 Å/month, high GPU creep corrosion risk)</option>
+                      <option value="GX_Severe">GX - Severe (&gt;2000 Å/month, mission-critical failure zone)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Distance to Nearest Petrochemical / Chemical Refinery: <strong>{formData.atmospheric_params?.distance_to_refinery_km || 15} km</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="50"
+                      step="1"
+                      value={formData.atmospheric_params?.distance_to_refinery_km || 15}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, distance_to_refinery_km: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Ambient SO₂ / H₂S Concentration: <strong>{formData.atmospheric_params?.so2_concentration_ug_m3 || 12} µg/m³</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="2"
+                      max="80"
+                      step="1"
+                      value={formData.atmospheric_params?.so2_concentration_ug_m3 || 12}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, so2_concentration_ug_m3: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-amber-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 8. Atmospheric Corrosivity & Chemistry Domain */}
+            {activeDomainTab === 'corrosivity' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono text-amber-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4" />
+                    Atmospheric Chemistry & ISA-71.04 Electronic Corrosion Standard
+                  </div>
+                  <span className="text-[10px] font-mono text-[#454c58] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    Source: ISA-71.04 & CPCB Air Standards
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      ISA-71.04 Environmental Severity Level:
+                    </label>
+                    <select
+                      value={formData.atmospheric_params?.isa_71_04_level || 'G1_Mild'}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, isa_71_04_level: e.target.value }
+                      })}
+                      className="w-full bg-white border border-[#dde0e6] rounded-lg px-2.5 py-1.5 text-xs text-[#16191f]"
+                    >
+                      <option value="G1_Mild">G1 - Mild (&lt;300 Å/month silver, optimal for GPU clusters)</option>
+                      <option value="G2_Moderate">G2 - Moderate (&lt;1000 Å/month, requires chemical filtration)</option>
+                      <option value="G3_Harsh">G3 - Harsh (&lt;2000 Å/month, high GPU creep corrosion risk)</option>
+                      <option value="GX_Severe">GX - Severe (&gt;2000 Å/month, mission-critical failure zone)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Distance to Nearest Petrochemical / Chemical Refinery: <strong>{formData.atmospheric_params?.distance_to_refinery_km || 15} km</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="50"
+                      step="1"
+                      value={formData.atmospheric_params?.distance_to_refinery_km || 15}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, distance_to_refinery_km: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#454c58] mb-1">
+                      Ambient SO₂ / H₂S Concentration: <strong>{formData.atmospheric_params?.so2_concentration_ug_m3 || 12} µg/m³</strong>
+                    </label>
+                    <input
+                      type="range"
+                      min="2"
+                      max="80"
+                      step="1"
+                      value={formData.atmospheric_params?.so2_concentration_ug_m3 || 12}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        atmospheric_params: { ...formData.atmospheric_params, so2_concentration_ug_m3: parseFloat(e.target.value) }
+                      })}
+                      className="w-full accent-amber-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Modal Footer Controls */}
@@ -1224,7 +1439,7 @@ export default function CustomSiteModal({ isOpen, onClose, onAssessCustomSite })
                 <Play className="w-3.5 h-3.5 fill-current" />
                 <span>
                   {isSubmitting 
-                    ? 'Evaluating 7 Engines...' 
+                    ? 'Evaluating 9 Dimensions (50 Factors)...' 
                     : isLiveEvaluated 
                     ? 'Assess Site with Verified Live Telemetry' 
                     : 'Execute Deterministic Assessment'}

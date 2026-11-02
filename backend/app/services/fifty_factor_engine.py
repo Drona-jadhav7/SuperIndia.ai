@@ -644,20 +644,23 @@ def f48_protected_area(pa_info: Any, **kwargs) -> float:
     return f48_wildlife_proximity(pa_info, **kwargs)
 
 def f49_tree_canopy(canopy_pct: float, is_notified_non_forest: bool, is_core: bool) -> float:
-    """Factor 49: Tree Canopy Density & Statutory Zero-Deforestation Felling Ban."""
+    """Factor 49: Tree Canopy Density & Statutory Zero-Deforestation Felling Ban.
+    Rule: Any place where there are more trees should NOT be scored well!"""
     if is_core:
         return 0.0
-    if not is_notified_non_forest:
-        if canopy_pct >= 40.0:
-            return 15.0
-        elif canopy_pct >= 20.0:
-            return 35.0
-        elif canopy_pct >= 10.0:
-            return 60.0
-        else:
-            return 80.0
-    # Certified industrial non-forest land: zero trees felled
-    return 100.0
+    # Even if claimed non-forest, if there are trees, felling is required and must be penalized
+    if canopy_pct <= 5.0 and is_notified_non_forest:
+        return 100.0  # Master-planned non-forest industrial land (0 trees cut)
+    elif canopy_pct <= 5.0:
+        return 85.0
+    elif canopy_pct <= 10.0:
+        return round(80.0 - ((canopy_pct - 5.0) / 5.0) * 25.0, 2)
+    elif canopy_pct <= 20.0:
+        return round(55.0 - ((canopy_pct - 10.0) / 10.0) * 30.0, 2)
+    elif canopy_pct <= 40.0:
+        return round(25.0 - ((canopy_pct - 20.0) / 20.0) * 20.0, 2)
+    else:
+        return max(0.0, round(5.0 - (canopy_pct - 40.0) * 0.1, 2))
 
 def f50_border_security(strat_risk: Optional[Any] = None, **kwargs) -> float:
     """Factor 50: Hostile Border Proximity & Winter Snowbound Logistics Cutoff."""
@@ -822,10 +825,31 @@ def calculate_fifty_factor_assessment(
     
     # 3b. Non-Linear Critical Pillar Bottleneck Multiplier
     bottleneck_mult, bottleneck_penalties = calculate_bottleneck_multiplier(dim_scores)
+
+    # Tree Canopy & Deforestation Bottleneck Multiplier: Any place where there are more trees should NOT be scored well!
+    if canopy_pct > 10.0:
+        bottleneck_mult *= max(0.05, (100.0 - canopy_pct) / 90.0) ** 0.75
     
     # 3c. Calibrated Precision Synthesis (65% TOPSIS geometric variance + 35% Weighted baseline * Bottleneck Multiplier)
     calibrated_base = (0.65 * topsis_score) + (0.35 * raw_composite)
     composite_score = round(calibrated_base * bottleneck_mult, 1)
+
+    # Land Dimension & Tree Canopy Downward Clamping
+    if is_core_sanctuary:
+        dim_scores["land"] = min(dim_scores["land"], 10.0)
+        dim_scores["sovereign_vetoes"] = min(dim_scores["sovereign_vetoes"], 5.0)
+    elif canopy_pct >= 40.0:
+        dim_scores["land"] = min(dim_scores["land"], 15.0)
+        dim_scores["sovereign_vetoes"] = min(dim_scores["sovereign_vetoes"], 12.0)
+        composite_score = round(min(composite_score, 22.0), 1)
+    elif canopy_pct >= 20.0:
+        dim_scores["land"] = min(dim_scores["land"], 35.0)
+        dim_scores["sovereign_vetoes"] = min(dim_scores["sovereign_vetoes"], 30.0)
+        composite_score = round(min(composite_score, 48.0), 1)
+    elif canopy_pct >= 10.0:
+        dim_scores["land"] = min(dim_scores["land"], 55.0)
+        dim_scores["sovereign_vetoes"] = min(dim_scores["sovereign_vetoes"], 55.0)
+        composite_score = round(min(composite_score, 65.0), 1)
 
     # 4. Apply Hard Sovereign Veto Constraints (Statutory Overrides)
     # VETO 1: Core Wildlife Sanctuary / National Park (e.g. Gir Wildlife Sanctuary)

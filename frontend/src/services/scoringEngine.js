@@ -168,7 +168,11 @@ export function f27_seismic_zone(z) {
 }
 
 // 6. Civil & Land
-export function f34_zoning(isNotified) {
+export function f34_zoning(isNotified, isProtected = false, canopyPct = 0) {
+  if (isProtected) return 5.0; // Inalienable statutory wildlife / forest land
+  if (canopyPct >= 40.0) return 10.0; // Dense forest land - commercial zoning prohibited
+  if (canopyPct >= 20.0) return 25.0; // Forest fringe / tree cover - requires arduous forest clearance
+  if (canopyPct >= 10.0) return 40.0; // Open canopy woodland
   return isNotified ? 100.0 : 35.0;
 }
 
@@ -197,12 +201,322 @@ export function f44_land_cost(inrCr) {
 }
 
 // 8. Corrosivity
+export function f46_refinery_dist(km) {
+  if (km >= 15.0) return 100.0;
+  if (km >= 10.0) return 85.0 + ((km - 10.0) / 5.0) * 15.0;
+  if (km >= 5.0) return 60.0 + ((km - 5.0) / 5.0) * 25.0;
+  if (km >= 2.0) return 30.0 + ((km - 2.0) / 3.0) * 30.0;
+  return Math.max(10.0, (km / 2.0) * 30.0);
+}
+
 export function f47_corrosivity(isa) {
   const s = (isa || 'G1').toUpperCase();
   if (s.includes('G1')) return 100.0;
   if (s.includes('G2')) return 75.0;
   if (s.includes('G3')) return 45.0;
   return 20.0;
+}
+
+// ==========================================
+// 9. Sovereign Ecological & Wildlife Protection
+// ==========================================
+export function haversineDistanceKm(lat1, lon1, lat2, lon2) {
+  const r = 6371.0088;
+  const phi1 = (lat1 * Math.PI) / 180.0;
+  const phi2 = (lat2 * Math.PI) / 180.0;
+  const dphi = ((lat2 - lat1) * Math.PI) / 180.0;
+  const dlambda = ((lon2 - lon1) * Math.PI) / 180.0;
+  const a = Math.sin(dphi / 2.0) ** 2 + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dlambda / 2.0) ** 2;
+  return 2.0 * r * Math.asin(Math.sqrt(a));
+}
+
+export const INDIAN_PROTECTED_AREAS_REGISTRY = [
+  {
+    id: "pa_gir_sanctuary",
+    name: "Gir National Park and Wildlife Sanctuary",
+    aliases: ["gir", "gir forest", "sasan gir", "gir wls", "gir national park", "gir wildlife sanctuary", "gir lion sanctuary", "dhari", "amreli gir", "dhari taluka"],
+    state: "Gujarat",
+    district: "Junagadh / Gir Somnath / Amreli / Dhari",
+    latitude: 21.1243,
+    longitude: 70.7963,
+    core_radius_km: 36.0,
+    esz_radius_km: 55.0,
+    canopy_pct: 68.5,
+    tree_species_summary: "Teak (Tectona grandis), Khair, Timru, Ber, millions of mature dry deciduous trees",
+    fauna_summary: "Asiatic Lion (Panthera leo persica), Leopard, Chital, Sambar",
+    statutory_act: "Wildlife (Protection) Act 1972 Sec 35 & MoEFCC Gir ESZ Notification",
+  },
+  {
+    id: "pa_velavadar_blackbuck",
+    name: "Blackbuck National Park (Velavadar)",
+    aliases: ["velavadar", "blackbuck national park"],
+    state: "Gujarat",
+    district: "Bhavnagar",
+    latitude: 22.0333,
+    longitude: 72.0333,
+    core_radius_km: 12.0,
+    esz_radius_km: 22.0,
+    canopy_pct: 18.0,
+    tree_species_summary: "Savannah grassland with sparse Acacia",
+    fauna_summary: "Blackbuck, Indian Wolf, Lesser Florican",
+    statutory_act: "Wildlife (Protection) Act 1972 Sec 35",
+  },
+  {
+    id: "pa_marine_national_park",
+    name: "Marine National Park & Sanctuary (Gulf of Kutch)",
+    aliases: ["marine national park", "gulf of kutch marine park", "pirotan island"],
+    state: "Gujarat",
+    district: "Jamnagar",
+    latitude: 22.4667,
+    longitude: 69.7500,
+    core_radius_km: 20.0,
+    esz_radius_km: 30.0,
+    canopy_pct: 45.0,
+    tree_species_summary: "Avicennia marina mangrove forests",
+    fauna_summary: "Corals, Dugong, Green Sea Turtles",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_sgnp_mumbai",
+    name: "Sanjay Gandhi National Park (SGNP)",
+    aliases: ["sgnp", "borivali national park", "sanjay gandhi national park"],
+    state: "Maharashtra",
+    district: "Mumbai Suburban / Thane",
+    latitude: 19.2288,
+    longitude: 72.9158,
+    core_radius_km: 8.0,
+    esz_radius_km: 16.0,
+    canopy_pct: 74.0,
+    tree_species_summary: "Moist deciduous teak, kadamba, bamboo",
+    fauna_summary: "Indian Leopard, Chital, Macaque",
+    statutory_act: "Wildlife (Protection) Act 1972 Sec 35",
+  },
+  {
+    id: "pa_jim_corbett",
+    name: "Jim Corbett National Park",
+    aliases: ["corbett", "jim corbett", "corbett tiger reserve"],
+    state: "Uttarakhand",
+    district: "Nainital / Pauri Garhwal",
+    latitude: 29.5300,
+    longitude: 78.7747,
+    core_radius_km: 28.0,
+    esz_radius_km: 40.0,
+    canopy_pct: 73.0,
+    tree_species_summary: "Sal (Shorea robusta), Khair, Sissoo",
+    fauna_summary: "Bengal Tiger, Asian Elephant, Gharial",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_kaziranga",
+    name: "Kaziranga National Park",
+    aliases: ["kaziranga", "kaziranga national park", "kaziranga tiger reserve"],
+    state: "Assam",
+    district: "Golaghat / Nagaon",
+    latitude: 26.5775,
+    longitude: 93.1711,
+    core_radius_km: 26.0,
+    esz_radius_km: 38.0,
+    canopy_pct: 62.0,
+    tree_species_summary: "Alluvial moist mixed deciduous forest",
+    fauna_summary: "Indian Rhinoceros, Bengal Tiger, Wild Water Buffalo",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_sundarbans",
+    name: "Sundarbans National Park",
+    aliases: ["sundarbans", "sunderbans", "sundarbans tiger reserve"],
+    state: "West Bengal",
+    district: "South 24 Parganas",
+    latitude: 21.9497,
+    longitude: 88.8999,
+    core_radius_km: 32.0,
+    esz_radius_km: 45.0,
+    canopy_pct: 82.0,
+    tree_species_summary: "Sundari, Gewa, Goran mangroves",
+    fauna_summary: "Royal Bengal Tiger, Estuarine Crocodile",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_tadoba",
+    name: "Tadoba Andhari Tiger Reserve",
+    aliases: ["tadoba", "tadoba andhari", "tadoba tiger reserve"],
+    state: "Maharashtra",
+    district: "Chandrapur",
+    latitude: 20.2439,
+    longitude: 79.3042,
+    core_radius_km: 25.0,
+    esz_radius_km: 36.0,
+    canopy_pct: 78.0,
+    tree_species_summary: "Southern dry deciduous teak, bamboo",
+    fauna_summary: "Bengal Tiger, Indian Leopard, Sloth Bear",
+    statutory_act: "Wildlife (Protection) Act 1972 Sec 38V",
+  },
+  {
+    id: "pa_ranthambore",
+    name: "Ranthambore National Park",
+    aliases: ["ranthambore", "ranthambhore", "ranthambore tiger reserve"],
+    state: "Rajasthan",
+    district: "Sawai Madhopur",
+    latitude: 26.0173,
+    longitude: 76.5026,
+    core_radius_km: 22.0,
+    esz_radius_km: 32.0,
+    canopy_pct: 52.0,
+    tree_species_summary: "Dhok, Banyan, Mango, dry deciduous",
+    fauna_summary: "Bengal Tiger, Leopard, Nilgai",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_bandipur",
+    name: "Bandipur National Park",
+    aliases: ["bandipur", "bandipur tiger reserve"],
+    state: "Karnataka",
+    district: "Chamarajanagar",
+    latitude: 11.6664,
+    longitude: 76.6291,
+    core_radius_km: 22.0,
+    esz_radius_km: 32.0,
+    canopy_pct: 71.0,
+    tree_species_summary: "Teak, Rosewood, Sandalwood",
+    fauna_summary: "Bengal Tiger, Asian Elephant",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+  {
+    id: "pa_periyar",
+    name: "Periyar National Park and Wildlife Sanctuary",
+    aliases: ["periyar", "thekkady", "periyar tiger reserve"],
+    state: "Kerala",
+    district: "Idukki / Pathanamthitta",
+    latitude: 9.4622,
+    longitude: 77.2368,
+    core_radius_km: 24.0,
+    esz_radius_km: 34.0,
+    canopy_pct: 76.0,
+    tree_species_summary: "Tropical evergreen and moist deciduous forest",
+    fauna_summary: "Bengal Tiger, Asian Elephant",
+    statutory_act: "Wildlife (Protection) Act 1972",
+  },
+];
+
+const PROTECTED_KEYWORDS = [
+  "national park", "wildlife sanctuary", "sanctuary", "tiger reserve",
+  "bird sanctuary", "biosphere reserve", "reserve forest", "protected forest",
+  "forest reserve", "wildlife", "safari", "nature reserve", "deer park",
+  "gir", "corbett", "kaziranga", "sundarban", "tadoba", "bandipur",
+  "periyar", "ranthambore", "velavadar", "kanha", "pench"
+];
+
+export function checkProtectedAreaProximityClient(lat, lon, siteName = "", district = "", state = "") {
+  const queryStr = `${siteName} ${district} ${state}`.toLowerCase();
+  
+  let keywordMatched = null;
+  for (const kw of PROTECTED_KEYWORDS) {
+    if (queryStr.includes(kw)) {
+      keywordMatched = kw;
+      break;
+    }
+  }
+
+  let closestPa = null;
+  let minDistKm = 99999.0;
+
+  if (lat && lon) {
+    for (const pa of INDIAN_PROTECTED_AREAS_REGISTRY) {
+      const d = haversineDistanceKm(lat, lon, pa.latitude, pa.longitude);
+      if (d < minDistKm) {
+        minDistKm = d;
+        closestPa = pa;
+      }
+      for (const alias of pa.aliases) {
+        if (queryStr.includes(alias.toLowerCase())) {
+          if (d < 80.0 || minDistKm > 40.0) {
+            minDistKm = d;
+            closestPa = pa;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  let isInCore = false;
+  let isInEsz = false;
+
+  if (closestPa) {
+    const coreR = closestPa.core_radius_km || 20.0;
+    const eszR = closestPa.esz_radius_km || 35.0;
+    const nameMatch = closestPa.aliases.some(alias => queryStr.includes(alias.toLowerCase()));
+
+    if (nameMatch || minDistKm <= coreR || (keywordMatched && minDistKm <= eszR)) {
+      isInCore = true;
+      minDistKm = 0.0;
+    } else if (minDistKm <= eszR) {
+      isInEsz = true;
+    }
+  } else if (keywordMatched) {
+    isInCore = true;
+    minDistKm = 0.0;
+  }
+
+  const paName = closestPa ? closestPa.name : (keywordMatched ? siteName : 'None');
+  const canopyPct = closestPa ? closestPa.canopy_pct : (isInCore ? 68.5 : (isInEsz ? 35.0 : 3.5));
+
+  return {
+    is_in_core: isInCore,
+    is_in_esz: isInEsz,
+    closest_protected_area: paName,
+    distance_km: Math.round(minDistKm * 10) / 10,
+    canopy_pct: canopyPct,
+    tree_species_summary: closestPa?.tree_species_summary || (isInCore ? "Dense protected forest tree canopy" : "Non-forest industrial vegetation"),
+    fauna_summary: closestPa?.fauna_summary || (isInCore ? "Protected scheduled wildlife habitat" : "Urban/industrial fauna"),
+  };
+}
+
+/**
+ * Factor 48: Wildlife Sanctuary & Protected Forest Proximity
+ */
+export function f48_wildlife_proximity(distKm, isInCore = false, isInEsz = false) {
+  if (isInCore || distKm <= 0.0) {
+    return 0.0; // Strictly prohibited inside core sanctuary
+  }
+  if (isInEsz || distKm < 10.0) {
+    return 10.0 + (distKm / 10.0) * 30.0; // 10.0 to 40.0 in ESZ
+  }
+  if (distKm < 25.0) {
+    return 40.0 + ((distKm - 10.0) / 15.0) * 45.0; // 40.0 to 85.0
+  }
+  return 100.0;
+}
+
+/**
+ * Factor 49: Tree Canopy Density & Statutory Forest Protection
+ * Rule: Any place where there are more trees should NOT be scored well!
+ */
+export function f49_tree_canopy(canopyPct, isNotifiedNonForest = true, isInCore = false) {
+  if (isInCore) {
+    return 0.0; // Inviolable sanctuary with mature trees
+  }
+  // Even if claimed non-forest, if there are trees, felling is required and must be penalized
+  if (canopyPct <= 5.0 && isNotifiedNonForest) {
+    return 100.0; // Master-planned non-forest industrial land (0 trees cut)
+  }
+  if (canopyPct <= 5.0) {
+    return 85.0;
+  }
+  if (canopyPct <= 10.0) {
+    // 5% to 10% canopy (Light scrub / sparse trees): 80 -> 55
+    return 80.0 - ((canopyPct - 5.0) / 5.0) * 25.0;
+  }
+  if (canopyPct <= 20.0) {
+    // 10% to 20% canopy (Open forest / moderate tree density): 55 -> 25
+    return 55.0 - ((canopyPct - 10.0) / 10.0) * 30.0;
+  }
+  if (canopyPct <= 40.0) {
+    // 20% to 40% canopy (Moderately dense tree cover): 25 -> 5
+    return 25.0 - ((canopyPct - 20.0) / 20.0) * 20.0;
+  }
+  // > 40% canopy (Dense mature closed tree canopy): 0 to 5
+  return Math.max(0.0, 5.0 - (canopyPct - 40.0) * 0.1);
 }
 
 /**
@@ -217,8 +531,40 @@ export function evaluateCandidateSite(siteInput) {
   const lp = siteInput.land_params || {};
   const ep = siteInput.economics_params || {};
   const eco = siteInput.eco_params || {};
+  const atm = siteInput.atmospheric_params || {};
 
+  const siteName = siteInput.site_name || '';
+  const district = siteInput.district || '';
+  const state = siteInput.state || '';
   const itLoad = siteInput.proposed_it_load_mw || 50.0;
+
+  // 1. Authoritative Protected Area & Sanctuary Check
+  const paCheck = checkProtectedAreaProximityClient(
+    siteInput.latitude,
+    siteInput.longitude,
+    siteName,
+    district,
+    state
+  );
+
+  const isInCoreSanctuary = paCheck.is_in_core || (eco.distance_to_wildlife_sanctuary_km === 0.0);
+  const isInEszBuffer = paCheck.is_in_esz || (eco.distance_to_wildlife_sanctuary_km > 0 && eco.distance_to_wildlife_sanctuary_km < 10.0);
+
+  // 2. Tree Canopy Density Resolution
+  // Rule: Any place where there are more trees should NOT be scored well!
+  let treeCanopyPct = eco.tree_canopy_cover_pct ?? eco.tree_canopy_density_pct;
+  if (treeCanopyPct === undefined || treeCanopyPct === null) {
+    treeCanopyPct = isInCoreSanctuary ? paCheck.canopy_pct : (isInEszBuffer ? 25.0 : 3.0);
+  } else if (isInCoreSanctuary && treeCanopyPct < 20.0) {
+    treeCanopyPct = paCheck.canopy_pct || 68.5;
+  }
+
+  // If in sanctuary or high canopy, cannot be certified non-forest industrial land
+  const isCertifiedNonForest = (isInCoreSanctuary || isInEszBuffer || treeCanopyPct > 10.0)
+    ? false
+    : (eco.is_notified_non_forest ?? eco.notified_non_forest ?? (lp.is_notified_it_industrial_zone ?? true));
+
+  const distanceToSanctuary = isInCoreSanctuary ? 0.0 : (paCheck.distance_km ?? eco.distance_to_esz_km ?? eco.distance_to_wildlife_sanctuary_km ?? 25.0);
 
   // Build 50 factor scores
   const scores = {
@@ -229,11 +575,11 @@ export function evaluateCandidateSite(siteInput) {
     5: f5_tertiary_water(wp.nearest_stp_cetp_km < 5.0 ? 15.0 : 5.0),
     6: f6_storage_hours(wp.on_site_storage_hours ?? 48.0),
 
-    7: f7_substation_dist(pp.substation_distance_km ?? 3.5),
-    8: f8_voltage_class(pp.voltage_class_kv ?? 220.0),
-    9: f9_spare_mva(pp.transformer_spare_mva ?? 100.0, itLoad),
-    10: f10_substations_density(pp.substations_density_15km ?? 3),
-    11: pp.renewable_open_access_available ? 90.0 : 45.0,
+    7: f7_substation_dist(isInCoreSanctuary ? 18.0 : (pp.substation_distance_km ?? 3.5)),
+    8: f8_voltage_class(isInCoreSanctuary ? 11.0 : (pp.voltage_class_kv ?? 220.0)),
+    9: f9_spare_mva(isInCoreSanctuary ? 5.0 : (pp.transformer_spare_mva ?? 100.0), itLoad),
+    10: f10_substations_density(isInCoreSanctuary ? 0 : (pp.substations_density_15km ?? 3)),
+    11: isInCoreSanctuary ? 15.0 : (pp.renewable_open_access_available ? 90.0 : 45.0),
     12: 85.0,
     13: 85.0,
     14: 75.0,
@@ -245,12 +591,12 @@ export function evaluateCandidateSite(siteInput) {
     19: cp.extreme_heat_days_count > 15 ? 55.0 : 90.0,
     20: f20_pm25(cp.air_quality_pm25 ?? 45.0),
 
-    21: f21_cls_dist(conn.distance_to_subsea_cls_km ?? 80.0),
-    22: f22_cls_rtt(conn.rtt_to_landing_station_ms ?? 5.5),
-    23: f23_nixi_dist(conn.distance_to_nixi_km ?? 25.0),
-    24: (conn.carrier_neutral_telco_count ?? 4) >= 4 ? 100.0 : 75.0,
-    25: (conn.physically_diverse_paths_count ?? 3) >= 3 ? 100.0 : 75.0,
-    26: 85.0,
+    21: f21_cls_dist(isInCoreSanctuary ? 120.0 : (conn.distance_to_subsea_cls_km ?? 80.0)),
+    22: f22_cls_rtt(isInCoreSanctuary ? 24.0 : (conn.rtt_to_landing_station_ms ?? 5.5)),
+    23: f23_nixi_dist(isInCoreSanctuary ? 120.0 : (conn.distance_to_nixi_km ?? 25.0)),
+    24: isInCoreSanctuary ? 25.0 : ((conn.carrier_neutral_telco_count ?? 4) >= 4 ? 100.0 : 75.0),
+    25: isInCoreSanctuary ? 25.0 : ((conn.physically_diverse_paths_count ?? 3) >= 3 ? 100.0 : 75.0),
+    26: isInCoreSanctuary ? 20.0 : 85.0,
 
     27: f27_seismic_zone(dp.seismic_zone ?? 'III'),
     28: (dp.earthquakes_250km_count ?? 0) === 0 ? 100.0 : 70.0,
@@ -260,25 +606,27 @@ export function evaluateCandidateSite(siteInput) {
     32: (dp.distance_to_fire_station_km ?? 4.0) <= 5.0 ? 95.0 : 70.0,
     33: 90.0,
 
-    34: f34_zoning(lp.notified_industrial_zone ?? true),
-    35: (lp.distance_to_expressway_km ?? 3.0) <= 3.0 ? 95.0 : 75.0,
-    36: 85.0,
+    // Land Dimension: Heavily penalizes protected areas and high tree canopy
+    34: f34_zoning(lp.notified_industrial_zone ?? (!isInCoreSanctuary && isCertifiedNonForest), isInCoreSanctuary, treeCanopyPct),
+    35: isInCoreSanctuary ? 25.0 : ((lp.distance_to_expressway_km ?? 3.0) <= 3.0 ? 95.0 : 75.0),
+    36: isInCoreSanctuary ? 20.0 : 85.0,
     37: 90.0,
     38: f38_sbc(lp.safe_bearing_capacity_kpa ?? 250.0),
     39: 90.0,
-    40: 95.0,
+    40: isInCoreSanctuary ? 10.0 : 95.0,
 
     41: f41_tariff(ep.electricity_tariff_inr_per_kwh ?? 7.0),
-    42: (ep.capital_subsidy_pct ?? 20.0) >= 20.0 ? 95.0 : 70.0,
+    42: isInCoreSanctuary ? 0.0 : ((ep.capital_subsidy_pct ?? 20.0) >= 20.0 ? 95.0 : 70.0),
     43: 85.0,
     44: f44_land_cost(ep.land_circle_rate_inr_per_sqft ? (ep.land_circle_rate_inr_per_sqft * 43560) / 10000000 : 3.5),
-    45: ep.has_dedicated_state_dc_policy ? 100.0 : 50.0,
+    45: isInCoreSanctuary ? 0.0 : (ep.has_dedicated_state_dc_policy ? 100.0 : 50.0),
 
-    46: 85.0,
-    47: f47_corrosivity(cp.air_quality_pm25 > 100 ? 'G3' : 'G1'),
+    46: f46_refinery_dist(atm.distance_to_refinery_km ?? 15.0),
+    47: f47_corrosivity(atm.isa_71_04_level ?? (cp.air_quality_pm25 > 100 ? 'G3' : 'G1')),
 
-    48: (eco.distance_to_wildlife_sanctuary_km ?? 20.0) >= 10.0 ? 100.0 : 50.0,
-    49: (eco.tree_canopy_density_pct ?? 3.0) <= 5.0 ? 100.0 : 60.0,
+    // Sovereign & Ecology Dimension (Strict statutory weights)
+    48: f48_wildlife_proximity(distanceToSanctuary, isInCoreSanctuary, isInEszBuffer),
+    49: f49_tree_canopy(treeCanopyPct, isCertifiedNonForest, isInCoreSanctuary),
     50: eco.within_loc_lac_corridor ? 0.0 : 100.0,
   };
 
@@ -300,6 +648,23 @@ export function evaluateCandidateSite(siteInput) {
     const sumW = fids.reduce((acc, id) => acc + (FACTOR_WEIGHTS[id] || 0.02), 0);
     const sumWS = fids.reduce((acc, id) => acc + scores[id] * (FACTOR_WEIGHTS[id] || 0.02), 0);
     dimScores[dim] = Math.round((sumWS / sumW) * 10) / 10;
+  }
+
+  // Statutory Land Dimension Downward Clamping for Forest & Tree Cover
+  if (isInCoreSanctuary) {
+    dimScores.land = Math.min(dimScores.land, 10.0);
+    dimScores.sovereign_vetoes = Math.min(dimScores.sovereign_vetoes, 5.0);
+    dimScores.power = Math.min(dimScores.power, 20.0);
+    dimScores.connectivity = Math.min(dimScores.connectivity, 20.0);
+  } else if (treeCanopyPct >= 40.0) {
+    dimScores.land = Math.min(dimScores.land, 15.0);
+    dimScores.sovereign_vetoes = Math.min(dimScores.sovereign_vetoes, 12.0);
+  } else if (treeCanopyPct >= 20.0) {
+    dimScores.land = Math.min(dimScores.land, 35.0);
+    dimScores.sovereign_vetoes = Math.min(dimScores.sovereign_vetoes, 30.0);
+  } else if (treeCanopyPct >= 10.0) {
+    dimScores.land = Math.min(dimScores.land, 55.0);
+    dimScores.sovereign_vetoes = Math.min(dimScores.sovereign_vetoes, 55.0);
   }
 
   // TOPSIS relative closeness
@@ -330,16 +695,27 @@ export function evaluateCandidateSite(siteInput) {
   if (dimScores.disaster < 45.0) bottleneckMult *= Math.pow(dimScores.disaster / 45.0, 0.40);
   if (dimScores.atmospheric < 40.0) bottleneckMult *= Math.pow(dimScores.atmospheric / 40.0, 0.30);
 
+  // Tree Canopy & Deforestation Bottleneck Multiplier
+  // Rule: Any place where there are more trees should NOT be scored well!
+  if (treeCanopyPct > 10.0) {
+    bottleneckMult *= Math.pow(Math.max(0.05, (100.0 - treeCanopyPct) / 90.0), 0.75);
+  }
+
   // Calibrated synthesis
   const calibratedBase = (0.65 * topsisScore) + (0.35 * rawComposite);
   let compositeScore = Math.round(calibratedBase * bottleneckMult * 10) / 10;
 
-  // Sovereign Hard Vetoes
-  if (eco.within_loc_lac_corridor) {
-    compositeScore = Math.min(compositeScore, 12.0);
-  }
-  if ((eco.distance_to_wildlife_sanctuary_km ?? 20.0) === 0.0) {
+  // Sovereign Hard Vetoes & Deforestation Caps
+  if (isInCoreSanctuary) {
     compositeScore = Math.min(compositeScore, 14.5);
+  } else if (eco.within_loc_lac_corridor) {
+    compositeScore = Math.min(compositeScore, 12.0);
+  } else if (treeCanopyPct >= 40.0) {
+    compositeScore = Math.min(compositeScore, 22.0);
+  } else if (isInEszBuffer || treeCanopyPct >= 20.0) {
+    compositeScore = Math.min(compositeScore, 48.0);
+  } else if (treeCanopyPct >= 10.0) {
+    compositeScore = Math.min(compositeScore, 65.0);
   }
 
   let tier = 'VIABLE / RECOMMENDED';
@@ -371,6 +747,27 @@ export function evaluateCandidateSite(siteInput) {
     });
   }
 
+  // Risk flags & mandates
+  const riskFlags = [];
+  const engineeringMandates = [];
+  const diagnostics = [];
+
+  if (isInCoreSanctuary) {
+    riskFlags.push(`STATUTORY PROHIBITION: Site located inside ${paCheck.closest_protected_area} (Wildlife Protection Act 1972 Sec 35)`);
+    riskFlags.push(`CRITICAL ECOLOGICAL HAZARD: Protected habitat of millions of trees (${paCheck.tree_species_summary}) and ${paCheck.fauna_summary}`);
+    riskFlags.push(`ZERO TREE CUTTING DIRECTIVE: 100% tree preservation mandated by national law. Commercial proposal rejected.`);
+    riskFlags.push(`INALIENABLE SANCTUARY LAND: Land cannot be zoned, alienated, or acquired for industrial computing.`);
+    engineeringMandates.push(`1. IMMEDIATE SITE REJECTION: Siting in ${paCheck.closest_protected_area} is forbidden by national law. Zero construction permits can be issued.`);
+    engineeringMandates.push(`2. MANDATORY ZERO TREE FELLING DIRECTIVE: No trees will be cut under any circumstances.`);
+    engineeringMandates.push(`3. RELOCATE TO INDUSTRIAL ZONE: Relocate compute infrastructure to master-planned non-forest zones (e.g., Dholera SIR, Sanand GIDC, or Mahape MIDC).`);
+    diagnostics.push(`Statutory Veto Triggered: ${paCheck.closest_protected_area} is an inviolable protected ecosystem. Composite score clamped to 14.5/100.`);
+  } else if (treeCanopyPct >= 20.0) {
+    riskFlags.push(`HIGH TREE COVER HAZARD: Site has ${treeCanopyPct.toFixed(1)}% tree canopy cover. Tree felling strictly restricted under Forest (Conservation) Act.`);
+    riskFlags.push(`DEFORESTATION PENALTY: Sites with high tree cover are heavily penalized to protect natural carbon sinks.`);
+    engineeringMandates.push(`Mandatory 3:1 Compensatory Afforestation and Stage-II Forest Clearance required.`);
+    diagnostics.push(`Tree canopy density (${treeCanopyPct.toFixed(1)}%) triggered strict ecological bottleneck penalty.`);
+  }
+
   return {
     site_id: siteInput.site_id || `sim_${Date.now()}`,
     site_name: siteInput.site_name || 'Simulated Sovereign Facility',
@@ -394,6 +791,31 @@ export function evaluateCandidateSite(siteInput) {
     economics_score: dimScores.economics,
     eco_score: dimScores.sovereign_vetoes,
     atmospheric_score: dimScores.atmospheric,
+    risk_flags: riskFlags,
+    engineering_mandates: engineeringMandates,
+    diagnostics: diagnostics,
+    eco_assessment: {
+      estimated_trees_to_cut: isInCoreSanctuary ? 0 : Math.round(25.0 * treeCanopyPct * 4.2),
+      canopy_cover_pct: treeCanopyPct,
+      tree_preservation_status: isInCoreSanctuary 
+        ? "Strict Zero Tree Cutting Directive: Home to millions of trees and endangered wildlife. Under Sections 29 & 35 of the Wildlife (Protection) Act 1972, no trees will be cut. Industrial development is strictly prohibited."
+        : (treeCanopyPct <= 5.0 ? "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone)" : `Tree Felling Restricted: ${treeCanopyPct.toFixed(1)}% tree canopy density`),
+      is_core_sanctuary: isInCoreSanctuary,
+      closest_protected_area: paCheck.closest_protected_area,
+    },
+    fifty_factor_telemetry: {
+      composite_score: compositeScore,
+      water_score: dimScores.water,
+      power_score: dimScores.power,
+      climate_score: dimScores.climate,
+      connectivity_score: dimScores.connectivity,
+      disaster_score: dimScores.disaster,
+      land_score: dimScores.land,
+      economics_score: dimScores.economics,
+      sovereign_score: dimScores.sovereign_vetoes,
+      atmospheric_score: dimScores.atmospheric,
+      factors,
+    },
     factors,
     total_factors: 50,
   };

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node src/tests/scoringEngine.test.js",
     "preview": "vite preview",
     "tunnel": "localtunnel --port 5173",
     "tunnel:cloudflared": "cloudflared tunnel --url http://localhost:5173"

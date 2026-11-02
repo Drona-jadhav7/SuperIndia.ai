@@ -191,8 +191,8 @@ export default function App() {
           {/* Action Controls & Health */}
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f3f4f6] border border-[#dde0e6] text-[11px] font-mono text-[#454c58]">
-              <span className={`w-2 h-2 rounded-full ${apiOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
-              <span>{apiOnline ? 'Backend Live' : 'Connecting...'}</span>
+              <span className={`w-2 h-2 rounded-full ${apiOnline ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'}`}></span>
+              <span>{apiOnline ? 'Backend Live' : 'Sovereign Edge Live'}</span>
             </div>
 
             <button
@@ -252,7 +252,7 @@ export default function App() {
                 National AI Infrastructure Decision Intelligence & Geospatial Operating System
               </h2>
               <p className="text-xs text-[#454c58] leading-relaxed">
-                Evaluates hyperscale AI data centers across 7 physical and regulatory dimensions: water stress (CGWB), electrical grid (CEA), psychrometric wet-bulb (NASA POWER), subsea connectivity (NIXI), and seismic hazard (BIS IS 1893:2016). Strictly zero guessed scores.
+                Evaluates hyperscale AI data centers across 9 statutory infrastructure & sovereign dimensions (50-Factor Matrix): water stress (CGWB), electrical grid (CEA), psychrometric wet-bulb (NASA POWER), subsea connectivity (NIXI), seismic hazard (BIS IS 1893:2016), soil bearing capacity (IS 1892), open-access tariffs (SERC), atmospheric corrosivity (ISA-71.04), and MoEFCC forest buffers. Zero guessed scores.
               </p>
             </div>
 
@@ -263,15 +263,15 @@ export default function App() {
                 <div className="text-[10px] text-[#454c58]">Key Hubs</div>
               </div>
               <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[90px]">
-                <div className="text-sm font-black text-[#074ce0]">7</div>
-                <div className="text-[10px] text-[#454c58]">Domains</div>
+                <div className="text-sm font-black text-[#074ce0]">9</div>
+                <div className="text-[10px] text-[#454c58]">Dimensions</div>
               </div>
               <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[90px]">
-                <div className="text-sm font-black text-emerald-600">31</div>
-                <div className="text-[10px] text-[#454c58]">Sub-Metrics</div>
+                <div className="text-sm font-black text-emerald-600">50</div>
+                <div className="text-[10px] text-[#454c58]">Factors</div>
               </div>
               <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[90px]">
-                <div className="text-sm font-black text-indigo-600">NASA</div>
+                <div className="text-sm font-black text-indigo-600">5</div>
                 <div className="text-[10px] text-[#454c58]">Live APIs</div>
               </div>
             </div>

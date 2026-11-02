@@ -1,3 +1,4 @@
+import { checkProtectedAreaProximityClient } from './scoringEngine';
 /**
  * SuperIndia.ai - Direct Sovereign Telemetry Ingestion Pipeline
  * High-speed, zero-downtime client-side telemetry client.
@@ -363,30 +364,36 @@ export async function fetchDirectSovereignTelemetry({
     },
 
     land_params: {
-      notified_industrial_zone: true,
-      distance_to_expressway_km: 3.2,
+      notified_industrial_zone: !isProtectedArea && !isEszArea && effectiveTreeCanopy <= 10.0,
+      is_notified_it_industrial_zone: !isProtectedArea && !isEszArea && effectiveTreeCanopy <= 10.0,
+      distance_to_expressway_km: isProtectedArea ? 18.0 : 3.2,
       depth_to_bedrock_m: 5.5,
-      soil_texture_class: 'Loamy Clay with Basalt Bedrock',
-      safe_bearing_capacity_kpa: 280.0,
+      soil_texture_class: isProtectedArea ? 'Protected Forest Land (Inalienable Habitat)' : 'Loamy Clay with Basalt Bedrock',
+      safe_bearing_capacity_kpa: isProtectedArea ? 120.0 : 280.0,
       airport_distance_km: Math.max(15.0, Math.round(minNixiDistKm * 0.4 * 10) / 10),
       aeronautical_height_limit_m: 65.0,
     },
 
     economics_params: {
       electricity_tariff_inr_per_kwh: statePolicy.tariff_inr,
-      capital_subsidy_pct: statePolicy.capital_subsidy_pct,
-      electricity_duty_exemption_years: statePolicy.electricity_duty_waiver_years,
+      capital_subsidy_pct: isProtectedArea ? 0.0 : statePolicy.capital_subsidy_pct,
+      electricity_duty_exemption_years: isProtectedArea ? 0 : statePolicy.electricity_duty_waiver_years,
       land_circle_rate_inr_per_sqft: 2200.0,
-      has_dedicated_state_dc_policy: statePolicy.has_dc_policy,
+      has_dedicated_state_dc_policy: isProtectedArea ? false : statePolicy.has_dc_policy,
     },
 
     eco_params: {
-      distance_to_wildlife_sanctuary_km: 18.5,
-      tree_canopy_density_pct: 4.5,
-      zero_tree_felling_applicable: true,
-      compensatory_afforestation_ratio: 3.0,
+      distance_to_wildlife_sanctuary_km: distanceToProtectedKm,
+      distance_to_esz_km: distanceToProtectedKm,
+      tree_canopy_density_pct: effectiveTreeCanopy,
+      tree_canopy_cover_pct: effectiveTreeCanopy,
+      is_notified_non_forest: !isProtectedArea && !isEszArea && effectiveTreeCanopy <= 5.0,
+      zero_tree_felling_applicable: !isProtectedArea && !isEszArea && effectiveTreeCanopy <= 5.0,
+      compensatory_afforestation_ratio: isProtectedArea ? 0 : 3.0,
       within_loc_lac_corridor: false,
       annual_snowbound_cutoff_months: 0,
+      is_core_sanctuary: isProtectedArea,
+      closest_protected_area: paCheck.closest_protected_area,
     },
   };
 
