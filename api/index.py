@@ -5,16 +5,14 @@ import traceback
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 
-# Ensure api, parent, and local backend are on sys.path
-for p in [parent_dir, current_dir, os.path.join(current_dir, "backend"), os.getcwd()]:
-    if p and p not in sys.path:
-        sys.path.insert(0, p)
+# Ensure api directory (where self-contained backend package resides) is at highest priority
+for p in [parent_dir, current_dir]:
+    if p in sys.path:
+        sys.path.remove(p)
+    sys.path.insert(0, p)
 
 try:
-    try:
-        from backend.app.main import app
-    except ImportError:
-        from api.backend.app.main import app
+    from backend.app.main import app
 except Exception as e:
     err_tb = traceback.format_exc()
     from fastapi import FastAPI
@@ -30,6 +28,8 @@ except Exception as e:
                 "details": str(e),
                 "traceback": err_tb,
                 "current_dir": current_dir,
+                "parent_dir": parent_dir,
+                "sys_path": sys.path[:5],
                 "files_in_api": os.listdir(current_dir) if os.path.exists(current_dir) else []
             }
         )
