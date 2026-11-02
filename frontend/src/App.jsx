@@ -66,7 +66,11 @@ export default function App() {
       }
     } catch (err) {
       console.error('Failed to load sites:', err);
-      setErrorMsg('Failed to communicate with SuperIndia.ai backend. Please ensure the backend server is running on port 8000.');
+      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      setErrorMsg(isLocal 
+        ? 'Failed to communicate with SuperIndia.ai backend. Please ensure the backend server is running on port 8000.'
+        : 'Connecting to SuperIndia.ai Cloud Engine... Please refresh or retry in a few moments.'
+      );
     } finally {
       setIsLoading(false);
     }

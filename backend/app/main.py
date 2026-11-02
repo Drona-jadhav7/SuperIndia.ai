@@ -19,8 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include main router
+# Include main router both with /api prefix and without prefix for resilient routing
 app.include_router(endpoints_router, prefix=settings.API_V1_STR)
+if settings.API_V1_STR:
+    app.include_router(endpoints_router)
 
 @app.get("/")
 def root():

@@ -51,6 +51,20 @@ BENCHMARK_FILE = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "data", "benchmark_sites.json"
 )
 
+EVALUATED_BENCHMARK_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "data", "evaluated_benchmark_sites.json"
+)
+
+def load_evaluated_benchmark_sites() -> List[SiteAssessmentResponse]:
+    if not os.path.exists(EVALUATED_BENCHMARK_FILE):
+        return []
+    try:
+        with open(EVALUATED_BENCHMARK_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return [SiteAssessmentResponse(**item) for item in data]
+    except Exception as e:
+        return []
+
 def load_benchmark_sites() -> List[SiteInput]:
     if not os.path.exists(BENCHMARK_FILE):
         return []
@@ -106,6 +120,12 @@ def get_benchmark_sites(refresh: bool = False):
     if _BENCHMARK_CACHE is not None and not refresh:
         return _BENCHMARK_CACHE
 
+    if not refresh:
+        evaluated = load_evaluated_benchmark_sites()
+        if evaluated:
+            _BENCHMARK_CACHE = evaluated
+            return _BENCHMARK_CACHE
+
     sites = load_benchmark_sites()
     _BENCHMARK_CACHE = [assess_site(site) for site in sites]
     return _BENCHMARK_CACHE
@@ -115,6 +135,16 @@ def get_site_by_id(site_id: str = Path(..., description="Unique ID of benchmark 
     """
     Retrieve single benchmark site assessment by ID.
     """
+    if _BENCHMARK_CACHE is not None:
+        for s in _BENCHMARK_CACHE:
+            if s.site_id == site_id:
+                return s
+
+    evaluated = load_evaluated_benchmark_sites()
+    for s in evaluated:
+        if s.site_id == site_id:
+            return s
+
     sites = load_benchmark_sites()
     for site in sites:
         if site.site_id == site_id:
