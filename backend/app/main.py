@@ -47,3 +47,7 @@ def health():
         "service": settings.PROJECT_NAME,
         "version": settings.VERSION,
     }
+
+@app.get("/api/index.py")
+def vercel_entrypoint_probe():
+    return root()
