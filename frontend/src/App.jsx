@@ -40,6 +40,7 @@ import PolicyIntelligenceTab from './components/PolicyIntelligenceTab';
 import EcoPlannerTab from './components/EcoPlannerTab';
 
 import { fetchBenchmarkSites, assessCustomSite, checkApiHealth } from './services/api';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('mesh');
@@ -443,6 +444,8 @@ export default function App() {
         onAssessCustomSite={handleAssessCustomSite}
       />
 
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
