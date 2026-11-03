@@ -6,6 +6,40 @@
 
 export const STRATEGIC_INDIAN_PLACES = [
   {
+    name: "Gir National Park and Wildlife Sanctuary",
+    state: "Gujarat",
+    district: "Junagadh / Gir Somnath / Amreli (Dhari)",
+    latitude: 21.1243,
+    longitude: 70.7963,
+    elevation_m: 50.0,
+    category: "Restricted Sanctuary (WPA 1972 Sec 35)",
+    seismic_zone: "III",
+    tariff_inr: 7.2,
+    subsea_rtt_ms: 24.0,
+    voltage_class_kv: 11.0,
+    substation_dist_km: 18.0,
+    water_tds: 520.0,
+    canopy_pct: 68.5,
+    highlight: "🚨 Inviolable Lion Habitat • Strictly Prohibited for Industrial Development"
+  },
+  {
+    name: "Jim Corbett National Park",
+    state: "Uttarakhand",
+    district: "Nainital / Pauri Garhwal",
+    latitude: 29.5300,
+    longitude: 78.7747,
+    elevation_m: 385.0,
+    category: "Restricted National Park (WPA 1972)",
+    seismic_zone: "IV",
+    tariff_inr: 6.5,
+    subsea_rtt_ms: 28.0,
+    voltage_class_kv: 11.0,
+    substation_dist_km: 22.0,
+    water_tds: 350.0,
+    canopy_pct: 73.0,
+    highlight: "🚨 Critical Tiger Habitat • Strictly Prohibited for Industrial Development"
+  },
+  {
     name: "GIFT City (Gujarat International Finance Tec-City)",
     state: "Gujarat",
     district: "Gandhinagar",

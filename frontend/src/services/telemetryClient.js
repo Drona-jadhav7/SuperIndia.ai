@@ -1,4 +1,4 @@
-import { checkProtectedAreaProximityClient } from './scoringEngine';
+import { checkProtectedAreaProximityClient } from './scoringEngine.js';
 /**
  * SuperIndia.ai - Direct Sovereign Telemetry Ingestion Pipeline
  * High-speed, zero-downtime client-side telemetry client.
