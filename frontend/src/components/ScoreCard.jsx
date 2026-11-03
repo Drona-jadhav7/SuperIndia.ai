@@ -454,13 +454,15 @@ export default function ScoreCard({ site }) {
             </svg>
 
             {/* Radar Scale Reference */}
-            <div className="flex items-center justify-between w-full px-2 pt-1 border-t border-slate-100 text-[9px] font-mono text-[#8c94a4]">
-              <span>0% Center</span>
+            <div className="flex items-center justify-between w-full px-2.5 py-1.5 border-t border-slate-100 text-[10px] font-mono text-slate-500">
               <span className="flex items-center gap-1 font-bold text-slate-700">
                 <Activity className="w-3 h-3 text-[#074ce0]" />
-                9-Domain Sovereign Architecture (50 Factors Active)
+                9-Domain Architecture (50 Factors)
               </span>
-              <span>100% Perimeter</span>
+              <div className="flex items-center gap-1.5 text-[9px]">
+                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold">0% Center</span>
+                <span className="px-1.5 py-0.5 rounded bg-blue-50 text-[#074ce0] font-semibold border border-blue-100">100% Outer</span>
+              </div>
             </div>
           </div>
 

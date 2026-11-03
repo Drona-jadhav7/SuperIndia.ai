@@ -102,90 +102,66 @@ export default function App() {
   const currentModule = PLATFORM_MODULES.find(m => m.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-[#fcfcfd] text-[#16191f] flex flex-col font-sans selection:bg-[#074ce0]/20 selection:text-[#074ce0]">
+    <div className="min-h-screen bg-[#f8fafc] text-[#16191f] flex flex-col font-sans selection:bg-[#074ce0]/20 selection:text-[#074ce0]">
       
       {/* 1. Header (National Insignia & Clean Enterprise Command Bar) */}
-      <header className="sticky top-0 z-[1500] border-b border-[#dde0e6] bg-[#fcfcfd]/95 backdrop-blur-md">
+      <header className="sticky top-0 z-[1500] border-b border-slate-200/90 bg-white/95 backdrop-blur-md shadow-2xs">
         
         {/* Subtle Indian Tricolor National Accent Stripe */}
         <div className="h-[3px] bg-gradient-to-r from-[#FF9933] via-[#FFFFFF] to-[#138808] w-full shrink-0 shadow-xs" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           
           {/* Top-Left: Menu Trigger & Brand Identity */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* TOP-LEFT CORNER: Platform Modules Menu Button (Blue style matching Simulate Site) */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+            {/* TOP-LEFT CORNER: Platform Modules Menu Button (Signature Blue matching Simulate Site) */}
             <button
               onClick={() => setIsSidePanelOpen(true)}
-              className="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 font-display shrink-0 group cursor-pointer"
-              title="Open Platform Modules Menu (All Other Features)"
+              className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 font-display shrink-0 group cursor-pointer"
+              title="Open Platform Features Menu (7 Extended Modules)"
             >
               <Menu className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-              <span className="font-bold">Features Menu</span>
+              <span className="font-bold">Features</span>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-white/20 text-white font-bold border border-white/25">
                 7
               </span>
             </button>
 
             {/* Subtle Divider */}
-            <div className="h-6 w-px bg-[#dde0e6] hidden sm:block" />
+            <div className="h-5 w-px bg-slate-200 hidden sm:block shrink-0" />
 
-            {/* Brand Identity */}
+            {/* Brand Logo & Name */}
             <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
               <div className="relative group">
-                <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-full p-0.5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full p-0.5 group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
                   <img 
                     src="/logo.png" 
                     alt="SuperIndia.ai Official Insignia" 
-                    className="w-full h-full object-contain drop-shadow-xs" 
+                    className="w-full h-full object-contain drop-shadow-2xs" 
                   />
                 </div>
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" title="National AI OS Active" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-lg sm:text-xl font-bold font-display tracking-tight text-[#16191f]">
+                  <h1 className="text-lg sm:text-xl font-bold font-display tracking-tight text-slate-900 leading-none">
                     SuperIndia<span className="text-[#074ce0]">.ai</span>
                   </h1>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold hidden sm:flex items-center gap-1">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold hidden sm:inline-flex items-center gap-1">
                     <span>🇮🇳</span> National AI OS
                   </span>
                 </div>
-                <div className="text-[11px] text-[#454c58] font-sans hidden lg:block">
+                <div className="text-[11px] text-slate-500 font-sans hidden 2xl:block mt-0.5">
                   National AI Infrastructure Intelligence & Siting Operating System
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Strategic Hub Quick Switcher (Desktop Pills + Laptop/Tablet Compact Dropdown) */}
-          <div className="hidden xl:flex items-center gap-1.5 bg-[#f3f4f6] p-1 rounded-xl border border-[#dde0e6] text-xs">
-            <span className="text-[10px] font-mono font-bold text-[#8c94a4] uppercase px-2">Hubs:</span>
-            {sites.slice(0, 5).map((s) => {
-              const active = selectedSite?.site_id === s.site_id;
-              const shortName = s.site_name.split(' (')[0].split(' / ')[0];
-              return (
-                <button
-                  key={s.site_id}
-                  onClick={() => {
-                    setSelectedSite(s);
-                    if (activeTab !== 'mesh') setActiveTab('mesh');
-                  }}
-                  className={`px-3 py-1 rounded-lg transition-all font-medium text-xs whitespace-nowrap ${
-                    active 
-                      ? 'bg-white text-[#074ce0] shadow-sm font-bold border border-blue-100' 
-                      : 'text-[#454c58] hover:text-[#16191f]'
-                  }`}
-                >
-                  {shortName}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Compact Dropdown on Laptop & Medium Viewports */}
-          <div className="hidden md:flex xl:hidden items-center gap-1.5 bg-[#f3f4f6] px-2.5 py-1.5 rounded-xl border border-[#dde0e6] text-xs">
-            <span className="text-[10px] font-mono font-bold text-[#8c94a4] uppercase">Hub:</span>
+          {/* Center: Executive Compact Hub Selector (Guarantees zero header wrap) */}
+          <div className="hidden md:flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/70 transition-colors px-3 py-1.5 rounded-xl border border-slate-200/90 text-xs shadow-2xs">
+            <MapPin className="w-3.5 h-3.5 text-[#074ce0] shrink-0" />
+            <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Hub:</span>
             <select
               value={selectedSite?.site_id || ''}
               onChange={(e) => {
@@ -195,19 +171,22 @@ export default function App() {
                   if (activeTab !== 'mesh') setActiveTab('mesh');
                 }
               }}
-              className="bg-transparent text-xs font-semibold text-[#16191f] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer max-w-[170px] xl:max-w-[220px] truncate"
             >
               {sites.map(s => (
                 <option key={s.site_id} value={s.site_id}>
-                  {s.site_name.split(' (')[0]} ({s.composite_score?.toFixed(0) || '0'}/100)
+                  {s.site_name.split(' (')[0]}
                 </option>
               ))}
             </select>
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-white text-[#074ce0] border border-blue-100 shadow-2xs shrink-0">
+              {selectedSite?.composite_score?.toFixed(1) || '0'}/100
+            </span>
           </div>
 
-          {/* Right Action Controls: Health & Simulate Site */}
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f3f4f6] border border-[#dde0e6] text-[11px] font-mono text-[#454c58]">
+          {/* Right Action Controls: Health, Refresh & Simulate Site (Shrink-0 Guaranteed) */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-mono text-emerald-800 font-medium">
               <span className={`w-2 h-2 rounded-full ${apiOnline ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'}`}></span>
               <span>{apiOnline ? 'Backend Live' : 'Sovereign Edge Live'}</span>
             </div>
@@ -215,14 +194,14 @@ export default function App() {
             <button
               onClick={loadSites}
               title="Refresh Ground Truth Telemetry"
-              className="p-2 rounded-xl bg-white border border-[#dde0e6] text-[#454c58] hover:text-[#16191f] hover:bg-[#f3f4f6] transition-colors shadow-2xs"
+              className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 font-display"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 font-display shrink-0 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 shrink-0" />
               <span className="hidden sm:inline">Simulate Site</span>
@@ -233,75 +212,46 @@ export default function App() {
         </div>
       </header>
 
-      {/* 2. Floating Docked Quick-Access Pill on LEFT Edge (Tablet/Desktop) */}
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[1000] hidden md:block">
-        <button
-          onClick={() => setIsSidePanelOpen(true)}
-          title="Open Platform Features Menu (7 Extended Tools)"
-          className="bg-[#074ce0] hover:bg-[#0640c4] text-white shadow-xl rounded-r-xl px-2.5 py-3 flex items-center gap-2 cursor-pointer transition-all duration-200 border-r border-t border-b border-blue-400/40 group hover:pl-3.5"
-        >
-          <Menu className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
-          <div className="text-left">
-            <div className="text-[11px] font-bold font-display leading-tight flex items-center gap-1">
-              <span>Features</span>
-              <span className="text-[9px] font-mono bg-white/20 px-1.5 py-0.2 rounded-full text-white font-bold">7</span>
-            </div>
-            <div className="text-[9px] text-blue-100 font-mono leading-tight">Side Menu</div>
-          </div>
-        </button>
-      </div>
-
-      {/* 3. Core Home View vs. Extended Feature Module View */}
+      {/* 2. Core Home View vs. Extended Feature Module View */}
       {activeTab === 'mesh' ? (
         /* HOME PAGE: 100% Focused on the Main Working Model of Site Scoring */
         <>
           {/* Mission & Statutory Siting Overview Banner */}
-          <section className="border-b border-[#dde0e6] bg-gradient-to-b from-[#fcfcfd] to-[#f8f9fb]">
+          <section className="border-b border-slate-200 bg-gradient-to-b from-white via-slate-50/70 to-slate-100/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                 
                 <div className="space-y-1.5 max-w-3xl">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-50 text-[#074ce0] text-[11px] font-mono font-bold border border-blue-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#074ce0]"></span>
-                      <span>INDIA AI MISSION (₹10,372 CR) • STATUTORY GROUNDED SITING</span>
-                    </div>
-
-                    <button
-                      onClick={() => setIsSidePanelOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 hover:bg-blue-100 text-[#074ce0] text-[10px] font-mono border border-blue-200 transition-colors font-semibold"
-                      title="Explore 7 extended modules in side panel"
-                    >
-                      <Menu className="w-3 h-3 text-[#074ce0]" />
-                      <span>7 Extended Suites in Left Menu →</span>
-                    </button>
+                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-50 text-[#074ce0] text-[11px] font-mono font-bold border border-blue-200 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#074ce0]"></span>
+                    <span>INDIA AI MISSION (₹10,372 CR) • STATUTORY GROUNDED SITING</span>
                   </div>
 
-                  <h2 className="text-xl sm:text-2xl font-bold font-display text-[#16191f] tracking-tight">
-                    National AI Infrastructure Decision Intelligence & Geospatial Operating System
+                  <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+                    National AI Infrastructure Siting & Decision Intelligence
                   </h2>
-                  <p className="text-xs text-[#454c58] leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">
                     Evaluates hyperscale AI data centers across 9 statutory infrastructure & sovereign dimensions (50-Factor Matrix): water stress (CGWB), electrical grid (CEA), psychrometric wet-bulb (NASA POWER), subsea connectivity (NIXI), seismic hazard (BIS IS 1893:2016), soil bearing capacity (IS 1892), open-access tariffs (SERC), atmospheric corrosivity (ISA-71.04), and MoEFCC forest buffers. Zero guessed scores.
                   </p>
                 </div>
 
-                {/* Quick Stats Micro Strip */}
-                <div className="flex items-center gap-2.5 shrink-0 font-mono text-xs">
-                  <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[85px]">
-                    <div className="text-sm font-black text-[#16191f]">{sites.length}</div>
-                    <div className="text-[10px] text-[#454c58]">Key Hubs</div>
+                {/* Quick Stats Micro Strip - Glassmorphic capsules */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0 font-mono text-xs">
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs text-center min-w-[90px] hover:border-slate-300 transition-colors">
+                    <div className="text-base font-black text-slate-900">{sites.length}</div>
+                    <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Key Hubs</div>
                   </div>
-                  <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[85px]">
-                    <div className="text-sm font-black text-[#074ce0]">9</div>
-                    <div className="text-[10px] text-[#454c58]">Dimensions</div>
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs text-center min-w-[90px] hover:border-blue-300 transition-colors">
+                    <div className="text-base font-black text-[#074ce0]">9</div>
+                    <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Dimensions</div>
                   </div>
-                  <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[85px]">
-                    <div className="text-sm font-black text-emerald-600">50</div>
-                    <div className="text-[10px] text-[#454c58]">Factors</div>
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs text-center min-w-[90px] hover:border-emerald-300 transition-colors">
+                    <div className="text-base font-black text-emerald-600">50</div>
+                    <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Factors</div>
                   </div>
-                  <div className="p-2.5 bg-white rounded-xl border border-[#dde0e6] shadow-2xs text-center min-w-[85px]">
-                    <div className="text-sm font-black text-indigo-600">5</div>
-                    <div className="text-[10px] text-[#454c58]">Live APIs</div>
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs text-center min-w-[90px] hover:border-indigo-300 transition-colors">
+                    <div className="text-base font-black text-indigo-600">5</div>
+                    <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Live APIs</div>
                   </div>
                 </div>
 
@@ -310,7 +260,7 @@ export default function App() {
           </section>
 
           {/* Main Siting Working Model Canvas */}
-          <section className="flex-1 bg-[#f3f4f6] py-6 sm:py-8">
+          <section className="flex-1 bg-slate-100/60 py-6 sm:py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
               
               {/* Error Banner */}
@@ -325,7 +275,7 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 
                 {/* Precision Cartographic Viewer (7 cols) */}
-                <div className="lg:col-span-7 min-h-[580px] lg:h-[640px] flex flex-col rounded-2xl overflow-hidden border border-[#dde0e6] shadow-sm bg-[#16191f]">
+                <div className="lg:col-span-7 min-h-[580px] lg:h-[640px] flex flex-col rounded-2xl overflow-hidden border border-slate-300 shadow-sm bg-[#16191f]">
                   <MapView 
                     sites={sites} 
                     selectedSite={selectedSite} 
@@ -351,21 +301,21 @@ export default function App() {
               )}
 
               {/* Extended Platform Ecosystem Gateway Card */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-white via-white to-blue-50/50 border border-[#dde0e6] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-white via-white to-blue-50/70 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-[#074ce0] text-white flex items-center justify-center shrink-0 shadow-sm shadow-[#074ce0]/25">
-                    <Menu className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-xl bg-[#074ce0] text-white flex items-center justify-center shrink-0 shadow-sm shadow-[#074ce0]/25">
+                    <Menu className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold font-display text-[#16191f]">
+                      <h3 className="text-sm font-bold font-display text-slate-900">
                         Extended IndiaAI Infrastructure Feature Suites
                       </h3>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-100 text-[#074ce0] border border-blue-200 font-bold">
                         7 Modules
                       </span>
                     </div>
-                    <p className="text-xs text-[#454c58] mt-0.5 max-w-2xl leading-relaxed">
+                    <p className="text-xs text-slate-600 mt-0.5 max-w-2xl leading-relaxed">
                       Beyond site scoring: run DC Engineering sizing simulations, inspect the GPU Marketplace, analyze state policy incentives, optimize ESG renewable mix, or review the multi-site audit matrix.
                     </p>
                   </div>
@@ -386,16 +336,16 @@ export default function App() {
         </>
       ) : (
         /* EXTENDED MODULE VIEW (Launched via Side Panel) */
-        <section className="flex-1 bg-[#f3f4f6] py-6 sm:py-8">
+        <section className="flex-1 bg-slate-100/60 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             
             {/* Extended Module Breadcrumb & Navigation Command Bar */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#dde0e6] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#8c94a4]">
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
                   <button 
                     onClick={() => setActiveTab('mesh')}
-                    className="hover:text-[#074ce0] flex items-center gap-1 font-semibold text-[#454c58] transition-colors"
+                    className="hover:text-[#074ce0] flex items-center gap-1 font-semibold text-slate-600 transition-colors"
                   >
                     <MapPin className="w-3.5 h-3.5 text-[#074ce0]" />
                     <span>Site Scoring Engine</span>
@@ -403,7 +353,7 @@ export default function App() {
                   <span>/</span>
                   <span>Platform Modules</span>
                   <span>/</span>
-                  <span className="text-[#16191f] font-bold">
+                  <span className="text-slate-900 font-bold">
                     {currentModule?.shortLabel || 'Extended Suite'}
                   </span>
                 </div>
@@ -414,7 +364,7 @@ export default function App() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-base sm:text-lg font-bold font-display text-[#16191f] leading-tight">
+                      <h2 className="text-base sm:text-lg font-bold font-display text-slate-900 leading-tight">
                         {currentModule?.title}
                       </h2>
                       {currentModule?.badge && (
@@ -423,7 +373,7 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#454c58] mt-0.5">
+                    <p className="text-xs text-slate-600 mt-0.5">
                       {currentModule?.description}
                     </p>
                   </div>
@@ -434,18 +384,18 @@ export default function App() {
               <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
                 {/* Active Hub Context */}
                 {selectedSite && (
-                  <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f3f4f6] border border-[#dde0e6] text-xs font-mono">
-                    <span className="text-[#8c94a4]">Active Hub:</span>
-                    <span className="font-bold text-[#16191f]">{selectedSite.site_name.split(' (')[0]}</span>
+                  <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono">
+                    <span className="text-slate-400">Active Hub:</span>
+                    <span className="font-bold text-slate-800">{selectedSite.site_name.split(' (')[0]}</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded bg-white text-[#074ce0] font-bold border border-blue-100">
-                      {selectedSite.composite_score?.toFixed(0) || '0'}/100
+                      {selectedSite.composite_score?.toFixed(1) || '0'}/100
                     </span>
                   </div>
                 )}
 
                 <button
                   onClick={() => setIsSidePanelOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 text-[#074ce0] transition-colors border border-blue-200 font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 text-[#074ce0] transition-colors border border-blue-200 font-semibold cursor-pointer"
                 >
                   <Menu className="w-4 h-4 text-[#074ce0]" />
                   <span>Switch Module</span>
@@ -453,7 +403,7 @@ export default function App() {
 
                 <button
                   onClick={() => setActiveTab('mesh')}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Return to Site Scoring</span>
@@ -498,8 +448,8 @@ export default function App() {
         </section>
       )}
 
-      {/* 4. Enterprise Institutional Footer */}
-      <footer className="border-t border-[#dde0e6] bg-[#0F172A] text-slate-300 py-10">
+      {/* 3. Enterprise Institutional Footer */}
+      <footer className="border-t border-slate-200 bg-[#0F172A] text-slate-300 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -512,11 +462,11 @@ export default function App() {
                   SuperIndia.ai
                 </h3>
               </div>
-              <p className="text-xs text-[#d0d4dd] leading-relaxed max-w-md">
+              <p className="text-xs text-slate-300 leading-relaxed max-w-md">
                 India's sovereign infrastructure intelligence and resource optimization platform.
                 Bridging upstream strategic spatial planning with cross-institutional compute utilization under IndiaAI.
               </p>
-              <div className="text-[11px] font-mono text-[#8c94a4]">
+              <div className="text-[11px] font-mono text-slate-400">
                 Axiom: One model → one responsibility → domain aggregator → composite national intelligence.
               </div>
             </div>
@@ -525,7 +475,7 @@ export default function App() {
               <div className="font-bold text-white font-display uppercase tracking-wider text-[11px]">
                 Platform Capabilities
               </div>
-              <ul className="space-y-1.5 text-[#d0d4dd]">
+              <ul className="space-y-1.5 text-slate-300">
                 <li>• 9-Domain Siting Mesh (Core)</li>
                 <li>• Data Center Capacity Planner</li>
                 <li>• Federated GPU Marketplace</li>
@@ -539,7 +489,7 @@ export default function App() {
               <div className="font-bold text-white font-display uppercase tracking-wider text-[11px]">
                 Authentic Statutory Standards
               </div>
-              <ul className="space-y-1.5 text-[#d0d4dd]">
+              <ul className="space-y-1.5 text-slate-300">
                 <li>• Central Ground Water Board (CGWB)</li>
                 <li>• Central Electricity Authority (CEA)</li>
                 <li>• NASA POWER 30-Year Climatology</li>
@@ -549,7 +499,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8c94a4] font-sans">
+          <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 font-sans">
             <div>
               &copy; 2026 SuperIndia.ai • National AI Infrastructure Intelligence Platform
             </div>
