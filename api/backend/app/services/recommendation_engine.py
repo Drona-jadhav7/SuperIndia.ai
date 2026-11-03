@@ -624,6 +624,9 @@ def find_nearby_recommended_sites(
         hub_lat = hub["latitude"]
         hub_lon = hub["longitude"]
         dist_km = haversine_distance_km(current_lat, current_lon, hub_lat, hub_lon)
+        # Never recommend the candidate site itself as an alternative! (Must be distinct >= 5 km away)
+        if dist_km < 5.0:
+            continue
 
         hub_score = hub["composite_score"]
         score_delta = hub_score - current_score
@@ -657,6 +660,8 @@ def find_nearby_recommended_sites(
         # Fallback: find the absolute closest viable hub in catalog regardless of distance
         for hub in VERIFIED_AI_HUBS_CATALOG:
             dist_km = haversine_distance_km(current_lat, current_lon, hub["latitude"], hub["longitude"])
+            if dist_km < 5.0:
+                continue
             candidates.append({
                 "hub": hub,
                 "dist_km": dist_km,

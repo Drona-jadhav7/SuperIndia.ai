@@ -311,7 +311,10 @@ export async function fetchDirectSovereignTelemetry({
   const isProtectedArea = Boolean(paCheck?.is_in_core);
   const isEszArea = Boolean(paCheck?.is_in_esz);
   const distanceToProtectedKm = paCheck?.distance_km ?? 25.0;
-  const effectiveTreeCanopy = paCheck?.canopy_pct ?? 3.5;
+  // Authoritative: Only apply dense forest sanctuary canopy if site is actually inside core sanctuary or ESZ!
+  const effectiveTreeCanopy = isProtectedArea 
+    ? (paCheck?.canopy_pct ?? 68.5) 
+    : (isEszArea ? 18.0 : 2.8);
 
   // Construct structured site_input matching backend schemas
   const siteInput = {

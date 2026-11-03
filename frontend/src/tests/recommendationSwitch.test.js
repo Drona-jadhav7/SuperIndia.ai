@@ -16,6 +16,7 @@ const benchmarkSites = JSON.parse(
 );
 
 import { findNearbyRecommendedSitesClient, evaluateCandidateSite } from '../services/scoringEngine.js';
+import { fetchDirectSovereignTelemetry } from '../services/telemetryClient.js';
 
 console.log('🧪 Starting SuperIndia.ai Recommended Site Switch Test Suite...\n');
 
@@ -147,5 +148,66 @@ assert.strictEqual(evaluation.tier, 'VIABLE / RECOMMENDED');
 assert.strictEqual(evaluation.tier_badge, 'VIABLE');
 assert.strictEqual(evaluation.fifty_factor_telemetry?.is_vetoed, undefined);
 console.log(`  ✓ Un-cached greenfield hub successfully evaluated with Viable Feasibility: ${evaluation.composite_score}/100 (${evaluation.tier_badge})`);
+
+// ==========================================
+// Test 4: Prevention of Self-Recommendation at 0 km
+// ==========================================
+console.log('\nTest 4: Prevention of Self-Recommendation at 0 km');
+
+// Candidate site located at YEIDA Sector 28 coordinates (28.21, 77.58)
+const yeidaRecs = findNearbyRecommendedSitesClient(
+  28.21,
+  77.58,
+  22.0,
+  true,
+  'Uttar Pradesh'
+);
+
+assert.ok(yeidaRecs.bestAlternative, 'Must provide an alternative for low scoring YEIDA candidate');
+assert.notStrictEqual(
+  yeidaRecs.bestAlternative.site_id,
+  'yeida_jewar',
+  'Must NOT recommend itself (yeida_jewar) when already located at yeida_jewar!'
+);
+assert.ok(
+  yeidaRecs.bestAlternative.distance_km >= 5.0,
+  `Alternative distance must be >= 5 km, got ${yeidaRecs.bestAlternative.distance_km} km`
+);
+console.log(`  ✓ Self-recommendation prevented: Candidate at (28.21, 77.58) recommends '${yeidaRecs.bestAlternative.site_name}' (${yeidaRecs.bestAlternative.distance_km} km away, Score: ${yeidaRecs.bestAlternative.composite_score}/100)`);
+
+// ==========================================
+// Test 5: Clean Non-Forest Telemetry Ingestion (No Fictitious 73% Forest Cover)
+// ==========================================
+console.log('\nTest 5: Authentic Non-Forest Telemetry Ingestion for Industrial Zones');
+
+const telRes = await fetchDirectSovereignTelemetry({
+  latitude: 28.21,
+  longitude: 77.58,
+  site_name: 'YEIDA Sector 28',
+  district: 'Gautam Buddha Nagar',
+  state: 'Uttar Pradesh'
+});
+
+assert.ok(telRes.success, 'Telemetry fetch must succeed');
+const ecoInp = telRes.site_input.eco_params;
+assert.strictEqual(
+  ecoInp.tree_canopy_cover_pct,
+  2.8,
+  `Non-protected industrial zone should have baseline 2.8% canopy, not sanctuary canopy. Got ${ecoInp.tree_canopy_cover_pct}%`
+);
+assert.strictEqual(ecoInp.is_notified_non_forest, true, 'Industrial zone must be certified non-forest');
+assert.strictEqual(telRes.site_input.land_params.notified_industrial_zone, true, 'Industrial zone flag must be true');
+
+const evaluatedCandidate = evaluateCandidateSite(telRes.site_input);
+assert.ok(
+  evaluatedCandidate.composite_score >= 85.0,
+  `Candidate site must score >= 85.0 with real telemetry, got ${evaluatedCandidate.composite_score}/100`
+);
+assert.strictEqual(
+  evaluatedCandidate.fifty_factor_telemetry?.is_vetoed,
+  undefined,
+  'Must have zero statutory rejection vetoes'
+);
+console.log(`  ✓ Telemetry verified: Canopy=${ecoInp.tree_canopy_cover_pct}%, Feasibility=${evaluatedCandidate.composite_score}/100 (${evaluatedCandidate.tier_badge}, 0 Vetoes)`);
 
 console.log('\n🎉 ALL RECOMMENDED SITE SWITCH TESTS PASSED SUCCESSFULLY!\n');

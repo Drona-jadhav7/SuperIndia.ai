@@ -53,7 +53,17 @@ export default function ScoreCard({ site, onSelectSite }) {
   const siteLat = site.latitude ?? site.lat ?? site.coordinates?.lat;
   const siteLon = site.longitude ?? site.lon ?? site.coordinates?.lng ?? site.coordinates?.lon;
 
-  const recommendedAlt = site.recommended_alternative || (
+  // Filter out any stale self-recommendations (distance < 5km or same name/id)
+  let rawAlt = site.recommended_alternative;
+  if (rawAlt && (
+    (rawAlt.distance_km !== undefined && rawAlt.distance_km < 5.0) ||
+    rawAlt.site_id === site.site_id ||
+    rawAlt.site_name === site.site_name
+  )) {
+    rawAlt = null;
+  }
+
+  const recommendedAlt = rawAlt || (
     ((compositeScore < 75.0) || site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto) && (siteLat && siteLon)
       ? findNearbyRecommendedSitesClient(
           siteLat,

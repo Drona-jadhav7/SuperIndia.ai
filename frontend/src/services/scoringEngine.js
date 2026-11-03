@@ -1357,6 +1357,9 @@ export function findNearbyRecommendedSitesClient(
 
   for (const hub of VERIFIED_AI_HUBS_CLIENT) {
     const distKm = haversineDistanceKmClient(currentLat, currentLon, hub.latitude, hub.longitude);
+    // Never recommend the current site itself as an alternative! (Must be distinct location >= 5 km away)
+    if (distKm < 5.0) continue;
+
     const scoreDelta = hub.composite_score - currentScore;
 
     if (!isVetoed && scoreDelta < minScoreDelta) continue;
@@ -1377,6 +1380,7 @@ export function findNearbyRecommendedSitesClient(
   if (candidates.length === 0) {
     for (const hub of VERIFIED_AI_HUBS_CLIENT) {
       const distKm = haversineDistanceKmClient(currentLat, currentLon, hub.latitude, hub.longitude);
+      if (distKm < 5.0) continue;
       candidates.push({
         hub,
         distKm: Math.round(distKm * 10) / 10,
