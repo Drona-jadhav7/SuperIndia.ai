@@ -50,11 +50,14 @@ export default function ScoreCard({ site, onSelectSite }) {
   const tierColor = site.tier_color || '#10B981';
   const tier = site.tier || 'VIABLE / RECOMMENDED';
 
+  const siteLat = site.latitude ?? site.lat ?? site.coordinates?.lat;
+  const siteLon = site.longitude ?? site.lon ?? site.coordinates?.lng ?? site.coordinates?.lon;
+
   const recommendedAlt = site.recommended_alternative || (
-    ((compositeScore < 75.0) || site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto) && (site.latitude && site.longitude)
+    ((compositeScore < 75.0) || site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto) && (siteLat && siteLon)
       ? findNearbyRecommendedSitesClient(
-          site.latitude,
-          site.longitude,
+          siteLat,
+          siteLon,
           compositeScore,
           Boolean(site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto || compositeScore < 25),
           site.state
@@ -427,8 +430,10 @@ export default function ScoreCard({ site, onSelectSite }) {
 
             {/* 1-Click Action to Adopt/Switch */}
             <button
-              onClick={() => {
-                if (onSelectSite) {
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onSelectSite && recommendedAlt) {
                   onSelectSite(recommendedAlt);
                 }
               }}

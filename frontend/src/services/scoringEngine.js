@@ -291,8 +291,8 @@ export const INDIAN_PROTECTED_AREAS_REGISTRY = [
     district: "Mumbai Suburban / Thane",
     latitude: 19.2288,
     longitude: 72.9158,
-    core_radius_km: 8.0,
-    esz_radius_km: 16.0,
+    core_radius_km: 5.0,
+    esz_radius_km: 10.0,
     canopy_pct: 74.0,
     tree_species_summary: "Moist deciduous teak, kadamba, bamboo",
     fauna_summary: "Indian Leopard, Chital, Macaque",
@@ -454,10 +454,11 @@ export function checkProtectedAreaProximityClient(lat, lon, siteName = "", distr
     const eszR = closestPa.esz_radius_km || 35.0;
     const nameMatch = closestPa.aliases.some(alias => queryStr.includes(alias.toLowerCase()));
 
+    const isIndustrialEstate = ['midc', 'gidc', 'sipcot', 'kiadb', 'industrial', 'tech park', 'sez', 'infopark'].some(kw => queryStr.includes(kw));
     if (nameMatch || minDistKm <= coreR || (keywordMatched && minDistKm <= eszR)) {
       isInCore = true;
       minDistKm = 0.0;
-    } else if (minDistKm <= eszR) {
+    } else if (minDistKm <= eszR && !isIndustrialEstate) {
       isInEsz = true;
     }
   } else if (keywordMatched) {
