@@ -306,6 +306,13 @@ export async function fetchDirectSovereignTelemetry({
   );
   const seismicZone = seismicKey ? SEISMIC_ZONE_REGISTRY[seismicKey] : 'III';
 
+  // 11. Authoritative Protected Area & Sanctuary Check
+  const paCheck = checkProtectedAreaProximityClient(lat, lon, site_name, district, state);
+  const isProtectedArea = Boolean(paCheck?.is_in_core);
+  const isEszArea = Boolean(paCheck?.is_in_esz);
+  const distanceToProtectedKm = paCheck?.distance_km ?? 25.0;
+  const effectiveTreeCanopy = paCheck?.canopy_pct ?? 3.5;
+
   // Construct structured site_input matching backend schemas
   const siteInput = {
     site_name: site_name || `Candidate Hub (${lat.toFixed(3)}°N, ${lon.toFixed(3)}°E)`,
