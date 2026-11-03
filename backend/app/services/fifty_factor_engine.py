@@ -124,18 +124,24 @@ for dim, fids in DIMENSION_SLICES.items():
 # 2. Mathematical Utility Functions for the 50 Siting Factors
 # ============================================================================
 
-def f1_groundwater_soe(soe_pct: float) -> float:
-    """Factor 1: Stage of Groundwater Extraction (CGWB baseline)."""
+def f1_groundwater_soe(soe_pct: float, tertiary_supply_mld: float = 0.0) -> float:
+    """Factor 1: Stage of Groundwater Extraction (CGWB baseline, with tertiary treated offset)."""
     if soe_pct <= 60.0:
-        return 100.0
+        base = 100.0
     elif soe_pct <= 70.0:
-        return 100.0 - (soe_pct - 60.0) * 1.5
+        base = 100.0 - (soe_pct - 60.0) * 1.5
     elif soe_pct <= 90.0:
-        return 85.0 - ((soe_pct - 70.0) / 20.0) * 35.0
+        base = 85.0 - ((soe_pct - 70.0) / 20.0) * 35.0
     elif soe_pct <= 100.0:
-        return 50.0 - ((soe_pct - 90.0) / 10.0) * 25.0
+        base = 50.0 - ((soe_pct - 90.0) / 10.0) * 25.0
     else:
-        return max(0.0, 25.0 - (soe_pct - 100.0) * 1.5)
+        base = max(0.0, 25.0 - (soe_pct - 100.0) * 1.5)
+
+    if tertiary_supply_mld >= 15.0:
+        return max(base, 80.0)
+    elif tertiary_supply_mld >= 5.0:
+        return max(base, 65.0)
+    return base
 
 def f2_water_tds(tds: float) -> float:
     """Factor 2: Total Dissolved Solids (BIS 10500 standard)."""
@@ -297,15 +303,17 @@ def f16_relative_humidity(rh: float) -> float:
         return 40.0
 
 def f17_wet_bulb(tw: float) -> float:
-    """Factor 17: Psychrometric Wet-Bulb Temperature (°C)."""
+    """Factor 17: Psychrometric Wet-Bulb Temperature (°C) calibrated for modern DLC liquid cooling."""
     if tw <= 24.0:
         return 100.0
     elif tw <= 28.0:
-        return 100.0 - ((tw - 24.0) / 4.0) * 30.0
+        return 100.0 - ((tw - 24.0) / 4.0) * 20.0
     elif tw <= 31.0:
-        return 70.0 - ((tw - 28.0) / 3.0) * 40.0
+        return 80.0 - ((tw - 28.0) / 3.0) * 35.0
+    elif tw <= 33.5:
+        return 45.0 - ((tw - 31.0) / 2.5) * 25.0
     else:
-        return max(0.0, 30.0 - (tw - 31.0) * 8.0)
+        return max(15.0, 20.0 - (tw - 33.5) * 3.0)
 
 # Exported alias for psychrometric testing
 f17_wet_bulb_temp = f17_wet_bulb
@@ -329,15 +337,15 @@ def f19_extreme_heat_days(days: float) -> float:
         return max(20.0, 75.0 - (days - 15.0) * 2.5)
 
 def f20_pm25(pm25: float) -> float:
-    """Factor 20: Atmospheric Particulate Matter (PM2.5 in µg/m³)."""
+    """Factor 20: Atmospheric Particulate Matter (PM2.5 in µg/m³) with positive-pressure MERV filtration."""
     if pm25 <= 30.0:
         return 100.0
     elif pm25 <= 60.0:
-        return 100.0 - ((pm25 - 30.0) / 30.0) * 25.0
+        return 100.0 - ((pm25 - 30.0) / 30.0) * 20.0
     elif pm25 <= 120.0:
-        return 75.0 - ((pm25 - 60.0) / 60.0) * 40.0
+        return 80.0 - ((pm25 - 60.0) / 60.0) * 30.0
     else:
-        return max(15.0, 35.0 - (pm25 - 120.0) * 0.25)
+        return max(30.0, 50.0 - (pm25 - 120.0) * 0.15)
 
 def f21_cls_dist(dist_km: float) -> float:
     """Factor 21: Terrestrial Distance to Nearest Subsea CLS."""
@@ -351,15 +359,15 @@ def f21_cls_dist(dist_km: float) -> float:
         return max(25.0, 45.0 - ((dist_km - 500.0) / 1000.0) * 20.0)
 
 def f22_cls_rtt(rtt_ms: float) -> float:
-    """Factor 22: Subsea Gateway Optical RTT Latency."""
-    if rtt_ms <= 3.0:
+    """Factor 22: Subsea Gateway Optical RTT Latency via high-speed optical expressways."""
+    if rtt_ms <= 4.0:
         return 100.0
-    elif rtt_ms <= 6.0:
-        return 100.0 - ((rtt_ms - 3.0) / 3.0) * 15.0
-    elif rtt_ms <= 15.0:
-        return 85.0 - ((rtt_ms - 6.0) / 9.0) * 35.0
+    elif rtt_ms <= 10.0:
+        return 100.0 - ((rtt_ms - 4.0) / 6.0) * 18.0
+    elif rtt_ms <= 20.0:
+        return 82.0 - ((rtt_ms - 10.0) / 10.0) * 22.0
     else:
-        return max(20.0, 50.0 - (rtt_ms - 15.0) * 2.0)
+        return max(30.0, 60.0 - (rtt_ms - 20.0) * 1.5)
 
 def f23_nixi_dist(dist_km: float) -> float:
     """Factor 23: Distance to Nearest NIXI Internet Exchange."""
@@ -738,7 +746,7 @@ def calculate_fifty_factor_assessment(
 
     # 1. Evaluate Individual Factor Scores (0.0 to 100.0)
     scores: Dict[int, float] = {
-        1: round(f1_groundwater_soe(wp.groundwater_extraction_pct), 2),
+        1: round(f1_groundwater_soe(wp.groundwater_extraction_pct, wp.tertiary_supply_mld), 2),
         2: round(f2_water_tds(wp.water_quality_tds), 2),
         3: round(f3_aquifer_stress(wp.local_aquifer_stress_pct), 2),
         4: round(f4_water_demand(wp.data_center_demand_mld, site.proposed_it_load_mw), 2),
@@ -830,8 +838,23 @@ def calculate_fifty_factor_assessment(
     if canopy_pct > 10.0:
         bottleneck_mult *= max(0.05, (100.0 - canopy_pct) / 90.0) ** 0.75
     
-    # 3c. Calibrated Precision Synthesis (65% TOPSIS geometric variance + 35% Weighted baseline * Bottleneck Multiplier)
-    calibrated_base = (0.65 * topsis_score) + (0.35 * raw_composite)
+    # Fatal Economic & Land acquisition cost veto for hyper-dense metros (e.g. South Mumbai)
+    land_cost = getattr(site.economics_params, "land_cost_inr_crore_per_acre", 1.5)
+    parcel_acres = getattr(site.land_params, "contiguous_parcel_acres", 50.0)
+    if land_cost >= 30.0 or (land_cost >= 15.0 and parcel_acres <= 10.0):
+        bottleneck_mult *= 0.60
+        bottleneck_penalties.append({
+            "pillar": "Prohibitive Metro Land Acquisition",
+            "score": round(dim_scores.get("economics", 0.0), 1),
+            "threshold": 50.0,
+            "penalty_factor": 0.60,
+            "reason": f"Astronomical commercial land cost (₹{land_cost:.1f} Cr/Acre) renders hyperscale AI compute unviable",
+        })
+        dim_scores["economics"] = min(dim_scores.get("economics", 50.0), 30.0)
+        dim_scores["land"] = min(dim_scores.get("land", 50.0), 35.0)
+
+    # 3c. Calibrated Precision Synthesis (25% TOPSIS geometric variance + 75% Weighted baseline * Bottleneck Multiplier)
+    calibrated_base = (0.25 * topsis_score) + (0.75 * raw_composite)
     composite_score = round(calibrated_base * bottleneck_mult, 1)
 
     # Land Dimension & Tree Canopy Downward Clamping

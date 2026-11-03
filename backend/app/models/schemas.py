@@ -183,6 +183,23 @@ class GenericDomainOutput(BaseModel):
     sub_metrics: List[Dict[str, Any]]
     summary: str
 
+class RecommendedAlternative(BaseModel):
+    site_id: str
+    site_name: str
+    state: str
+    district: str
+    latitude: float
+    longitude: float
+    elevation_m: float = 50.0
+    distance_km: float
+    composite_score: float
+    score_delta: float
+    tier: str
+    tier_badge: str
+    tier_color: str
+    key_advantages: List[str] = Field(default_factory=list)
+    why_better: Dict[str, str] = Field(default_factory=dict)
+
 class SiteAssessmentResponse(BaseModel):
     site_id: Optional[str] = None
     site_name: str
@@ -229,6 +246,10 @@ class SiteAssessmentResponse(BaseModel):
     is_live_evaluated: bool = False
     data_provenance: Optional[Dict[str, Any]] = None
     fifty_factor_telemetry: Optional[Dict[str, Any]] = None
+
+    # Nearby Sovereign Recommendations (When site scores low or has statutory veto)
+    recommended_alternative: Optional[RecommendedAlternative] = None
+    nearby_alternatives: Optional[List[RecommendedAlternative]] = Field(default_factory=list)
 
 class SiteComparisonRequest(BaseModel):
     site_ids: Optional[List[str]] = None

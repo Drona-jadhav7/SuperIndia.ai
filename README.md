@@ -175,7 +175,7 @@ $$\text{Composite Score}_{\text{raw}} = \sum_{i=1}^{50} \left( w_i \times f_i(x_
 - **Runtime:** Python 3.10+ (tested on Python 3.10, 3.11, 3.12, 3.14)
 - **Framework:** FastAPI 0.110.0 (Asynchronous ASGI REST framework)
 - **Data Validation & Schemas:** Pydantic v2 (Type-safe models with non-linear scoring algorithms)
-- **Serverless Cloud Entrypoint:** Dual-root Vercel Serverless Function architecture ([api/index.py](file:///D:/MY/SuperIndia.ai/api/index.py) & [frontend/api/index.py](file:///D:/MY/SuperIndia.ai/frontend/api/index.py)) with negative-lookahead rewrites (`/((?!api/|health).*)` $\rightarrow$ `/index.html`) to ensure API routes are never hijacked by SPA catch-alls.
+- **Serverless Cloud Entrypoint:** High-performance Vercel Serverless Function architecture ([api/index.py](file:///D:/MY/SuperIndia.ai/api/index.py)) with negative-lookahead rewrites (`/((?!api/|health).*)` $\rightarrow$ `/index.html`) to ensure API routes are never hijacked by SPA catch-alls.
 - **Testing & Verification:** Pytest suite with 100 passing tests across all 50 transfer functions and statutory veto constraints.
 
 ---

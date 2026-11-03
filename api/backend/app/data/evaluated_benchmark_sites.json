@@ -8,14 +8,14 @@
     "longitude": 77.712,
     "elevation_m": 918.0,
     "proposed_it_load_mw": 80.0,
-    "composite_score": 86.7,
+    "composite_score": 91.8,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
-    "water_score": 77.7,
+    "water_score": 85.4,
     "power_score": 91.0,
-    "climate_score": 94.1,
-    "connectivity_score": 87.5,
+    "climate_score": 95.4,
+    "connectivity_score": 91.5,
     "disaster_score": 99.7,
     "land_score": 100.0,
     "economics_score": 86.9,
@@ -177,7 +177,7 @@
           "weight": 0.35,
           "weighted_score": 29.35,
           "category": "EXCELLENT",
-          "details": "Design Wet Bulb: 25.42\u00b0C (Dry: 33.2\u00b0C, RH: 52.0%).",
+          "details": "Design Wet Bulb: 25.42°C (Dry: 33.2°C, RH: 52.0%).",
           "flagged": false
         },
         {
@@ -187,7 +187,7 @@
           "weight": 0.25,
           "weighted_score": 22.12,
           "category": "EXCELLENT",
-          "details": "Annual CDD: 2180 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2180 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -207,11 +207,11 @@
           "weight": 0.2,
           "weighted_score": 17.67,
           "category": "EXCELLENT",
-          "details": "Annual PM2.5 mean: 38.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 38.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 81.96/100. Wet bulb 25.42\u00b0C supports ASHRAE TC 9.9 Class A1 (Tight Envelope)."
+      "summary": "Climate suitability score 81.96/100. Wet bulb 25.42°C supports ASHRAE TC 9.9 Class A1 (Tight Envelope)."
     },
     "connectivity_assessment": {
       "connectivity_score": 89.88,
@@ -354,7 +354,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 280 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 280 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -369,7 +369,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 100.0/100 with 45.0 contiguous acres and SBC 280.0 kN/m\u00b2."
+      "summary": "Land suitability score 100.0/100 with 45.0 contiguous acres and SBC 280.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 79.15,
@@ -387,7 +387,7 @@
           "weight": 0.4,
           "weighted_score": 34.0,
           "category": "COMPETITIVE",
-          "details": "SERC HT Tariff: \u20b97.20 / kWh.",
+          "details": "SERC HT Tariff: ₹7.20 / kWh.",
           "flagged": false
         },
         {
@@ -417,12 +417,12 @@
           "weight": 0.15,
           "weighted_score": 12.15,
           "category": "AFFORDABLE",
-          "details": "\u20b94.20 Cr / acre benchmark cost.",
+          "details": "₹4.20 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "COMPETITIVE INCENTIVES",
-      "summary": "Economic viability score 79.15/100. Electricity tariff \u20b97.2/kWh with COMPETITIVE INCENTIVES benefits."
+      "summary": "Economic viability score 79.15/100. Electricity tariff ₹7.2/kWh with COMPETITIVE INCENTIVES benefits."
     },
     "eco_assessment": {
       "score": 93.4,
@@ -440,7 +440,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "4.5% Canopy Density \u2022 Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
+          "details": "4.5% Canopy Density • Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -449,7 +449,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -458,7 +458,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 3,226 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 3,226 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -467,7 +467,7 @@
           "weight": 0.15,
           "weighted_score": 9.4,
           "category": "Carbon Neutrality",
-          "details": "56.4% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "56.4% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -480,9 +480,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 93.4/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
+      "summary": "Eco-Feasibility Index 93.4/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 4.5,
       "esz_proximity_km": 20.0,
@@ -529,19 +529,19 @@
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:48.487332+00:00",
+    "timestamp": "2026-11-03T04:40:33.181244+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 86.7,
-      "raw_composite_score": 91.0,
+      "composite_score": 91.8,
+      "raw_composite_score": 93.0,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
-      "water_score": 77.7,
+      "water_score": 85.4,
       "power_score": 91.0,
-      "climate_score": 94.1,
-      "connectivity_score": 87.5,
+      "climate_score": 95.4,
+      "connectivity_score": 91.5,
       "disaster_score": 99.7,
       "land_score": 100.0,
       "economics_score": 86.9,
@@ -556,12 +556,12 @@
           "name": "Groundwater Stage of Extraction (SOE %)",
           "metric_key": "groundwater_extraction_pct",
           "value": "92.0%",
-          "factor_score": 45.0,
+          "factor_score": 80.0,
           "weight": 0.04,
-          "weighted_score": 1.8,
+          "weighted_score": 3.2,
           "benchmark": "<= 70% (Safe per CGWB)",
           "source": "Central Ground Water Board (CGWB)",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 2,
@@ -698,11 +698,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -711,11 +711,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -724,11 +724,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -737,11 +737,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "33.2\u00b0C",
+          "value": "33.2°C",
           "factor_score": 90.4,
           "weight": 0.025,
           "weighted_score": 2.26,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "OPTIMAL"
         },
@@ -763,18 +763,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "25.4\u00b0C",
-          "factor_score": 89.35,
+          "value": "25.4°C",
+          "factor_score": 92.9,
           "weight": 0.04,
-          "weighted_score": 3.574,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 3.716,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
-          "status": "COMPLIANT"
+          "status": "OPTIMAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2180 CDD",
           "factor_score": 100.0,
@@ -787,7 +787,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "2 Days/Year",
           "factor_score": 100.0,
@@ -802,11 +802,11 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "38.0 \u00b5g/m\u00b3",
-          "factor_score": 93.33,
+          "value": "38.0 µg/m³",
+          "factor_score": 94.67,
           "weight": 0.015,
-          "weighted_score": 1.4,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.42,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
           "status": "OPTIMAL"
         },
@@ -829,12 +829,12 @@
           "name": "Subsea Gateway Optical Round-Trip Time",
           "metric_key": "rtt_to_landing_station_ms",
           "value": "12.2 ms",
-          "factor_score": 60.89,
+          "factor_score": 77.16,
           "weight": 0.03,
-          "weighted_score": 1.827,
+          "weighted_score": 2.315,
           "benchmark": "<= 5.0 ms (Ultra-Low Latency GPU Mesh)",
           "source": "Terrestrial SMF-28 Optical Transit",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 23,
@@ -1036,11 +1036,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "280 kN/m\u00b2",
+          "value": "280 kN/m²",
           "factor_score": 100.0,
           "weight": 0.015,
           "weighted_score": 1.5,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -1075,11 +1075,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b97.20/kWh",
+          "value": "₹7.20/kWh",
           "factor_score": 86.0,
           "weight": 0.025,
           "weighted_score": 2.15,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "COMPLIANT"
         },
@@ -1114,7 +1114,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b94.20 Cr/Acre",
+          "value": "₹4.20 Cr/Acre",
           "factor_score": 99.0,
           "weight": 0.01,
           "weighted_score": 0.99,
@@ -1212,14 +1212,14 @@
     "longitude": 78.472,
     "elevation_m": 542.0,
     "proposed_it_load_mw": 120.0,
-    "composite_score": 89.6,
+    "composite_score": 93.0,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
     "water_score": 95.7,
     "power_score": 95.4,
-    "climate_score": 74.0,
-    "connectivity_score": 88.6,
+    "climate_score": 77.8,
+    "connectivity_score": 92.4,
     "disaster_score": 99.7,
     "land_score": 100.0,
     "economics_score": 94.7,
@@ -1381,7 +1381,7 @@
           "weight": 0.35,
           "weighted_score": 16.81,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 28.74\u00b0C (Dry: 38.5\u00b0C, RH: 46.0%).",
+          "details": "Design Wet Bulb: 28.74°C (Dry: 38.5°C, RH: 46.0%).",
           "flagged": true
         },
         {
@@ -1391,7 +1391,7 @@
           "weight": 0.25,
           "weighted_score": 18.75,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 2720 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2720 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -1411,11 +1411,11 @@
           "weight": 0.2,
           "weighted_score": 16.5,
           "category": "EXCELLENT",
-          "details": "Annual PM2.5 mean: 45.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 45.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 58.69/100. Wet bulb 28.74\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 58.69/100. Wet bulb 28.74°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 90.31,
@@ -1558,7 +1558,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 350 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 350 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -1573,7 +1573,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 100.0/100 with 60.0 contiguous acres and SBC 350.0 kN/m\u00b2."
+      "summary": "Land suitability score 100.0/100 with 60.0 contiguous acres and SBC 350.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 90.6,
@@ -1591,7 +1591,7 @@
           "weight": 0.4,
           "weighted_score": 35.0,
           "category": "COMPETITIVE",
-          "details": "SERC HT Tariff: \u20b97.00 / kWh.",
+          "details": "SERC HT Tariff: ₹7.00 / kWh.",
           "flagged": false
         },
         {
@@ -1621,12 +1621,12 @@
           "weight": 0.15,
           "weighted_score": 13.6,
           "category": "AFFORDABLE",
-          "details": "\u20b92.80 Cr / acre benchmark cost.",
+          "details": "₹2.80 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "TIER-1 INCENTIVE STATE",
-      "summary": "Economic viability score 90.6/100. Electricity tariff \u20b97.0/kWh with TIER-1 INCENTIVE STATE benefits."
+      "summary": "Economic viability score 90.6/100. Electricity tariff ₹7.0/kWh with TIER-1 INCENTIVE STATE benefits."
     },
     "eco_assessment": {
       "score": 91.0,
@@ -1644,7 +1644,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "4.1% Canopy Density \u2022 Fab City / Hardware Park Industrial (FSI ISFR 2023 / GFW)",
+          "details": "4.1% Canopy Density • Fab City / Hardware Park Industrial (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -1653,7 +1653,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -1662,7 +1662,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 4,838 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 4,838 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -1671,7 +1671,7 @@
           "weight": 0.15,
           "weighted_score": 7.0,
           "category": "Carbon Neutrality",
-          "details": "37.6% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "37.6% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -1684,9 +1684,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 91.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 4,838 kL/day.",
+      "summary": "Eco-Feasibility Index 91.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 4,838 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 4.1,
       "esz_proximity_km": 26.0,
@@ -1736,23 +1736,23 @@
     ],
     "diagnostics": [
       "Demand stress score (48.0/100) breached the <= 50 threshold due to severe competing regional water abstraction.",
-      "Design wet-bulb temperature (28.74\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (28.74°C) limits open-circuit cooling tower thermal dissipation.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:49.724452+00:00",
+    "timestamp": "2026-11-03T04:40:34.341216+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 89.6,
-      "raw_composite_score": 93.2,
+      "composite_score": 93.0,
+      "raw_composite_score": 94.1,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
       "water_score": 95.7,
       "power_score": 95.4,
-      "climate_score": 74.0,
-      "connectivity_score": 88.6,
+      "climate_score": 77.8,
+      "connectivity_score": 92.4,
       "disaster_score": 99.7,
       "land_score": 100.0,
       "economics_score": 94.7,
@@ -1909,11 +1909,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -1922,11 +1922,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -1935,11 +1935,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -1948,11 +1948,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "38.5\u00b0C",
+          "value": "38.5°C",
           "factor_score": 68.67,
           "weight": 0.025,
           "weighted_score": 1.717,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "WARNING"
         },
@@ -1974,18 +1974,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "28.7\u00b0C",
-          "factor_score": 60.13,
+          "value": "28.7°C",
+          "factor_score": 71.37,
           "weight": 0.04,
-          "weighted_score": 2.405,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 2.855,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2720 CDD",
           "factor_score": 83.75,
@@ -1998,7 +1998,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "18 Days/Year",
           "factor_score": 67.5,
@@ -2013,13 +2013,13 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "45.0 \u00b5g/m\u00b3",
-          "factor_score": 87.5,
+          "value": "45.0 µg/m³",
+          "factor_score": 90.0,
           "weight": 0.015,
-          "weighted_score": 1.312,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.35,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
-          "status": "COMPLIANT"
+          "status": "OPTIMAL"
         },
         {
           "id": 21,
@@ -2040,12 +2040,12 @@
           "name": "Subsea Gateway Optical Round-Trip Time",
           "metric_key": "rtt_to_landing_station_ms",
           "value": "11.5 ms",
-          "factor_score": 63.61,
+          "factor_score": 78.7,
           "weight": 0.03,
-          "weighted_score": 1.908,
+          "weighted_score": 2.361,
           "benchmark": "<= 5.0 ms (Ultra-Low Latency GPU Mesh)",
           "source": "Terrestrial SMF-28 Optical Transit",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 23,
@@ -2247,11 +2247,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "350 kN/m\u00b2",
+          "value": "350 kN/m²",
           "factor_score": 100.0,
           "weight": 0.015,
           "weighted_score": 1.5,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -2286,11 +2286,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b97.00/kWh",
+          "value": "₹7.00/kWh",
           "factor_score": 90.0,
           "weight": 0.025,
           "weighted_score": 2.25,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "OPTIMAL"
         },
@@ -2325,7 +2325,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b92.80 Cr/Acre",
+          "value": "₹2.80 Cr/Acre",
           "factor_score": 100.0,
           "weight": 0.01,
           "weighted_score": 1.0,
@@ -2423,13 +2423,13 @@
     "longitude": 73.016,
     "elevation_m": 14.5,
     "proposed_it_load_mw": 80.0,
-    "composite_score": 82.7,
+    "composite_score": 86.1,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
-    "water_score": 85.2,
+    "water_score": 85.6,
     "power_score": 86.8,
-    "climate_score": 62.3,
+    "climate_score": 66.8,
     "connectivity_score": 98.1,
     "disaster_score": 89.5,
     "land_score": 100.0,
@@ -2592,7 +2592,7 @@
           "weight": 0.35,
           "weighted_score": 5.25,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 32.08\u00b0C (Dry: 35.5\u00b0C, RH: 78.0%).",
+          "details": "Design Wet Bulb: 32.08°C (Dry: 35.5°C, RH: 78.0%).",
           "flagged": true
         },
         {
@@ -2602,7 +2602,7 @@
           "weight": 0.25,
           "weighted_score": 17.55,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 2880 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2880 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -2622,11 +2622,11 @@
           "weight": 0.2,
           "weighted_score": 14.33,
           "category": "ACCEPTABLE",
-          "details": "Annual PM2.5 mean: 58.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 58.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 44.33/100. Wet bulb 32.08\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 44.33/100. Wet bulb 32.08°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 99.25,
@@ -2769,7 +2769,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 240 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 240 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -2784,7 +2784,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 97.6/100 with 12.0 contiguous acres and SBC 240.0 kN/m\u00b2."
+      "summary": "Land suitability score 97.6/100 with 12.0 contiguous acres and SBC 240.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 74.23,
@@ -2802,7 +2802,7 @@
           "weight": 0.4,
           "weighted_score": 26.31,
           "category": "MODERATE",
-          "details": "SERC HT Tariff: \u20b98.20 / kWh.",
+          "details": "SERC HT Tariff: ₹8.20 / kWh.",
           "flagged": false
         },
         {
@@ -2832,12 +2832,12 @@
           "weight": 0.15,
           "weighted_score": 8.92,
           "category": "PREMIUM",
-          "details": "\u20b98.50 Cr / acre benchmark cost.",
+          "details": "₹8.50 Cr / acre benchmark cost.",
           "flagged": true
         }
       ],
       "policy_tier": "COMPETITIVE INCENTIVES",
-      "summary": "Economic viability score 74.23/100. Electricity tariff \u20b98.2/kWh with COMPETITIVE INCENTIVES benefits."
+      "summary": "Economic viability score 74.23/100. Electricity tariff ₹8.2/kWh with COMPETITIVE INCENTIVES benefits."
     },
     "eco_assessment": {
       "score": 93.4,
@@ -2855,7 +2855,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "3.8% Canopy Density \u2022 Non-Forest / Industrial MIDC (FSI ISFR 2023 / GFW)",
+          "details": "3.8% Canopy Density • Non-Forest / Industrial MIDC (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -2864,7 +2864,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -2873,7 +2873,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 3,226 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 3,226 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -2882,7 +2882,7 @@
           "weight": 0.15,
           "weighted_score": 9.4,
           "category": "Carbon Neutrality",
-          "details": "56.4% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "56.4% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -2895,9 +2895,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 93.4/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
+      "summary": "Eco-Feasibility Index 93.4/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 3.8,
       "esz_proximity_km": 14.5,
@@ -2950,22 +2950,22 @@
     "diagnostics": [
       "Demand stress score (45.0/100) breached the <= 50 threshold due to severe competing regional water abstraction.",
       "Emergency storage buffer (48h) is below the 72-hour mission-critical mandate.",
-      "Design wet-bulb temperature (32.08\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (32.08°C) limits open-circuit cooling tower thermal dissipation.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:50.826507+00:00",
+    "timestamp": "2026-11-03T04:40:35.529636+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 82.7,
-      "raw_composite_score": 86.8,
+      "composite_score": 86.1,
+      "raw_composite_score": 87.5,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
-      "water_score": 85.2,
+      "water_score": 85.6,
       "power_score": 86.8,
-      "climate_score": 62.3,
+      "climate_score": 66.8,
       "connectivity_score": 98.1,
       "disaster_score": 89.5,
       "land_score": 100.0,
@@ -2981,9 +2981,9 @@
           "name": "Groundwater Stage of Extraction (SOE %)",
           "metric_key": "groundwater_extraction_pct",
           "value": "74.0%",
-          "factor_score": 78.0,
+          "factor_score": 80.0,
           "weight": 0.04,
-          "weighted_score": 3.12,
+          "weighted_score": 3.2,
           "benchmark": "<= 70% (Safe per CGWB)",
           "source": "Central Ground Water Board (CGWB)",
           "status": "COMPLIANT"
@@ -3123,11 +3123,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -3136,11 +3136,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -3149,11 +3149,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -3162,11 +3162,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "35.5\u00b0C",
+          "value": "35.5°C",
           "factor_score": 83.5,
           "weight": 0.025,
           "weighted_score": 2.087,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "COMPLIANT"
         },
@@ -3188,18 +3188,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "32.1\u00b0C",
-          "factor_score": 21.36,
+          "value": "32.1°C",
+          "factor_score": 34.2,
           "weight": 0.04,
-          "weighted_score": 0.854,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 1.368,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2880 CDD",
           "factor_score": 78.75,
@@ -3212,7 +3212,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "6 Days/Year",
           "factor_score": 97.5,
@@ -3227,11 +3227,11 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "58.0 \u00b5g/m\u00b3",
-          "factor_score": 76.67,
+          "value": "58.0 µg/m³",
+          "factor_score": 81.33,
           "weight": 0.015,
-          "weighted_score": 1.15,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.22,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
           "status": "COMPLIANT"
         },
@@ -3461,11 +3461,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "240 kN/m\u00b2",
+          "value": "240 kN/m²",
           "factor_score": 100.0,
           "weight": 0.015,
           "weighted_score": 1.5,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -3500,11 +3500,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b98.20/kWh",
+          "value": "₹8.20/kWh",
           "factor_score": 63.67,
           "weight": 0.025,
           "weighted_score": 1.592,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "WARNING"
         },
@@ -3539,7 +3539,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b98.50 Cr/Acre",
+          "value": "₹8.50 Cr/Acre",
           "factor_score": 77.86,
           "weight": 0.01,
           "weighted_score": 0.779,
@@ -3637,13 +3637,13 @@
     "longitude": 80.218,
     "elevation_m": 18.0,
     "proposed_it_load_mw": 80.0,
-    "composite_score": 81.7,
+    "composite_score": 85.2,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
     "water_score": 82.7,
     "power_score": 87.9,
-    "climate_score": 56.4,
+    "climate_score": 59.8,
     "connectivity_score": 97.9,
     "disaster_score": 83.7,
     "land_score": 100.0,
@@ -3806,7 +3806,7 @@
           "weight": 0.35,
           "weighted_score": 5.25,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 33.57\u00b0C (Dry: 37.8\u00b0C, RH: 74.0%).",
+          "details": "Design Wet Bulb: 33.57°C (Dry: 37.8°C, RH: 74.0%).",
           "flagged": true
         },
         {
@@ -3816,7 +3816,7 @@
           "weight": 0.25,
           "weighted_score": 15.19,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 3150 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 3150 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -3836,11 +3836,11 @@
           "weight": 0.2,
           "weighted_score": 17.0,
           "category": "EXCELLENT",
-          "details": "Annual PM2.5 mean: 42.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 42.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 41.4/100. Wet bulb 33.57\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 41.4/100. Wet bulb 33.57°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 96.85,
@@ -3983,7 +3983,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 220 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 220 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -3998,7 +3998,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 100.0/100 with 20.0 contiguous acres and SBC 220.0 kN/m\u00b2."
+      "summary": "Land suitability score 100.0/100 with 20.0 contiguous acres and SBC 220.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 81.66,
@@ -4016,7 +4016,7 @@
           "weight": 0.4,
           "weighted_score": 32.46,
           "category": "COMPETITIVE",
-          "details": "SERC HT Tariff: \u20b97.40 / kWh.",
+          "details": "SERC HT Tariff: ₹7.40 / kWh.",
           "flagged": false
         },
         {
@@ -4046,12 +4046,12 @@
           "weight": 0.15,
           "weighted_score": 10.2,
           "category": "MODERATE",
-          "details": "\u20b96.80 Cr / acre benchmark cost.",
+          "details": "₹6.80 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "TIER-1 INCENTIVE STATE",
-      "summary": "Economic viability score 81.66/100. Electricity tariff \u20b97.4/kWh with TIER-1 INCENTIVE STATE benefits."
+      "summary": "Economic viability score 81.66/100. Electricity tariff ₹7.4/kWh with TIER-1 INCENTIVE STATE benefits."
     },
     "eco_assessment": {
       "score": 90.9,
@@ -4069,7 +4069,7 @@
           "weight": 0.25,
           "weighted_score": 22.0,
           "category": "Deforestation Guard",
-          "details": "5.1% Canopy Density \u2022 Coastal Urban / Industrial (FSI ISFR 2023 / GFW)",
+          "details": "5.1% Canopy Density • Coastal Urban / Industrial (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -4078,7 +4078,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -4087,7 +4087,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 3,226 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 3,226 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -4096,7 +4096,7 @@
           "weight": 0.15,
           "weighted_score": 9.4,
           "category": "Carbon Neutrality",
-          "details": "56.4% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "56.4% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -4109,9 +4109,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 90.9/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
+      "summary": "Eco-Feasibility Index 90.9/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 3,226 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 5.1,
       "esz_proximity_km": 19.0,
@@ -4161,22 +4161,22 @@
     ],
     "diagnostics": [
       "Emergency storage buffer (48h) is below the 72-hour mission-critical mandate.",
-      "Design wet-bulb temperature (33.57\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (33.57°C) limits open-circuit cooling tower thermal dissipation.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:52.059542+00:00",
+    "timestamp": "2026-11-03T04:40:36.720572+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 81.7,
-      "raw_composite_score": 86.3,
+      "composite_score": 85.2,
+      "raw_composite_score": 86.8,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
       "water_score": 82.7,
       "power_score": 87.9,
-      "climate_score": 56.4,
+      "climate_score": 59.8,
       "connectivity_score": 97.9,
       "disaster_score": 83.7,
       "land_score": 100.0,
@@ -4334,11 +4334,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -4347,11 +4347,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -4360,11 +4360,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -4373,11 +4373,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "37.8\u00b0C",
+          "value": "37.8°C",
           "factor_score": 72.4,
           "weight": 0.025,
           "weighted_score": 1.81,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "COMPLIANT"
         },
@@ -4399,18 +4399,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "33.6\u00b0C",
-          "factor_score": 9.44,
+          "value": "33.6°C",
+          "factor_score": 19.79,
           "weight": 0.04,
-          "weighted_score": 0.378,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 0.792,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "3150 CDD",
           "factor_score": 69.75,
@@ -4423,7 +4423,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "15 Days/Year",
           "factor_score": 75.0,
@@ -4438,11 +4438,11 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "42.0 \u00b5g/m\u00b3",
-          "factor_score": 90.0,
+          "value": "42.0 µg/m³",
+          "factor_score": 92.0,
           "weight": 0.015,
-          "weighted_score": 1.35,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.38,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
           "status": "OPTIMAL"
         },
@@ -4672,11 +4672,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "220 kN/m\u00b2",
+          "value": "220 kN/m²",
           "factor_score": 100.0,
           "weight": 0.015,
           "weighted_score": 1.5,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -4711,11 +4711,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b97.40/kWh",
+          "value": "₹7.40/kWh",
           "factor_score": 82.0,
           "weight": 0.025,
           "weighted_score": 2.05,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "COMPLIANT"
         },
@@ -4750,7 +4750,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b96.80 Cr/Acre",
+          "value": "₹6.80 Cr/Acre",
           "factor_score": 86.0,
           "weight": 0.01,
           "weighted_score": 0.86,
@@ -4848,14 +4848,14 @@
     "longitude": 72.1965,
     "elevation_m": 12.0,
     "proposed_it_load_mw": 100.0,
-    "composite_score": 79.9,
+    "composite_score": 84.3,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
     "water_score": 78.4,
     "power_score": 92.5,
-    "climate_score": 56.2,
-    "connectivity_score": 75.6,
+    "climate_score": 60.3,
+    "connectivity_score": 80.8,
     "disaster_score": 90.6,
     "land_score": 98.9,
     "economics_score": 95.0,
@@ -5017,7 +5017,7 @@
           "weight": 0.35,
           "weighted_score": 5.25,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 32.37\u00b0C (Dry: 41.2\u00b0C, RH: 52.0%).",
+          "details": "Design Wet Bulb: 32.37°C (Dry: 41.2°C, RH: 52.0%).",
           "flagged": true
         },
         {
@@ -5027,7 +5027,7 @@
           "weight": 0.25,
           "weighted_score": 17.81,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 2850 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2850 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -5047,11 +5047,11 @@
           "weight": 0.2,
           "weighted_score": 16.5,
           "category": "EXCELLENT",
-          "details": "Annual PM2.5 mean: 45.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 45.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 44.39/100. Wet bulb 32.37\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 44.39/100. Wet bulb 32.37°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 78.3,
@@ -5194,7 +5194,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 210 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 210 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -5209,7 +5209,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 100.0/100 with 150.0 contiguous acres and SBC 210.0 kN/m\u00b2."
+      "summary": "Land suitability score 100.0/100 with 150.0 contiguous acres and SBC 210.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 93.0,
@@ -5227,7 +5227,7 @@
           "weight": 0.4,
           "weighted_score": 36.0,
           "category": "COMPETITIVE",
-          "details": "SERC HT Tariff: \u20b96.80 / kWh.",
+          "details": "SERC HT Tariff: ₹6.80 / kWh.",
           "flagged": false
         },
         {
@@ -5257,12 +5257,12 @@
           "weight": 0.15,
           "weighted_score": 15.0,
           "category": "AFFORDABLE",
-          "details": "\u20b91.25 Cr / acre benchmark cost.",
+          "details": "₹1.25 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "TIER-1 INCENTIVE STATE",
-      "summary": "Economic viability score 93.0/100. Electricity tariff \u20b96.8/kWh with TIER-1 INCENTIVE STATE benefits."
+      "summary": "Economic viability score 93.0/100. Electricity tariff ₹6.8/kWh with TIER-1 INCENTIVE STATE benefits."
     },
     "eco_assessment": {
       "score": 92.0,
@@ -5280,7 +5280,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "1.9% Canopy Density \u2022 Arid Non-Forest / Industrial (FSI ISFR 2023 / GFW)",
+          "details": "1.9% Canopy Density • Arid Non-Forest / Industrial (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -5289,7 +5289,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -5298,7 +5298,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 4,032 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 4,032 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -5307,7 +5307,7 @@
           "weight": 0.15,
           "weighted_score": 8.0,
           "category": "Carbon Neutrality",
-          "details": "45.1% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "45.1% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -5320,9 +5320,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 92.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 4,032 kL/day.",
+      "summary": "Eco-Feasibility Index 92.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 4,032 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 1.9,
       "esz_proximity_km": 35.0,
@@ -5369,23 +5369,23 @@
       "Closed-Loop Aquifer Shield: Conserves 4,032 kL/day over conventional evaporative towers; Zero municipal water depletion in Ahmedabad."
     ],
     "diagnostics": [
-      "Design wet-bulb temperature (32.37\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (32.37°C) limits open-circuit cooling tower thermal dissipation.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:53.613904+00:00",
+    "timestamp": "2026-11-03T04:40:37.934622+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 79.9,
-      "raw_composite_score": 84.8,
+      "composite_score": 84.3,
+      "raw_composite_score": 86.0,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
       "water_score": 78.4,
       "power_score": 92.5,
-      "climate_score": 56.2,
-      "connectivity_score": 75.6,
+      "climate_score": 60.3,
+      "connectivity_score": 80.8,
       "disaster_score": 90.6,
       "land_score": 98.9,
       "economics_score": 95.0,
@@ -5542,11 +5542,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -5555,11 +5555,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -5568,11 +5568,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -5581,11 +5581,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "41.2\u00b0C",
+          "value": "41.2°C",
           "factor_score": 54.27,
           "weight": 0.025,
           "weighted_score": 1.357,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "WARNING"
         },
@@ -5607,18 +5607,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "32.4\u00b0C",
-          "factor_score": 19.04,
+          "value": "32.4°C",
+          "factor_score": 31.3,
           "weight": 0.04,
-          "weighted_score": 0.762,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 1.252,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2850 CDD",
           "factor_score": 79.69,
@@ -5631,7 +5631,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "24 Days/Year",
           "factor_score": 52.5,
@@ -5646,13 +5646,13 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "45.0 \u00b5g/m\u00b3",
-          "factor_score": 87.5,
+          "value": "45.0 µg/m³",
+          "factor_score": 90.0,
           "weight": 0.015,
-          "weighted_score": 1.312,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.35,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
-          "status": "COMPLIANT"
+          "status": "OPTIMAL"
         },
         {
           "id": 21,
@@ -5673,9 +5673,9 @@
           "name": "Subsea Gateway Optical Round-Trip Time",
           "metric_key": "rtt_to_landing_station_ms",
           "value": "17.5 ms",
-          "factor_score": 45.0,
+          "factor_score": 65.5,
           "weight": 0.03,
-          "weighted_score": 1.35,
+          "weighted_score": 1.965,
           "benchmark": "<= 5.0 ms (Ultra-Low Latency GPU Mesh)",
           "source": "Terrestrial SMF-28 Optical Transit",
           "status": "WARNING"
@@ -5880,11 +5880,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "210 kN/m\u00b2",
+          "value": "210 kN/m²",
           "factor_score": 95.0,
           "weight": 0.015,
           "weighted_score": 1.425,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -5919,11 +5919,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b96.80/kWh",
+          "value": "₹6.80/kWh",
           "factor_score": 94.0,
           "weight": 0.025,
           "weighted_score": 2.35,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "OPTIMAL"
         },
@@ -5958,7 +5958,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b91.25 Cr/Acre",
+          "value": "₹1.25 Cr/Acre",
           "factor_score": 100.0,
           "weight": 0.01,
           "weighted_score": 1.0,
@@ -6056,13 +6056,13 @@
     "longitude": 73.118,
     "elevation_m": 11.0,
     "proposed_it_load_mw": 60.0,
-    "composite_score": 76.9,
+    "composite_score": 80.8,
     "tier": "VIABLE / RECOMMENDED",
     "tier_badge": "VIABLE",
     "tier_color": "#10B981",
-    "water_score": 68.0,
+    "water_score": 70.5,
     "power_score": 83.5,
-    "climate_score": 57.1,
+    "climate_score": 61.4,
     "connectivity_score": 97.7,
     "disaster_score": 83.1,
     "land_score": 97.7,
@@ -6225,7 +6225,7 @@
           "weight": 0.35,
           "weighted_score": 5.25,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 33.08\u00b0C (Dry: 36.2\u00b0C, RH: 80.0%).",
+          "details": "Design Wet Bulb: 33.08°C (Dry: 36.2°C, RH: 80.0%).",
           "flagged": true
         },
         {
@@ -6235,7 +6235,7 @@
           "weight": 0.25,
           "weighted_score": 17.38,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 2900 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2900 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -6255,11 +6255,11 @@
           "weight": 0.2,
           "weighted_score": 11.9,
           "category": "STRESSED",
-          "details": "Annual PM2.5 mean: 78.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 78.0 µg/m³.",
           "flagged": true
         }
       ],
-      "summary": "Climate suitability score 41.29/100. Wet bulb 33.08\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 41.29/100. Wet bulb 33.08°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 96.39,
@@ -6402,7 +6402,7 @@
           "weight": 0.2,
           "weighted_score": 20.0,
           "category": "EXCELLENT",
-          "details": "SBC 200 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 200 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -6417,7 +6417,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 98.31/100 with 15.0 contiguous acres and SBC 200.0 kN/m\u00b2."
+      "summary": "Land suitability score 98.31/100 with 15.0 contiguous acres and SBC 200.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 76.48,
@@ -6435,7 +6435,7 @@
           "weight": 0.4,
           "weighted_score": 26.31,
           "category": "MODERATE",
-          "details": "SERC HT Tariff: \u20b98.20 / kWh.",
+          "details": "SERC HT Tariff: ₹8.20 / kWh.",
           "flagged": false
         },
         {
@@ -6465,12 +6465,12 @@
           "weight": 0.15,
           "weighted_score": 11.17,
           "category": "MODERATE",
-          "details": "\u20b95.50 Cr / acre benchmark cost.",
+          "details": "₹5.50 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "COMPETITIVE INCENTIVES",
-      "summary": "Economic viability score 76.48/100. Electricity tariff \u20b98.2/kWh with COMPETITIVE INCENTIVES benefits."
+      "summary": "Economic viability score 76.48/100. Electricity tariff ₹8.2/kWh with COMPETITIVE INCENTIVES benefits."
     },
     "eco_assessment": {
       "score": 95.8,
@@ -6488,7 +6488,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "4.5% Canopy Density \u2022 Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
+          "details": "4.5% Canopy Density • Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -6497,7 +6497,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -6506,7 +6506,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 2,419 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 2,419 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -6515,7 +6515,7 @@
           "weight": 0.15,
           "weighted_score": 11.8,
           "category": "Carbon Neutrality",
-          "details": "75.2% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "75.2% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -6528,9 +6528,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 95.8/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 2,419 kL/day.",
+      "summary": "Eco-Feasibility Index 95.8/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 2,419 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 4.5,
       "esz_proximity_km": 20.0,
@@ -6580,22 +6580,22 @@
     ],
     "diagnostics": [
       "Emergency storage buffer (48h) is below the 72-hour mission-critical mandate.",
-      "Design wet-bulb temperature (33.08\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (33.08°C) limits open-circuit cooling tower thermal dissipation.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:54.760820+00:00",
+    "timestamp": "2026-11-03T04:40:39.098758+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 76.9,
-      "raw_composite_score": 81.3,
+      "composite_score": 80.8,
+      "raw_composite_score": 82.3,
       "tier": "VIABLE / RECOMMENDED",
       "tier_badge": "VIABLE",
       "tier_color": "#10B981",
-      "water_score": 68.0,
+      "water_score": 70.5,
       "power_score": 83.5,
-      "climate_score": 57.1,
+      "climate_score": 61.4,
       "connectivity_score": 97.7,
       "disaster_score": 83.1,
       "land_score": 97.7,
@@ -6611,9 +6611,9 @@
           "name": "Groundwater Stage of Extraction (SOE %)",
           "metric_key": "groundwater_extraction_pct",
           "value": "88.0%",
-          "factor_score": 53.5,
+          "factor_score": 65.0,
           "weight": 0.04,
-          "weighted_score": 2.14,
+          "weighted_score": 2.6,
           "benchmark": "<= 70% (Safe per CGWB)",
           "source": "Central Ground Water Board (CGWB)",
           "status": "WARNING"
@@ -6753,11 +6753,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -6766,11 +6766,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -6779,11 +6779,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -6792,11 +6792,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "36.2\u00b0C",
+          "value": "36.2°C",
           "factor_score": 80.93,
           "weight": 0.025,
           "weighted_score": 2.023,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "COMPLIANT"
         },
@@ -6818,18 +6818,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "33.1\u00b0C",
-          "factor_score": 13.36,
+          "value": "33.1°C",
+          "factor_score": 24.2,
           "weight": 0.04,
-          "weighted_score": 0.534,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 0.968,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2900 CDD",
           "factor_score": 78.12,
@@ -6842,7 +6842,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "8 Days/Year",
           "factor_score": 92.5,
@@ -6857,13 +6857,13 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "78.0 \u00b5g/m\u00b3",
-          "factor_score": 63.0,
+          "value": "78.0 µg/m³",
+          "factor_score": 71.0,
           "weight": 0.015,
-          "weighted_score": 0.945,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.065,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 21,
@@ -7091,11 +7091,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "200 kN/m\u00b2",
+          "value": "200 kN/m²",
           "factor_score": 90.0,
           "weight": 0.015,
           "weighted_score": 1.35,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "OPTIMAL"
         },
@@ -7130,11 +7130,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b98.20/kWh",
+          "value": "₹8.20/kWh",
           "factor_score": 63.67,
           "weight": 0.025,
           "weighted_score": 1.592,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "WARNING"
         },
@@ -7169,7 +7169,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b95.50 Cr/Acre",
+          "value": "₹5.50 Cr/Acre",
           "factor_score": 92.5,
           "weight": 0.01,
           "weighted_score": 0.925,
@@ -7267,14 +7267,14 @@
     "longitude": 77.382,
     "elevation_m": 202.0,
     "proposed_it_load_mw": 100.0,
-    "composite_score": 67.7,
-    "tier": "CONDITIONAL / HIGH RISK",
-    "tier_badge": "CONDITIONAL",
-    "tier_color": "#F59E0B",
-    "water_score": 61.7,
+    "composite_score": 81.0,
+    "tier": "VIABLE / RECOMMENDED",
+    "tier_badge": "VIABLE",
+    "tier_color": "#10B981",
+    "water_score": 79.5,
     "power_score": 85.7,
-    "climate_score": 36.7,
-    "connectivity_score": 86.1,
+    "climate_score": 42.4,
+    "connectivity_score": 91.1,
     "disaster_score": 84.4,
     "land_score": 95.7,
     "economics_score": 95.1,
@@ -7436,7 +7436,7 @@
           "weight": 0.35,
           "weighted_score": 5.25,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 32.77\u00b0C (Dry: 44.5\u00b0C, RH: 42.0%).",
+          "details": "Design Wet Bulb: 32.77°C (Dry: 44.5°C, RH: 42.0%).",
           "flagged": true
         },
         {
@@ -7446,7 +7446,7 @@
           "weight": 0.25,
           "weighted_score": 14.31,
           "category": "STRESSED",
-          "details": "Annual CDD: 3250 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 3250 (Base 18.3°C).",
           "flagged": true
         },
         {
@@ -7466,11 +7466,11 @@
           "weight": 0.2,
           "weighted_score": 4.75,
           "category": "STRESSED",
-          "details": "Annual PM2.5 mean: 165.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 165.0 µg/m³.",
           "flagged": true
         }
       ],
-      "summary": "Climate suitability score 26.11/100. Wet bulb 32.77\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 26.11/100. Wet bulb 32.77°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 90.69,
@@ -7613,7 +7613,7 @@
           "weight": 0.2,
           "weighted_score": 18.4,
           "category": "EXCELLENT",
-          "details": "SBC 180 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 180 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -7628,7 +7628,7 @@
         }
       ],
       "zoning_cleared": true,
-      "summary": "Land suitability score 98.4/100 with 20.0 contiguous acres and SBC 180.0 kN/m\u00b2."
+      "summary": "Land suitability score 98.4/100 with 20.0 contiguous acres and SBC 180.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 90.95,
@@ -7646,7 +7646,7 @@
           "weight": 0.4,
           "weighted_score": 35.0,
           "category": "COMPETITIVE",
-          "details": "SERC HT Tariff: \u20b97.00 / kWh.",
+          "details": "SERC HT Tariff: ₹7.00 / kWh.",
           "flagged": false
         },
         {
@@ -7676,12 +7676,12 @@
           "weight": 0.15,
           "weighted_score": 10.95,
           "category": "MODERATE",
-          "details": "\u20b95.80 Cr / acre benchmark cost.",
+          "details": "₹5.80 Cr / acre benchmark cost.",
           "flagged": false
         }
       ],
       "policy_tier": "TIER-1 INCENTIVE STATE",
-      "summary": "Economic viability score 90.95/100. Electricity tariff \u20b97.0/kWh with TIER-1 INCENTIVE STATE benefits."
+      "summary": "Economic viability score 90.95/100. Electricity tariff ₹7.0/kWh with TIER-1 INCENTIVE STATE benefits."
     },
     "eco_assessment": {
       "score": 86.5,
@@ -7699,7 +7699,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "3.2% Canopy Density \u2022 Master-Planned Industrial SEZ (FSI ISFR 2023 / GFW)",
+          "details": "3.2% Canopy Density • Master-Planned Industrial SEZ (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -7708,7 +7708,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -7717,7 +7717,7 @@
           "weight": 0.25,
           "weighted_score": 19.5,
           "category": "Hydrological Shield",
-          "details": "Conserves 4,032 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 4,032 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -7726,7 +7726,7 @@
           "weight": 0.15,
           "weighted_score": 8.0,
           "category": "Carbon Neutrality",
-          "details": "45.1% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "45.1% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -7739,9 +7739,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 86.5/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 4,032 kL/day.",
+      "summary": "Eco-Feasibility Index 86.5/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 4,032 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 3.2,
       "esz_proximity_km": 18.0,
@@ -7793,24 +7793,24 @@
     ],
     "diagnostics": [
       "Emergency storage buffer (48h) is below the 72-hour mission-critical mandate.",
-      "Design wet-bulb temperature (32.77\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (32.77°C) limits open-circuit cooling tower thermal dissipation.",
       "Location in Seismic Zone IV mandates IS 1893:2016 ductile detailing.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:55.907770+00:00",
+    "timestamp": "2026-11-03T04:40:40.342825+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 67.7,
-      "raw_composite_score": 78.3,
-      "tier": "CONDITIONAL / HIGH RISK",
-      "tier_badge": "CONDITIONAL",
-      "tier_color": "#F59E0B",
-      "water_score": 61.7,
+      "composite_score": 81.0,
+      "raw_composite_score": 82.9,
+      "tier": "VIABLE / RECOMMENDED",
+      "tier_badge": "VIABLE",
+      "tier_color": "#10B981",
+      "water_score": 79.5,
       "power_score": 85.7,
-      "climate_score": 36.7,
-      "connectivity_score": 86.1,
+      "climate_score": 42.4,
+      "connectivity_score": 91.1,
       "disaster_score": 84.4,
       "land_score": 95.7,
       "economics_score": 95.1,
@@ -7825,12 +7825,12 @@
           "name": "Groundwater Stage of Extraction (SOE %)",
           "metric_key": "groundwater_extraction_pct",
           "value": "142.0%",
-          "factor_score": 0.0,
+          "factor_score": 80.0,
           "weight": 0.04,
-          "weighted_score": 0.0,
+          "weighted_score": 3.2,
           "benchmark": "<= 70% (Safe per CGWB)",
           "source": "Central Ground Water Board (CGWB)",
-          "status": "CRITICAL"
+          "status": "COMPLIANT"
         },
         {
           "id": 2,
@@ -7967,11 +7967,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -7980,11 +7980,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -7993,11 +7993,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -8006,11 +8006,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "44.5\u00b0C",
+          "value": "44.5°C",
           "factor_score": 35.0,
           "weight": 0.025,
           "weighted_score": 0.875,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "CRITICAL"
         },
@@ -8032,18 +8032,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "32.8\u00b0C",
-          "factor_score": 15.84,
+          "value": "32.8°C",
+          "factor_score": 27.3,
           "weight": 0.04,
-          "weighted_score": 0.634,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 1.092,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "3250 CDD",
           "factor_score": 66.25,
@@ -8056,7 +8056,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "38 Days/Year",
           "factor_score": 20.0,
@@ -8071,13 +8071,13 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "165.0 \u00b5g/m\u00b3",
-          "factor_score": 23.75,
+          "value": "165.0 µg/m³",
+          "factor_score": 43.25,
           "weight": 0.015,
-          "weighted_score": 0.356,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 0.649,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
-          "status": "CRITICAL"
+          "status": "WARNING"
         },
         {
           "id": 21,
@@ -8098,12 +8098,12 @@
           "name": "Subsea Gateway Optical Round-Trip Time",
           "metric_key": "rtt_to_landing_station_ms",
           "value": "14.5 ms",
-          "factor_score": 51.94,
+          "factor_score": 72.1,
           "weight": 0.03,
-          "weighted_score": 1.558,
+          "weighted_score": 2.163,
           "benchmark": "<= 5.0 ms (Ultra-Low Latency GPU Mesh)",
           "source": "Terrestrial SMF-28 Optical Transit",
-          "status": "WARNING"
+          "status": "COMPLIANT"
         },
         {
           "id": 23,
@@ -8305,11 +8305,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "180 kN/m\u00b2",
+          "value": "180 kN/m²",
           "factor_score": 80.0,
           "weight": 0.015,
           "weighted_score": 1.2,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "COMPLIANT"
         },
@@ -8344,11 +8344,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b97.00/kWh",
+          "value": "₹7.00/kWh",
           "factor_score": 90.0,
           "weight": 0.025,
           "weighted_score": 2.25,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "OPTIMAL"
         },
@@ -8383,7 +8383,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b95.80 Cr/Acre",
+          "value": "₹5.80 Cr/Acre",
           "factor_score": 91.0,
           "weight": 0.01,
           "weighted_score": 0.91,
@@ -8481,17 +8481,17 @@
     "longitude": 72.835,
     "elevation_m": 4.2,
     "proposed_it_load_mw": 40.0,
-    "composite_score": 58.5,
-    "tier": "CONDITIONAL / HIGH RISK",
-    "tier_badge": "CONDITIONAL",
-    "tier_color": "#F59E0B",
+    "composite_score": 36.7,
+    "tier": "UNVIABLE / REJECT",
+    "tier_badge": "UNVIABLE",
+    "tier_color": "#EF4444",
     "water_score": 79.4,
     "power_score": 61.8,
-    "climate_score": 65.1,
+    "climate_score": 69.7,
     "connectivity_score": 98.1,
     "disaster_score": 72.8,
-    "land_score": 70.1,
-    "economics_score": 41.0,
+    "land_score": 35.0,
+    "economics_score": 30.0,
     "eco_score": 87.0,
     "water_assessment": {
       "water_score": 63.64,
@@ -8650,7 +8650,7 @@
           "weight": 0.35,
           "weighted_score": 6.62,
           "category": "STRESSED",
-          "details": "Design Wet Bulb: 31.61\u00b0C (Dry: 34.0\u00b0C, RH: 84.0%).",
+          "details": "Design Wet Bulb: 31.61°C (Dry: 34.0°C, RH: 84.0%).",
           "flagged": true
         },
         {
@@ -8660,7 +8660,7 @@
           "weight": 0.25,
           "weighted_score": 16.68,
           "category": "ACCEPTABLE",
-          "details": "Annual CDD: 2980 (Base 18.3\u00b0C).",
+          "details": "Annual CDD: 2980 (Base 18.3°C).",
           "flagged": false
         },
         {
@@ -8680,11 +8680,11 @@
           "weight": 0.2,
           "weighted_score": 16.0,
           "category": "EXCELLENT",
-          "details": "Annual PM2.5 mean: 48.0 \u00b5g/m\u00b3.",
+          "details": "Annual PM2.5 mean: 48.0 µg/m³.",
           "flagged": false
         }
       ],
-      "summary": "Climate suitability score 46.06/100. Wet bulb 31.61\u00b0C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
+      "summary": "Climate suitability score 46.06/100. Wet bulb 31.61°C supports ASHRAE TC 9.9 Class A2 (Requires Hybrid Chiller Assist)."
     },
     "connectivity_assessment": {
       "connectivity_score": 99.25,
@@ -8827,7 +8827,7 @@
           "weight": 0.2,
           "weighted_score": 13.0,
           "category": "ACCEPTABLE",
-          "details": "SBC 120 kN/m\u00b2 (IS 1904 standard).",
+          "details": "SBC 120 kN/m² (IS 1904 standard).",
           "flagged": false
         },
         {
@@ -8842,7 +8842,7 @@
         }
       ],
       "zoning_cleared": false,
-      "summary": "Land suitability score 48.3/100 with 2.0 contiguous acres and SBC 120.0 kN/m\u00b2."
+      "summary": "Land suitability score 48.3/100 with 2.0 contiguous acres and SBC 120.0 kN/m²."
     },
     "economics_assessment": {
       "economics_score": 43.5,
@@ -8860,7 +8860,7 @@
           "weight": 0.4,
           "weighted_score": 24.0,
           "category": "MODERATE",
-          "details": "SERC HT Tariff: \u20b98.50 / kWh.",
+          "details": "SERC HT Tariff: ₹8.50 / kWh.",
           "flagged": false
         },
         {
@@ -8890,12 +8890,12 @@
           "weight": 0.15,
           "weighted_score": 3.0,
           "category": "PREMIUM",
-          "details": "\u20b945.00 Cr / acre benchmark cost.",
+          "details": "₹45.00 Cr / acre benchmark cost.",
           "flagged": true
         }
       ],
       "policy_tier": "STANDARD COMMERCIAL",
-      "summary": "Economic viability score 43.5/100. Electricity tariff \u20b98.5/kWh with STANDARD COMMERCIAL benefits."
+      "summary": "Economic viability score 43.5/100. Electricity tariff ₹8.5/kWh with STANDARD COMMERCIAL benefits."
     },
     "eco_assessment": {
       "score": 99.0,
@@ -8913,7 +8913,7 @@
           "weight": 0.25,
           "weighted_score": 24.5,
           "category": "Deforestation Guard",
-          "details": "4.5% Canopy Density \u2022 Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
+          "details": "4.5% Canopy Density • Non-Forest Master-Planned Zone (FSI ISFR 2023 / GFW)",
           "flagged": false
         },
         {
@@ -8922,7 +8922,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Anti-Felling Guard",
-          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved \u2022 Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
+          "details": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved • Compensatory Afforestation: 0 saplings (3:1 statutory ratio)",
           "flagged": false
         },
         {
@@ -8931,7 +8931,7 @@
           "weight": 0.25,
           "weighted_score": 25.0,
           "category": "Hydrological Shield",
-          "details": "Conserves 1,613 kL/day with closed-loop DLC \u2022 GloFAS River Flow: 24.5 m\u00b3/s",
+          "details": "Conserves 1,613 kL/day with closed-loop DLC • GloFAS River Flow: 24.5 m³/s",
           "flagged": false
         },
         {
@@ -8940,7 +8940,7 @@
           "weight": 0.15,
           "weighted_score": 15.0,
           "category": "Carbon Neutrality",
-          "details": "100.0% RE Share \u2022 Abates 57,236 Tons CO2/yr against CEA baseline",
+          "details": "100.0% RE Share • Abates 57,236 Tons CO2/yr against CEA baseline",
           "flagged": false
         },
         {
@@ -8953,9 +8953,9 @@
           "flagged": false
         }
       ],
-      "summary": "Eco-Feasibility Index 99.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved. Water conserved: 1,613 kL/day.",
+      "summary": "Eco-Feasibility Index 99.0/100. Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved. Water conserved: 1,613 kL/day.",
       "estimated_trees_to_cut": 0,
-      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) \u2022 100% Perimeter Trees Preserved",
+      "tree_preservation_status": "Zero Tree Cutting Required (Certified Non-Forest Industrial Zone) • 100% Perimeter Trees Preserved",
       "compensatory_afforestation_trees": 0,
       "canopy_cover_pct": 4.5,
       "esz_proximity_km": 20.0,
@@ -9013,27 +9013,27 @@
       "Site ground elevation (4.2m) is below the 10m threshold; vulnerable to high-tide coastal surge and Coastal Regulation Zone (CRZ) clauses.",
       "Substation spare capacity (15 MVA) cannot guarantee N-1 contingency for 40 MW IT load.",
       "Emergency storage buffer (24h) is below the 72-hour mission-critical mandate.",
-      "Design wet-bulb temperature (31.61\u00b0C) limits open-circuit cooling tower thermal dissipation.",
+      "Design wet-bulb temperature (31.61°C) limits open-circuit cooling tower thermal dissipation.",
       "Site is not situated in a pre-notified industrial or IT development corridor.",
       "Site confirmed on certified industrial brownfield / non-forest zone; zero trees to be felled.",
       "Closed-loop liquid cooling loop delivers 93.3% water savings with WUE 0.12 L/kWh."
     ],
-    "timestamp": "2026-11-02T12:17:57.103470+00:00",
+    "timestamp": "2026-11-03T04:40:41.585205+00:00",
     "is_live_evaluated": false,
     "data_provenance": null,
     "fifty_factor_telemetry": {
-      "composite_score": 58.5,
-      "raw_composite_score": 75.1,
-      "tier": "CONDITIONAL / HIGH RISK",
-      "tier_badge": "CONDITIONAL",
-      "tier_color": "#F59E0B",
+      "composite_score": 36.7,
+      "raw_composite_score": 75.7,
+      "tier": "UNVIABLE / REJECT",
+      "tier_badge": "UNVIABLE",
+      "tier_color": "#EF4444",
       "water_score": 79.4,
       "power_score": 61.8,
-      "climate_score": 65.1,
+      "climate_score": 69.7,
       "connectivity_score": 98.1,
       "disaster_score": 72.8,
-      "land_score": 70.1,
-      "economics_score": 41.0,
+      "land_score": 35.0,
+      "economics_score": 30.0,
       "atmospheric_score": 85.0,
       "sovereign_score": 100.0,
       "eco_score": 87.0,
@@ -9187,11 +9187,11 @@
           "dimension": "Power & Grid",
           "name": "Direct Normal Irradiance (DNI)",
           "metric_key": "solar_dni_w_m2",
-          "value": "720.0 W/m\u00b2",
+          "value": "720.0 W/m²",
           "factor_score": 95.5,
           "weight": 0.015,
           "weighted_score": 1.432,
-          "benchmark": ">= 650 W/m\u00b2 (High Solar Viability)",
+          "benchmark": ">= 650 W/m² (High Solar Viability)",
           "source": "Open-Meteo Solar & Global Solar Atlas",
           "status": "OPTIMAL"
         },
@@ -9200,11 +9200,11 @@
           "dimension": "Power & Grid",
           "name": "Global Horizontal Irradiance (GHI)",
           "metric_key": "solar_ghi_kwh_m2_day",
-          "value": "5.40 kWh/m\u00b2/day",
+          "value": "5.40 kWh/m²/day",
           "factor_score": 97.14,
           "weight": 0.015,
           "weighted_score": 1.457,
-          "benchmark": ">= 5.0 kWh/m\u00b2/day (National Solar Tier-1)",
+          "benchmark": ">= 5.0 kWh/m²/day (National Solar Tier-1)",
           "source": "NASA POWER / NISE Resource Map",
           "status": "OPTIMAL"
         },
@@ -9213,11 +9213,11 @@
           "dimension": "Power & Grid",
           "name": "Wind Power Density at 100m Hub Height",
           "metric_key": "wind_power_density_w_m2",
-          "value": "240.0 W/m\u00b2",
+          "value": "240.0 W/m²",
           "factor_score": 85.0,
           "weight": 0.01,
           "weighted_score": 0.85,
-          "benchmark": ">= 200 W/m\u00b2 (Hybrid Wind PPA Feasible)",
+          "benchmark": ">= 200 W/m² (Hybrid Wind PPA Feasible)",
           "source": "Global Wind Atlas / MNRE",
           "status": "COMPLIANT"
         },
@@ -9226,11 +9226,11 @@
           "dimension": "Climate & Cooling",
           "name": "Annual Peak Design Dry-Bulb Temperature",
           "metric_key": "dry_bulb_temp_c",
-          "value": "34.0\u00b0C",
+          "value": "34.0°C",
           "factor_score": 88.0,
           "weight": 0.025,
           "weighted_score": 2.2,
-          "benchmark": "<= 38.0\u00b0C (ASHRAE Envelope A1)",
+          "benchmark": "<= 38.0°C (ASHRAE Envelope A1)",
           "source": "NASA POWER 30-Year Climatology",
           "status": "COMPLIANT"
         },
@@ -9252,18 +9252,18 @@
           "dimension": "Climate & Cooling",
           "name": "Psychrometric Wet-Bulb Temperature",
           "metric_key": "wet_bulb_temp_c",
-          "value": "31.6\u00b0C",
-          "factor_score": 25.12,
+          "value": "31.6°C",
+          "factor_score": 38.9,
           "weight": 0.04,
-          "weighted_score": 1.005,
-          "benchmark": "<= 28.0\u00b0C (Evaporative & Adiabatic Limit)",
+          "weighted_score": 1.556,
+          "benchmark": "<= 28.0°C (Evaporative & Adiabatic Limit)",
           "source": "Stull Psychrometric Formulation",
           "status": "CRITICAL"
         },
         {
           "id": 18,
           "dimension": "Climate & Cooling",
-          "name": "Annual Cooling Degree Days (CDD 18.3\u00b0C)",
+          "name": "Annual Cooling Degree Days (CDD 18.3°C)",
           "metric_key": "annual_cooling_degree_days",
           "value": "2980 CDD",
           "factor_score": 75.62,
@@ -9276,7 +9276,7 @@
         {
           "id": 19,
           "dimension": "Climate & Cooling",
-          "name": "Annual Extreme Heat Days (>42\u00b0C)",
+          "name": "Annual Extreme Heat Days (>42°C)",
           "metric_key": "extreme_heat_days",
           "value": "4 Days/Year",
           "factor_score": 100.0,
@@ -9291,11 +9291,11 @@
           "dimension": "Climate & Cooling",
           "name": "Atmospheric Particulate Load (PM2.5)",
           "metric_key": "air_quality_pm25",
-          "value": "48.0 \u00b5g/m\u00b3",
-          "factor_score": 85.0,
+          "value": "48.0 µg/m³",
+          "factor_score": 88.0,
           "weight": 0.015,
-          "weighted_score": 1.275,
-          "benchmark": "<= 60 \u00b5g/m\u00b3 (CPCB National Standard)",
+          "weighted_score": 1.32,
+          "benchmark": "<= 60 µg/m³ (CPCB National Standard)",
           "source": "Copernicus CAMS & ECMWF Reanalysis",
           "status": "COMPLIANT"
         },
@@ -9525,11 +9525,11 @@
           "dimension": "Land & Civil",
           "name": "Safe Soil Bearing Capacity (SBC)",
           "metric_key": "soil_bearing_capacity_kpa",
-          "value": "120 kN/m\u00b2",
+          "value": "120 kN/m²",
           "factor_score": 50.0,
           "weight": 0.015,
           "weighted_score": 0.75,
-          "benchmark": ">= 180 kN/m\u00b2 (Heavy Transformer Bay Support)",
+          "benchmark": ">= 180 kN/m² (Heavy Transformer Bay Support)",
           "source": "IS 1904 Foundation Engineering Code",
           "status": "WARNING"
         },
@@ -9564,11 +9564,11 @@
           "dimension": "Economics & Policy",
           "name": "Industrial HT Electricity Tariff",
           "metric_key": "electricity_tariff_inr_per_kwh",
-          "value": "\u20b98.50/kWh",
+          "value": "₹8.50/kWh",
           "factor_score": 56.67,
           "weight": 0.025,
           "weighted_score": 1.417,
-          "benchmark": "<= \u20b97.20/kWh (Competitive AI Training Threshold)",
+          "benchmark": "<= ₹7.20/kWh (Competitive AI Training Threshold)",
           "source": "State Electricity Regulatory Commission (SERC)",
           "status": "WARNING"
         },
@@ -9603,7 +9603,7 @@
           "dimension": "Economics & Policy",
           "name": "Official Land Acquisition Circle Rate",
           "metric_key": "land_cost_inr_crore_per_acre",
-          "value": "\u20b945.00 Cr/Acre",
+          "value": "₹45.00 Cr/Acre",
           "factor_score": 4.6,
           "weight": 0.01,
           "weighted_score": 0.046,

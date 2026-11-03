@@ -151,6 +151,28 @@ def get_site_by_id(site_id: str = Path(..., description="Unique ID of benchmark 
             return assess_site(site)
     raise HTTPException(status_code=404, detail=f"Site with ID '{site_id}' not found.")
 
+
+@router.get("/sites/recommend-nearby", response_model=Dict[str, Any], tags=["Site Assessment"])
+def recommend_nearby_sites_endpoint(
+    latitude: float = Query(..., description="Latitude of candidate site"),
+    longitude: float = Query(..., description="Longitude of candidate site"),
+    current_score: float = Query(50.0, description="Current composite score of candidate site"),
+    is_vetoed: bool = Query(False, description="Whether current site is vetoed"),
+    state: Optional[str] = Query(None, description="Current State name"),
+):
+    from backend.app.services.recommendation_engine import find_nearby_recommended_sites
+    best_alt, nearby = find_nearby_recommended_sites(
+        current_lat=latitude,
+        current_lon=longitude,
+        current_score=current_score,
+        is_vetoed=is_vetoed,
+        current_state=state,
+    )
+    return {
+        "best_alternative": best_alt.model_dump() if best_alt else None,
+        "nearby_alternatives": [a.model_dump() for a in nearby],
+    }
+
 @router.post("/compare", response_model=SiteComparisonResponse, tags=["Site Assessment"])
 def compare_sites_endpoint(req: SiteComparisonRequest):
     """

@@ -19,9 +19,9 @@ CRITICAL_PILLAR_THRESHOLDS = {
     "power": 50.0,
     "economics": 55.0,
     "land": 50.0,
-    "climate": 45.0,
+    "climate": 35.0,
     "disaster": 45.0,
-    "atmospheric": 45.0,
+    "atmospheric": 35.0,
 }
 
 # Empirical sensitivity exponents for bottleneck degradation

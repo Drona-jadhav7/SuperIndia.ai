@@ -16,6 +16,7 @@ from backend.app.services.protected_areas_engine import check_protected_area_pro
 from backend.app.services.border_security_and_terrain_engine import check_geostrategic_and_terrain_risk
 from backend.app.services.live_telemetry_service import compile_fifty_factor_telemetry
 from backend.app.services.fifty_factor_engine import calculate_fifty_factor_assessment
+from backend.app.services.recommendation_engine import find_nearby_recommended_sites
 
 def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is_live_evaluated: bool = False) -> SiteAssessmentResponse:
     """
@@ -391,6 +392,16 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         )
         diagnostics.append(f"Closed-loop liquid cooling loop delivers {raw_eco['water_preservation']['water_saved_percentage']}% water savings with WUE {raw_eco['water_preservation']['water_usage_effectiveness_wue']} L/kWh.")
 
+    # Geospatial Sovereign Alternative Recommendation
+    is_vetoed = is_core_sanctuary or is_border_veto or is_esz_corridor
+    best_alt, nearby_alts = find_nearby_recommended_sites(
+        current_lat=site.latitude,
+        current_lon=site.longitude,
+        current_score=composite_score,
+        is_vetoed=is_vetoed,
+        current_state=site.state,
+    )
+
     # Authoritative 50-Factor Siting & Defense Matrix Telemetry
     fifty_factor_data = fifty_assessment
 
@@ -433,4 +444,6 @@ def assess_site(site: SiteInput, provenance: Optional[Dict[str, Any]] = None, is
         is_live_evaluated=is_live_evaluated,
         data_provenance=provenance,
         fifty_factor_telemetry=fifty_factor_data,
+        recommended_alternative=best_alt,
+        nearby_alternatives=nearby_alts,
     )

@@ -72,7 +72,7 @@ def test_water_bottleneck_penalty():
     assert mult_water < 1.0
     assert len(penalties_water) == 1
     assert penalties_water[0]["pillar"] == "Water Subsystem"
-    expected = (30.0 / 50.0) ** BOTTLENECK_EXPONENTS["water"]
+    expected = (30.0 / CRITICAL_PILLAR_THRESHOLDS["water"]) ** BOTTLENECK_EXPONENTS["water"]
     assert abs(mult_water - expected) < 1e-3
 
 

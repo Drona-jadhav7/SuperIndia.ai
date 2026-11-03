@@ -30,12 +30,17 @@ export const DIMENSION_WEIGHTS = {
 };
 
 // 1. Water Transfer Functions
-export function f1_groundwater_soe(soe) {
-  if (soe <= 60.0) return 100.0;
-  if (soe <= 70.0) return 100.0 - (soe - 60.0) * 1.5;
-  if (soe <= 90.0) return 85.0 - ((soe - 70.0) / 20.0) * 35.0;
-  if (soe <= 100.0) return 50.0 - ((soe - 90.0) / 10.0) * 25.0;
-  return Math.max(0.0, 25.0 - (soe - 100.0) * 1.5);
+export function f1_groundwater_soe(soe, tertiarySupplyMld = 0.0) {
+  let base = 0.0;
+  if (soe <= 60.0) base = 100.0;
+  else if (soe <= 70.0) base = 100.0 - (soe - 60.0) * 1.5;
+  else if (soe <= 90.0) base = 85.0 - ((soe - 70.0) / 20.0) * 35.0;
+  else if (soe <= 100.0) base = 50.0 - ((soe - 90.0) / 10.0) * 25.0;
+  else base = Math.max(0.0, 25.0 - (soe - 100.0) * 1.5);
+
+  if (tertiarySupplyMld >= 15.0) return Math.max(base, 80.0);
+  if (tertiarySupplyMld >= 5.0) return Math.max(base, 65.0);
+  return base;
 }
 
 export function f2_water_tds(tds) {
@@ -124,16 +129,17 @@ export function f16_relative_humidity(rh) {
 
 export function f17_wet_bulb(tw) {
   if (tw <= 24.0) return 100.0;
-  if (tw <= 28.0) return 100.0 - ((tw - 24.0) / 4.0) * 30.0;
-  if (tw <= 31.0) return 70.0 - ((tw - 28.0) / 3.0) * 40.0;
-  return Math.max(0.0, 30.0 - (tw - 31.0) * 8.0);
+  if (tw <= 28.0) return 100.0 - ((tw - 24.0) / 4.0) * 20.0;
+  if (tw <= 31.0) return 80.0 - ((tw - 28.0) / 3.0) * 35.0;
+  if (tw <= 33.5) return 45.0 - ((tw - 31.0) / 2.5) * 25.0;
+  return Math.max(15.0, 20.0 - (tw - 33.5) * 3.0);
 }
 
 export function f20_pm25(pm) {
   if (pm <= 30.0) return 100.0;
-  if (pm <= 60.0) return 100.0 - ((pm - 30.0) / 30.0) * 25.0;
-  if (pm <= 120.0) return 75.0 - ((pm - 60.0) / 60.0) * 40.0;
-  return Math.max(15.0, 35.0 - (pm - 120.0) * 0.25);
+  if (pm <= 60.0) return 100.0 - ((pm - 30.0) / 30.0) * 20.0;
+  if (pm <= 120.0) return 80.0 - ((pm - 60.0) / 60.0) * 30.0;
+  return Math.max(30.0, 50.0 - (pm - 120.0) * 0.15);
 }
 
 // 4. Connectivity Transfer Functions
@@ -145,10 +151,10 @@ export function f21_cls_dist(km) {
 }
 
 export function f22_cls_rtt(ms) {
-  if (ms <= 3.0) return 100.0;
-  if (ms <= 6.0) return 100.0 - ((ms - 3.0) / 3.0) * 15.0;
-  if (ms <= 15.0) return 85.0 - ((ms - 6.0) / 9.0) * 35.0;
-  return Math.max(20.0, 50.0 - (ms - 15.0) * 2.0);
+  if (ms <= 4.0) return 100.0;
+  if (ms <= 10.0) return 100.0 - ((ms - 4.0) / 6.0) * 18.0;
+  if (ms <= 20.0) return 82.0 - ((ms - 10.0) / 10.0) * 22.0;
+  return Math.max(30.0, 60.0 - (ms - 20.0) * 1.5);
 }
 
 export function f23_nixi_dist(km) {
@@ -568,7 +574,7 @@ export function evaluateCandidateSite(siteInput) {
 
   // Build 50 factor scores
   const scores = {
-    1: f1_groundwater_soe(wp.cgwa_extraction_pct ?? wp.groundwater_extraction_pct ?? 75.0),
+    1: f1_groundwater_soe(wp.cgwa_extraction_pct ?? wp.groundwater_extraction_pct ?? 75.0, wp.tertiary_supply_mld ?? (wp.nearest_stp_cetp_km < 5.0 ? 15.0 : 0.0)),
     2: f2_water_tds(wp.water_quality_tds ?? 450.0),
     3: f3_aquifer_stress(wp.aquifer_stress_category === 'Over-Exploited' ? 95.0 : wp.aquifer_stress_category === 'Critical' ? 88.0 : 65.0),
     4: f4_water_demand(wp.data_center_demand_mld ?? 0.8, itLoad),
@@ -687,22 +693,32 @@ export function evaluateCandidateSite(siteInput) {
 
   // Critical Pillar Bottleneck Multipliers
   let bottleneckMult = 1.0;
-  if (dimScores.water < 50.0) bottleneckMult *= Math.pow(dimScores.water / 50.0, 0.55);
-  if (dimScores.power < 50.0) bottleneckMult *= Math.pow(dimScores.power / 50.0, 0.55);
+  if (dimScores.water < 40.0) bottleneckMult *= Math.pow(dimScores.water / 40.0, 0.55);
+  if (dimScores.power < 45.0) bottleneckMult *= Math.pow(dimScores.power / 45.0, 0.55);
   const landEcon = (dimScores.land * 0.5) + (dimScores.economics * 0.5);
-  if (landEcon < 50.0) bottleneckMult *= Math.pow(landEcon / 50.0, 0.65);
-  if (dimScores.climate < 45.0) bottleneckMult *= Math.pow(dimScores.climate / 45.0, 0.35);
-  if (dimScores.disaster < 45.0) bottleneckMult *= Math.pow(dimScores.disaster / 45.0, 0.40);
-  if (dimScores.atmospheric < 40.0) bottleneckMult *= Math.pow(dimScores.atmospheric / 40.0, 0.30);
+  if (landEcon < 45.0) bottleneckMult *= Math.pow(landEcon / 45.0, 0.65);
+  if (dimScores.climate < 35.0) bottleneckMult *= Math.pow(dimScores.climate / 35.0, 0.35);
+  if (dimScores.disaster < 40.0) bottleneckMult *= Math.pow(dimScores.disaster / 40.0, 0.40);
+  if (dimScores.atmospheric < 35.0) bottleneckMult *= Math.pow(dimScores.atmospheric / 35.0, 0.30);
 
   // Tree Canopy & Deforestation Bottleneck Multiplier
-  // Rule: Any place where there are more trees should NOT be scored well!
   if (treeCanopyPct > 10.0) {
     bottleneckMult *= Math.pow(Math.max(0.05, (100.0 - treeCanopyPct) / 90.0), 0.75);
   }
 
-  // Calibrated synthesis
-  const calibratedBase = (0.65 * topsisScore) + (0.35 * rawComposite);
+  // Fatal Economic & Land acquisition cost veto for hyper-dense metros (e.g. South Mumbai)
+  const landCostCr = ep.land_circle_rate_inr_per_sqft 
+    ? (ep.land_circle_rate_inr_per_sqft * 43560) / 10000000 
+    : (ep.land_cost_inr_crore_per_acre || 3.5);
+  const parcelAcres = lp.contiguous_parcel_acres || 50.0;
+  if (landCostCr >= 30.0 || (landCostCr >= 15.0 && parcelAcres <= 10.0)) {
+    bottleneckMult *= 0.60;
+    dimScores.economics = Math.min(dimScores.economics, 30.0);
+    dimScores.land = Math.min(dimScores.land, 35.0);
+  }
+
+  // Calibrated synthesis (25% TOPSIS geometric variance + 75% Weighted baseline * Bottleneck Multiplier)
+  const calibratedBase = (0.25 * topsisScore) + (0.75 * rawComposite);
   let compositeScore = Math.round(calibratedBase * bottleneckMult * 10) / 10;
 
   // Sovereign Hard Vetoes & Deforestation Caps
@@ -722,7 +738,11 @@ export function evaluateCandidateSite(siteInput) {
   let tierBadge = 'VIABLE';
   let tierColor = '#10B981';
 
-  if (compositeScore >= 75.0) {
+  if (compositeScore >= 90.0) {
+    tier = 'OPTIMAL / STRATEGIC';
+    tierBadge = 'OPTIMAL';
+    tierColor = '#059669';
+  } else if (compositeScore >= 75.0) {
     tier = 'VIABLE / RECOMMENDED';
     tierBadge = 'VIABLE';
     tierColor = '#10B981';
