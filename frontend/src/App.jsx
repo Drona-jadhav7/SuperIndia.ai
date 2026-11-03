@@ -110,31 +110,50 @@ export default function App() {
         {/* Subtle Indian Tricolor National Accent Stripe */}
         <div className="h-[3px] bg-gradient-to-r from-[#FF9933] via-[#FFFFFF] to-[#138808] w-full shrink-0 shadow-xs" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-4">
           
-          {/* Brand Identity */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="relative group cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
-              <div className="w-11 h-11 rounded-full p-0.5 group-hover:scale-105 transition-transform flex items-center justify-center">
-                <img 
-                  src="/logo.png" 
-                  alt="SuperIndia.ai Official Insignia" 
-                  className="w-full h-full object-contain drop-shadow-xs" 
-                />
+          {/* Top-Left: Menu Trigger & Brand Identity */}
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* TOP-LEFT CORNER: Platform Modules Menu Button (Blue style matching Simulate Site) */}
+            <button
+              onClick={() => setIsSidePanelOpen(true)}
+              className="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 font-display shrink-0 group cursor-pointer"
+              title="Open Platform Modules Menu (All Other Features)"
+            >
+              <Menu className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+              <span className="font-bold">Features Menu</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-white/20 text-white font-bold border border-white/25">
+                7
+              </span>
+            </button>
+
+            {/* Subtle Divider */}
+            <div className="h-6 w-px bg-[#dde0e6] hidden sm:block" />
+
+            {/* Brand Identity */}
+            <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
+              <div className="relative group">
+                <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-full p-0.5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                  <img 
+                    src="/logo.png" 
+                    alt="SuperIndia.ai Official Insignia" 
+                    className="w-full h-full object-contain drop-shadow-xs" 
+                  />
+                </div>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" title="National AI OS Active" />
               </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" title="National AI OS Active" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold font-display tracking-tight text-[#16191f] cursor-pointer" onClick={() => { setActiveTab('mesh'); }}>
-                  SuperIndia<span className="text-[#074ce0]">.ai</span>
-                </h1>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold flex items-center gap-1">
-                  <span>🇮🇳</span> National AI OS
-                </span>
-              </div>
-              <div className="text-[11px] text-[#454c58] font-sans hidden md:block">
-                National AI Infrastructure Intelligence & Siting Operating System
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg sm:text-xl font-bold font-display tracking-tight text-[#16191f]">
+                    SuperIndia<span className="text-[#074ce0]">.ai</span>
+                  </h1>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold hidden sm:flex items-center gap-1">
+                    <span>🇮🇳</span> National AI OS
+                  </span>
+                </div>
+                <div className="text-[11px] text-[#454c58] font-sans hidden lg:block">
+                  National AI Infrastructure Intelligence & Siting Operating System
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +205,7 @@ export default function App() {
             </select>
           </div>
 
-          {/* Action Controls, Health & Platform Modules Trigger */}
+          {/* Right Action Controls: Health & Simulate Site */}
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f3f4f6] border border-[#dde0e6] text-[11px] font-mono text-[#454c58]">
               <span className={`w-2 h-2 rounded-full ${apiOnline ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'}`}></span>
@@ -209,38 +228,25 @@ export default function App() {
               <span className="hidden sm:inline">Simulate Site</span>
               <span className="sm:hidden">Simulate</span>
             </button>
-
-            {/* Dedicated Platform Features Side Menu Button */}
-            <button
-              onClick={() => setIsSidePanelOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-[#16191f] hover:bg-[#252a34] text-white transition-all shadow-xs border border-slate-700/50 group"
-              title="Open Extended Platform Modules Side Menu"
-            >
-              <LayoutGrid className="w-4 h-4 text-[#FF9933] group-hover:rotate-12 transition-transform" />
-              <span className="hidden sm:inline">Platform Modules</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-blue-600 text-white font-bold">
-                7
-              </span>
-            </button>
           </div>
 
         </div>
       </header>
 
-      {/* 2. Floating Docked Quick-Access Pill on Right Edge (Tablet/Desktop) */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-[1000] hidden md:block">
+      {/* 2. Floating Docked Quick-Access Pill on LEFT Edge (Tablet/Desktop) */}
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[1000] hidden md:block">
         <button
           onClick={() => setIsSidePanelOpen(true)}
-          title="Open Platform Modules Menu (7 Extended Tools)"
-          className="bg-[#16191f] text-white hover:bg-[#074ce0] shadow-xl rounded-l-xl px-2.5 py-3 flex items-center gap-2 cursor-pointer transition-all duration-200 border-l border-t border-b border-white/10 group hover:pr-3.5"
+          title="Open Platform Features Menu (7 Extended Tools)"
+          className="bg-[#074ce0] hover:bg-[#0640c4] text-white shadow-xl rounded-r-xl px-2.5 py-3 flex items-center gap-2 cursor-pointer transition-all duration-200 border-r border-t border-b border-blue-400/40 group hover:pl-3.5"
         >
-          <LayoutGrid className="w-4 h-4 text-[#FF9933] group-hover:rotate-12 transition-transform" />
+          <Menu className="w-4 h-4 text-white group-hover:rotate-90 transition-transform" />
           <div className="text-left">
             <div className="text-[11px] font-bold font-display leading-tight flex items-center gap-1">
-              <span>Modules</span>
-              <span className="text-[9px] font-mono bg-blue-600 px-1.5 py-0.2 rounded-full text-white font-bold">7</span>
+              <span>Features</span>
+              <span className="text-[9px] font-mono bg-white/20 px-1.5 py-0.2 rounded-full text-white font-bold">7</span>
             </div>
-            <div className="text-[9px] text-slate-400 group-hover:text-blue-100 font-mono leading-tight">Side Menu</div>
+            <div className="text-[9px] text-blue-100 font-mono leading-tight">Side Menu</div>
           </div>
         </button>
       </div>
@@ -263,11 +269,11 @@ export default function App() {
 
                     <button
                       onClick={() => setIsSidePanelOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-[#454c58] text-[10px] font-mono border border-slate-300 transition-colors"
-                      title="Explore 7 extended modules"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 hover:bg-blue-100 text-[#074ce0] text-[10px] font-mono border border-blue-200 transition-colors font-semibold"
+                      title="Explore 7 extended modules in side panel"
                     >
-                      <LayoutGrid className="w-3 h-3 text-[#074ce0]" />
-                      <span>7 Extended Suites in Side Menu →</span>
+                      <Menu className="w-3 h-3 text-[#074ce0]" />
+                      <span>7 Extended Suites in Left Menu →</span>
                     </button>
                   </div>
 
@@ -347,8 +353,8 @@ export default function App() {
               {/* Extended Platform Ecosystem Gateway Card */}
               <div className="p-5 rounded-2xl bg-gradient-to-r from-white via-white to-blue-50/50 border border-[#dde0e6] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-[#16191f] text-[#FF9933] flex items-center justify-center shrink-0 shadow-sm">
-                    <LayoutGrid className="w-5 h-5" />
+                  <div className="w-11 h-11 rounded-xl bg-[#074ce0] text-white flex items-center justify-center shrink-0 shadow-sm shadow-[#074ce0]/25">
+                    <Menu className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -367,10 +373,11 @@ export default function App() {
 
                 <button
                   onClick={() => setIsSidePanelOpen(true)}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#16191f] hover:bg-[#252a34] text-white transition-all shadow-xs shrink-0 group"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#074ce0] hover:bg-[#0640c4] text-white transition-all shadow-sm shadow-[#074ce0]/25 shrink-0 group cursor-pointer"
                 >
-                  <span>Explore Platform Suites</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#FF9933] group-hover:translate-x-1 transition-transform" />
+                  <Menu className="w-4 h-4 text-white" />
+                  <span>Open Features Menu</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-white group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
@@ -438,9 +445,9 @@ export default function App() {
 
                 <button
                   onClick={() => setIsSidePanelOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#16191f] transition-colors border border-[#dde0e6]"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 text-[#074ce0] transition-colors border border-blue-200 font-semibold"
                 >
-                  <LayoutGrid className="w-4 h-4 text-[#074ce0]" />
+                  <Menu className="w-4 h-4 text-[#074ce0]" />
                   <span>Switch Module</span>
                 </button>
 

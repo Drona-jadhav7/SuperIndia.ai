@@ -15,6 +15,7 @@ import {
   CheckCircle2, 
   Layers, 
   LayoutGrid,
+  Menu,
   ShieldCheck,
   Zap,
   ChevronRight,
@@ -214,28 +215,29 @@ export default function SidePanelMenu({
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-8 sm:pl-16">
-        <div className="w-screen max-w-md sm:max-w-lg md:max-w-xl bg-[#ffffff] shadow-2xl flex flex-col border-l border-[#dde0e6] animate-in slide-in-from-right duration-250 ease-out">
+      {/* Slide-out from LEFT (matching Top-Left Menu Trigger) */}
+      <div className="fixed inset-y-0 left-0 max-w-full flex pr-8 sm:pr-16">
+        <div className="w-screen max-w-md sm:max-w-lg md:max-w-xl bg-[#ffffff] shadow-2xl flex flex-col border-r border-[#dde0e6] animate-in slide-in-from-left duration-250 ease-out">
           
           {/* Indian Tricolor National Accent Stripe */}
           <div className="h-[3px] bg-gradient-to-r from-[#FF9933] via-[#FFFFFF] to-[#138808] w-full shrink-0 shadow-xs" />
 
-          {/* Drawer Header */}
-          <div className="p-5 border-b border-[#dde0e6] bg-[#fcfcfd] flex items-center justify-between gap-4">
+          {/* Drawer Header - In signature institutional blue matching Simulate Site */}
+          <div className="p-5 bg-gradient-to-r from-[#074ce0] to-[#053bb0] text-white flex items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#074ce0] shadow-2xs">
-                <LayoutGrid className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-white shadow-2xs backdrop-blur-xs">
+                <Menu className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold font-display text-[#16191f]">
+                  <h2 className="text-base font-bold font-display text-white">
                     Platform Feature Suites
                   </h2>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-[#074ce0] border border-blue-200 font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/20 text-white border border-white/30 font-bold">
                     7 Modules
                   </span>
                 </div>
-                <p className="text-xs text-[#454c58] mt-0.5">
+                <p className="text-xs text-blue-100 mt-0.5">
                   Extended infrastructure intelligence & sovereign tools
                 </p>
               </div>
@@ -244,14 +246,14 @@ export default function SidePanelMenu({
             <button
               onClick={onClose}
               title="Close Menu (Esc)"
-              className="p-2 rounded-xl text-[#454c58] hover:text-[#16191f] hover:bg-[#f3f4f6] transition-colors border border-transparent hover:border-[#dde0e6]"
+              className="p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors border border-transparent hover:border-white/20"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Search & Category Pills Filter */}
-          <div className="p-4 border-b border-[#dde0e6] bg-[#fcfcfd]/50 space-y-3">
+          <div className="p-4 border-b border-[#dde0e6] bg-[#fcfcfd]/80 space-y-3">
             {/* Search Input */}
             <div className="relative">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8c94a4]" />
@@ -272,7 +274,7 @@ export default function SidePanelMenu({
               )}
             </div>
 
-            {/* Category Pills */}
+            {/* Category Pills with Blue Accent */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
               {categories.map((cat) => {
                 const isSelected = selectedCategory === cat.id;
@@ -282,7 +284,7 @@ export default function SidePanelMenu({
                     onClick={() => setSelectedCategory(cat.id)}
                     className={`px-2.5 py-1 rounded-lg font-medium whitespace-nowrap transition-all ${
                       isSelected
-                        ? 'bg-[#16191f] text-white shadow-2xs font-semibold'
+                        ? 'bg-[#074ce0] text-white shadow-2xs font-semibold'
                         : 'bg-[#f3f4f6] text-[#454c58] hover:text-[#16191f] hover:bg-[#e9ebef]'
                     }`}
                   >
@@ -316,7 +318,7 @@ export default function SidePanelMenu({
                   }`}
                 >
                   <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-[#074ce0] text-white flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
                       <MapPin className="w-5 h-5" />
                     </div>
 
@@ -326,7 +328,7 @@ export default function SidePanelMenu({
                           {coreModule.title}
                         </h3>
                         {activeTab === 'mesh' ? (
-                          <span className="shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white">
+                          <span className="shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#074ce0] text-white">
                             Active Home
                           </span>
                         ) : (
@@ -380,7 +382,7 @@ export default function SidePanelMenu({
                         className={`group relative p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer ${
                           isActive
                             ? 'bg-slate-900 text-white border-slate-900 shadow-md'
-                            : 'bg-white border-[#dde0e6] hover:border-[#074ce0]/40 hover:bg-[#fcfcfd] hover:shadow-xs'
+                            : 'bg-white border-[#dde0e6] hover:border-[#074ce0]/50 hover:bg-[#fcfcfd] hover:shadow-xs'
                         }`}
                       >
                         <div className="flex items-start gap-3">
