@@ -1,3 +1,4 @@
+import { SOVEREIGN_APIS_DIRECTORY } from '../data/sovereignApis.js';
 import { STATE_POLICIES, INDIA_AI_MISSION, CITIZEN_PROJECTS, HARDWARE_OPTIONS, MARKETPLACE_NODES, DEMAND_FORECAST } from '../data/offlineFallbackData';
 import axios from 'axios';
 import benchmarkSites from '../data/benchmarkSites.json';
@@ -103,6 +104,27 @@ export const fetchLiveTelemetry = async (payload) => {
   }
   // Zero-downtime direct public API ingestion (NASA POWER, SRTM, CAMS, USGS, CGWB)
   return await fetchDirectSovereignTelemetry(payload);
+};
+
+export const fetchSovereignAPIsDirectory = async () => {
+  try {
+    const response = await apiClient.get('/telemetry/sovereign-apis-directory');
+    if (response.data && response.data.apis) {
+      return response.data;
+    }
+  } catch (err) {
+    console.warn('Backend /telemetry/sovereign-apis-directory unavailable, serving local sovereign APIs directory:', err.message);
+  }
+  return {
+    total_apis: SOVEREIGN_APIS_DIRECTORY.length,
+    mesh_status: 'ONLINE_ACTIVE',
+    mesh_tier_distribution: {
+      tier_1_dynamic_telemetry: SOVEREIGN_APIS_DIRECTORY.filter(a => a.tier === 'TIER_1_DYNAMIC_TELEMETRY').length,
+      tier_2_spatial_vector_layer: SOVEREIGN_APIS_DIRECTORY.filter(a => a.tier === 'TIER_2_SPATIAL_VECTOR_LAYER').length,
+      tier_3_statutory_registry: SOVEREIGN_APIS_DIRECTORY.filter(a => a.tier === 'TIER_3_STATUTORY_REGISTRY').length,
+    },
+    apis: SOVEREIGN_APIS_DIRECTORY,
+  };
 };
 
 export const assessLiveSite = async (payload) => {

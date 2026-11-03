@@ -165,6 +165,11 @@ def test_compile_fifty_factor_telemetry():
     )
     res = compile_fifty_factor_telemetry(site)
     assert res["total_factors"] == 50
+    assert res["total_apis"] == 50
     assert len(res["factors"]) == 50
+    assert len(res["apis_directory"]) == 50
+    assert "api_name" in res["factors"][0]
+    assert "api_tier" in res["factors"][0]
+    assert "authority" in res["factors"][0]
     assert res["factors"][0]["id"] == 1
     assert res["factors"][49]["id"] == 50

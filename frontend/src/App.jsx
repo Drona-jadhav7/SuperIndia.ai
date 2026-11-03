@@ -98,6 +98,33 @@ export default function App() {
     }
   };
 
+  const handleSelectRecommendedSite = async (rec) => {
+    if (!rec) return;
+    const existing = sites.find(s => s.site_id === rec.site_id);
+    if (existing) {
+      setSelectedSite(existing);
+      return;
+    }
+
+    try {
+      const payload = {
+        site_id: rec.site_id,
+        site_name: rec.site_name,
+        state: rec.state,
+        district: rec.district,
+        latitude: rec.latitude,
+        longitude: rec.longitude,
+        elevation_m: rec.elevation_m || 50.0,
+        proposed_it_load_mw: selectedSite?.proposed_it_load_mw || 50.0,
+      };
+      const assessment = await assessCustomSite(payload);
+      setSites(prev => [assessment, ...prev.filter(s => s.site_id !== assessment.site_id)]);
+      setSelectedSite(assessment);
+    } catch (err) {
+      console.error('Failed to load recommended site:', err);
+    }
+  };
+
   // Find active extended module details (when not on home mesh)
   const currentModule = PLATFORM_MODULES.find(m => m.id === activeTab);
 
@@ -250,7 +277,7 @@ export default function App() {
                     <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Factors</div>
                   </div>
                   <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs text-center min-w-[90px] hover:border-indigo-300 transition-colors">
-                    <div className="text-base font-black text-indigo-600">5</div>
+                    <div className="text-base font-black text-indigo-600">50</div>
                     <div className="text-[10px] text-slate-500 font-sans font-medium uppercase tracking-wider">Live APIs</div>
                   </div>
                 </div>
@@ -279,13 +306,22 @@ export default function App() {
                   <MapView 
                     sites={sites} 
                     selectedSite={selectedSite} 
-                    onSelectSite={(site) => { setSelectedSite(site); }} 
+                    onSelectSite={(site) => {
+                      if (site.key_advantages || site.why_better) {
+                        handleSelectRecommendedSite(site);
+                      } else {
+                        setSelectedSite(site);
+                      }
+                    }} 
                   />
                 </div>
 
                 {/* Selected Site Composite ScoreCard (5 cols) */}
                 <div className="lg:col-span-5 min-h-[580px] lg:h-[640px] flex flex-col">
-                  <ScoreCard site={selectedSite} />
+                  <ScoreCard 
+                    site={selectedSite} 
+                    onSelectSite={handleSelectRecommendedSite} 
+                  />
                 </div>
 
               </div>

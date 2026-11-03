@@ -125,7 +125,12 @@ def test_compound_bottlenecks():
 
 
 def test_precision_tier_determination():
-    """Verify tier badges, colors, and labels based on score."""
+    """Verify tier badges, colors, and labels based on score across the 4 tiers."""
+    tier_o, badge_o, color_o = determine_precision_tier(92.0)
+    assert "OPTIMAL" in tier_o
+    assert badge_o == "OPTIMAL"
+    assert color_o == "#059669"
+
     tier, badge, color = determine_precision_tier(85.0)
     assert "VIABLE" in tier
     assert badge == "VIABLE"

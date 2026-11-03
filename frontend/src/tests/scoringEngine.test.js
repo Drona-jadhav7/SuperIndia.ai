@@ -183,4 +183,34 @@ console.log(`  ✓ Composite TOPSIS Score: ${result.composite_score}/100 (${resu
 console.log(`  ✓ 9 Dimensions Aggregated: Water=${result.water_score}, Power=${result.power_score}, Corrosivity=${result.atmospheric_score}`);
 console.log(`  ✓ All 50 Factors Evaluated with Weights & Non-Linear Functions\n`);
 
+
+// 5. Verify Geospatial Alternative Recommendation for Low-Scoring / Vetoed Sites
+console.log('Test 5: Geospatial Sovereign Alternative Recommendation Engine');
+const girSite = {
+  site_name: 'Gir Wildlife Sanctuary',
+  state: 'Gujarat',
+  district: 'Junagadh',
+  latitude: 21.1243,
+  longitude: 70.7963,
+  elevation_m: 50.0,
+  proposed_it_load_mw: 50.0,
+  eco_params: {
+    distance_to_wildlife_sanctuary_km: 0.0,
+    tree_canopy_cover_pct: 68.5,
+  },
+};
+
+const girResult = evaluateCandidateSite(girSite);
+assert(girResult.composite_score <= 25.0, `Expected low vetoed score, got ${girResult.composite_score}`);
+assert(girResult.recommended_alternative !== null, 'Vetoed site must produce a recommended alternative');
+assert.strictEqual(girResult.recommended_alternative.state, 'Gujarat');
+assert(girResult.recommended_alternative.composite_score >= 85.0);
+assert(girResult.recommended_alternative.score_delta > 60.0);
+assert(girResult.recommended_alternative.distance_km < 300.0);
+assert(girResult.recommended_alternative.why_better.power !== undefined);
+assert(girResult.recommended_alternative.why_better.environment !== undefined);
+console.log(`  ✓ Low-Scoring/Vetoed Site: ${girResult.site_name} (${girResult.composite_score}/100)`);
+console.log(`  ✓ Automatically Recommends: ${girResult.recommended_alternative.site_name} (${girResult.recommended_alternative.composite_score}/100, +${girResult.recommended_alternative.score_delta} pts, ${girResult.recommended_alternative.distance_km} km away)`);
+console.log('  ✓ Comparative Advantages Compiled (Power, Water, Environment, Connectivity, Policy)\n');
+
 console.log('🎉 ALL FRONTEND TESTS PASSED SUCCESSFULLY! 100% Mathematical Parity Confirmed.');

@@ -143,8 +143,10 @@ def test_calculate_fifty_factor_gir_sanctuary_veto():
     assert res["tier_badge"] == "UNVIABLE"
     assert res["tier_color"] == "#EF4444"
 
-    # Factors check
+    # Factors & 50 APIs check
     assert res["total_factors"] == 50
+    assert res["total_apis"] == 50
+    assert "apis_directory" in res and len(res["apis_directory"]) == 50
     assert len(res["factors"]) == 50
 
     factor_48 = next(f for f in res["factors"] if f["id"] == 48)
@@ -292,8 +294,10 @@ def test_calculate_fifty_factor_dholera_viable_hub():
     assert res["tier"] in ["VIABLE / RECOMMENDED", "OPTIMAL / STRATEGIC"]
     assert res["tier_badge"] in ["VIABLE", "OPTIMAL"]
 
-    # Factors check
+    # Factors & 50 APIs check
     assert res["total_factors"] == 50
+    assert res["total_apis"] == 50
+    assert "apis_directory" in res and len(res["apis_directory"]) == 50
     for f in res["factors"]:
         assert "id" in f
         assert "dimension" in f
@@ -306,3 +310,8 @@ def test_calculate_fifty_factor_dholera_viable_hub():
         assert "benchmark" in f
         assert "source" in f
         assert "status" in f
+        assert "api_name" in f and f["api_name"]
+        assert "api_endpoint" in f and f["api_endpoint"].startswith("http")
+        assert "api_tier" in f
+        assert "api_status" in f and f["api_status"] == "LIVE_VERIFIED"
+        assert "authority" in f and f["authority"]

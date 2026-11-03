@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SOVEREIGN_APIS_DIRECTORY } from '../data/sovereignApis';
 import { 
   Droplet, 
   Zap, 
@@ -22,10 +23,17 @@ import {
   Search,
   SlidersHorizontal,
   FileCheck,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  ArrowRight,
+  ExternalLink,
+  Globe,
+  Database,
+  Radio
 } from 'lucide-react';
+import { findNearbyRecommendedSitesClient } from '../services/scoringEngine';
 
-export default function ScoreCard({ site }) {
+export default function ScoreCard({ site, onSelectSite }) {
   if (!site) {
     return (
       <div className="bg-white p-6 rounded-2xl flex items-center justify-center text-[#454c58] min-h-[350px] border border-[#dde0e6] shadow-sm">
@@ -42,8 +50,22 @@ export default function ScoreCard({ site }) {
   const tierColor = site.tier_color || '#10B981';
   const tier = site.tier || 'VIABLE / RECOMMENDED';
 
+  const recommendedAlt = site.recommended_alternative || (
+    ((compositeScore < 75.0) || site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto) && (site.latitude && site.longitude)
+      ? findNearbyRecommendedSitesClient(
+          site.latitude,
+          site.longitude,
+          compositeScore,
+          Boolean(site.fifty_factor_telemetry?.is_vetoed || site.strategic_security_assessment?.national_security_veto || compositeScore < 25),
+          site.state
+        ).bestAlternative
+      : null
+  );
+
   const renderTierIcon = () => {
-    if (compositeScore >= 75.0) {
+    if (compositeScore >= 90.0) {
+      return <Award className="w-3.5 h-3.5 text-emerald-700 shrink-0" />;
+    } else if (compositeScore >= 75.0) {
       return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />;
     } else if (compositeScore >= 50.0) {
       return <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />;
@@ -58,6 +80,8 @@ export default function ScoreCard({ site }) {
   const [showFiftyMatrix, setShowFiftyMatrix] = useState(false);
   const [selectedDim, setSelectedDim] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [modalTab, setModalTab] = useState('factors'); // 'factors' | 'apis'
+  const [selectedTier, setSelectedTier] = useState('ALL');
 
   // 50-Factor Architecture List (From backend telemetry or dynamic site compilation)
   const activeFactorsList = site.fifty_factor_telemetry?.factors || [
@@ -337,6 +361,85 @@ export default function ScoreCard({ site }) {
           </div>
         )}
 
+                {/* Recommended Better Site Nearby Card (When site scores low or has statutory veto) */}
+        {recommendedAlt && (
+          <div className="mb-3 p-3.5 rounded-xl bg-gradient-to-br from-emerald-50 via-teal-50/70 to-blue-50 border-2 border-emerald-300 shadow-sm animate-fadeIn">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="p-1 rounded-md bg-emerald-600 text-white shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-xs font-bold font-display uppercase tracking-wider text-emerald-950">
+                  Recommended Better Site Nearby
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-2xs">
+                +{(recommendedAlt.score_delta > 0 ? recommendedAlt.score_delta : (recommendedAlt.composite_score - compositeScore)).toFixed(1)} pts higher
+              </span>
+            </div>
+
+            <div className="bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-emerald-200 shadow-2xs mb-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-slate-900 font-display truncate">
+                    {recommendedAlt.site_name}
+                  </div>
+                  <div className="text-[11px] text-slate-600 font-sans flex items-center gap-1 mt-0.5">
+                    <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                    <span>{recommendedAlt.district}, {recommendedAlt.state}</span>
+                    <span className="text-slate-300">•</span>
+                    <span className="font-mono font-bold text-emerald-700">{recommendedAlt.distance_km} km away</span>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <div className="text-sm font-black font-display text-emerald-700">
+                    {recommendedAlt.composite_score.toFixed(1)}/100
+                  </div>
+                  <div className="text-[9px] font-mono font-bold text-emerald-600 uppercase">
+                    {recommendedAlt.tier_badge || 'VIABLE'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Why It's Better highlights */}
+              <div className="mt-2.5 pt-2 border-t border-slate-100 space-y-1 text-[11px]">
+                {recommendedAlt.why_better?.power && (
+                  <div className="flex items-start gap-1.5 text-slate-700">
+                    <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                    <span className="leading-snug"><strong>Power Grid:</strong> {recommendedAlt.why_better.power}</span>
+                  </div>
+                )}
+                {recommendedAlt.why_better?.water && (
+                  <div className="flex items-start gap-1.5 text-slate-700">
+                    <Droplet className="w-3.5 h-3.5 text-[#074ce0] shrink-0 mt-0.5" />
+                    <span className="leading-snug"><strong>Water Resource:</strong> {recommendedAlt.why_better.water}</span>
+                  </div>
+                )}
+                {recommendedAlt.why_better?.environment && (
+                  <div className="flex items-start gap-1.5 text-slate-700">
+                    <TreePine className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span className="leading-snug"><strong>Statutory Land:</strong> {recommendedAlt.why_better.environment}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 1-Click Action to Adopt/Switch */}
+            <button
+              onClick={() => {
+                if (onSelectSite) {
+                  onSelectSite(recommendedAlt);
+                }
+              }}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-all shadow-sm shadow-emerald-600/25 cursor-pointer font-display"
+            >
+              <span>Switch to Recommended Site</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
         {/* 2. Unified Hero Analytics Box: Feasibility Score + Spacious 8-Axis Radar */}
         <div className="p-3 rounded-xl bg-[#f8f9fb] border border-[#dde0e6] space-y-2">
           
@@ -560,13 +663,38 @@ export default function ScoreCard({ site }) {
                   </p>
                 </div>
               </div>
-              <button 
-                onClick={() => setShowFiftyMatrix(false)}
-                className="w-8 h-8 rounded-full bg-slate-200/80 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
-                title="Close"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-1 p-1 bg-slate-200/80 rounded-xl">
+                  <button
+                    onClick={() => setModalTab('factors')}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold font-sans transition-all cursor-pointer ${
+                      modalTab === 'factors'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    📊 50 Siting Factors
+                  </button>
+                  <button
+                    onClick={() => setModalTab('apis')}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold font-sans transition-all cursor-pointer flex items-center gap-1.5 ${
+                      modalTab === 'apis'
+                        ? 'bg-white text-[#074ce0] shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    ⚡ 50 Sovereign APIs
+                  </button>
+                </div>
+                <button 
+                  onClick={() => setShowFiftyMatrix(false)}
+                  className="w-8 h-8 rounded-full bg-slate-200/80 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                  title="Close"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* 50-Factor Architecture Statistics Overview Strip */}
@@ -631,9 +759,101 @@ export default function ScoreCard({ site }) {
               </div>
             </div>
 
-            {/* 50-Factor Scrollable Inventory */}
-            <div className="overflow-y-auto p-4 space-y-2 flex-1 bg-slate-50/60 divide-y-0">
-              {filteredFactors.map((f) => (
+            {/* 50 Sovereign APIs Grid View */}
+            {modalTab === 'apis' ? (
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-slate-50/60">
+                {/* Tier Filter Bar for APIs */}
+                <div className="p-3 border-b border-slate-200 bg-white flex flex-col sm:flex-row gap-2 items-center justify-between">
+                  <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto text-xs">
+                    {[
+                      { id: 'ALL', label: 'All 50 APIs' },
+                      { id: 'TIER_1_DYNAMIC_TELEMETRY', label: 'Tier 1: Dynamic (18)' },
+                      { id: 'TIER_2_SPATIAL_VECTOR_LAYER', label: 'Tier 2: Spatial (18)' },
+                      { id: 'TIER_3_STATUTORY_REGISTRY', label: 'Tier 3: Statutory (14)' },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setSelectedTier(t.id)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                          selectedTier === t.id
+                            ? 'bg-[#074ce0] text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-[11px] font-mono text-slate-500">
+                    Showing <strong className="text-slate-800">{filteredApis.length}</strong> of 50 APIs
+                  </div>
+                </div>
+
+                {/* APIs Cards Grid */}
+                <div className="overflow-y-auto p-4 space-y-2.5 flex-1">
+                  {filteredApis.map((api) => (
+                    <div
+                      key={api.factor_id}
+                      className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 transition-all shadow-2xs flex flex-col gap-2"
+                    >
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="w-6 h-6 rounded-lg bg-blue-50 text-[#074ce0] border border-blue-200 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                            #{api.factor_id}
+                          </span>
+                          <span className="text-xs font-bold text-slate-900 font-display">
+                            {api.api_name}
+                          </span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-blue-50 text-[#074ce0] font-semibold border border-blue-100">
+                            {api.dimension}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-mono font-bold flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            {api.status}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-mono font-semibold">
+                            {api.tier.replace('TIER_', 'Tier ').replace(/_/g, ' ')}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-slate-700 font-sans">
+                        <strong className="text-slate-900">Factor {api.factor_id}:</strong> {api.factor_name}
+                      </div>
+
+                      <div className="text-[11px] text-slate-500 font-sans flex items-center gap-2 flex-wrap">
+                        <span>Authority: <strong className="text-slate-800">{api.authority}</strong></span>
+                        <span>•</span>
+                        <span>Cadence: <span className="text-slate-700 font-mono">{api.cadence}</span></span>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-2 text-xs font-mono">
+                        <span className="text-slate-500 truncate text-[11px]">Endpoint: <span className="text-slate-800 font-medium">{api.endpoint}</span></span>
+                        <a
+                          href={api.endpoint}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[#074ce0] hover:bg-blue-50 hover:border-blue-200 text-[11px] font-sans font-bold flex items-center gap-1 transition-all shrink-0"
+                        >
+                          <span>Open API</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+
+                      <p className="text-[11px] text-slate-600 font-sans italic">
+                        {api.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* 50-Factor Scrollable Inventory */}
+                <div className="overflow-y-auto p-4 space-y-2 flex-1 bg-slate-50/60 divide-y-0">
+                  {filteredFactors.map((f) => (
                 <div 
                   key={f.id}
                   className={`p-3 rounded-2xl border transition-all shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 ${
@@ -663,6 +883,31 @@ export default function ScoreCard({ site }) {
                         <span>Target: <span className="text-slate-800 font-mono font-medium">{f.benchmark}</span></span>
                         <span>•</span>
                         <span>Authority: <span className="text-slate-600 font-mono">{f.source}</span></span>
+                      </div>
+
+                      {/* Connected Sovereign API Link & Badge */}
+                      <div className="mt-1 flex items-center gap-1.5 flex-wrap text-[10px] font-mono">
+                        <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold flex items-center gap-1 shadow-2xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                          {f.api_name || 'India Sovereign API'}
+                        </span>
+                        {f.api_endpoint && (
+                          <a
+                            href={f.api_endpoint}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 truncate max-w-[260px] flex items-center gap-1 transition-colors"
+                            title={f.api_endpoint}
+                          >
+                            <span className="truncate">{f.api_endpoint.replace('https://', '')}</span>
+                            <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                          </a>
+                        )}
+                        {f.api_tier && (
+                          <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 text-[9px]">
+                            {f.api_tier.replace('TIER_', 'Tier ').replace(/_/g, ' ')}
+                          </span>
+                        )}
                       </div>
                       
                       {/* Factor Mathematical Weight & Contribution */}
@@ -704,6 +949,8 @@ export default function ScoreCard({ site }) {
                 </div>
               ))}
             </div>
+            </>
+            )}
 
             {/* Modal Bottom Bar */}
             <div className="p-3 sm:p-4 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 font-mono">

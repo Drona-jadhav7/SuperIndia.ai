@@ -168,7 +168,9 @@ def calculate_bottleneck_multiplier(dim_scores: Dict[str, float]) -> Tuple[float
 
 def determine_precision_tier(composite_score: float) -> Tuple[str, str, str]:
     """Returns (tier_label, tier_badge, tier_hex_color)."""
-    if composite_score >= 75.0:
+    if composite_score >= 90.0:
+        return "OPTIMAL / STRATEGIC", "OPTIMAL", "#059669"
+    elif composite_score >= 75.0:
         return "VIABLE / RECOMMENDED", "VIABLE", "#10B981"
     elif composite_score >= 50.0:
         return "CONDITIONAL / HIGH RISK", "CONDITIONAL", "#F59E0B"

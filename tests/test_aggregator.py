@@ -114,4 +114,4 @@ def test_tier_classification_logic():
         proposed_it_load_mw=50.0,
     )
     res = assess_site(base_site)
-    assert res.tier in ["VIABLE / RECOMMENDED", "CONDITIONAL / HIGH RISK", "UNVIABLE / REJECT"]
+    assert res.tier in ["OPTIMAL / STRATEGIC", "VIABLE / RECOMMENDED", "CONDITIONAL / HIGH RISK", "UNVIABLE / REJECT"]

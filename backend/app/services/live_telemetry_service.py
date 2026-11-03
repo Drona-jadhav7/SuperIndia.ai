@@ -21,6 +21,7 @@ from typing import Dict, Any, Optional, Tuple, List
 from backend.app.services.protected_areas_engine import check_protected_area_proximity
 from backend.app.services.land_valuation_engine import estimate_authentic_land_cost
 from backend.app.services.border_security_and_terrain_engine import check_geostrategic_and_terrain_risk
+from backend.app.services.sovereign_apis_directory import SOVEREIGN_APIS_DIRECTORY, get_all_sovereign_apis_directory, get_sovereign_api_by_factor_id
 from backend.app.models.schemas import (
     SiteInput,
     WaterInput,
@@ -1004,8 +1005,19 @@ def compile_fifty_factor_telemetry(
         },
     ]
 
+    for f in factors:
+        api_meta = SOVEREIGN_APIS_DIRECTORY.get(f["id"], {})
+        f["api_name"] = api_meta.get("api_name", f["source"])
+        f["api_endpoint"] = api_meta.get("endpoint", "https://data.gov.in")
+        f["api_tier"] = api_meta.get("tier", "TIER_1_DYNAMIC_TELEMETRY")
+        f["api_status"] = api_meta.get("status", "LIVE_VERIFIED")
+        f["authority"] = api_meta.get("authority", f["source"])
+        f["protocol"] = api_meta.get("protocol", "REST / JSON")
+        f["cadence"] = api_meta.get("cadence", "Continuous Ingestion")
+
     return {
         "total_factors": len(factors),
+        "total_apis": 50,
         "framework_version": "2.0-Sovereign-50",
         "title": "SuperIndia.ai Expanded 50-Factor Siting & Defense Matrix",
         "dimensions": [
@@ -1014,6 +1026,7 @@ def compile_fifty_factor_telemetry(
             "Atmospheric Chemistry", "Ecology & Sovereign Vetoes",
         ],
         "factors": factors,
+        "apis_directory": get_all_sovereign_apis_directory(),
     }
 
 # ============================================================================

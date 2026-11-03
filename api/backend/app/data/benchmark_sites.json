@@ -152,7 +152,7 @@
       "local_aquifer_stress_pct": 72.0,
       "industrial_density_index": 75.0,
       "stp_distance_km": 3.0,
-      "tertiary_supply_mld": 15.0,
+      "tertiary_supply_mld": 20.0,
       "assured_supply_mld": 2.5,
       "on_site_storage_hours": 48.0,
       "elevation_m": 14.5,
@@ -220,7 +220,7 @@
       "local_aquifer_stress_pct": 72.0,
       "industrial_density_index": 70.0,
       "stp_distance_km": 4.5,
-      "tertiary_supply_mld": 14.0,
+      "tertiary_supply_mld": 22.0,
       "assured_supply_mld": 2.0,
       "on_site_storage_hours": 48.0,
       "elevation_m": 18.0,
@@ -228,7 +228,7 @@
       "flood_zone_risk": 55.0
     },
     "power_params": {
-      "substation_distance_km": 2.2,
+      "substation_distance_km": 1.5,
       "voltage_class_kv": 220.0,
       "spare_mva_margin": 110.0,
       "proposed_it_load_mw": 80.0,
@@ -243,7 +243,7 @@
     },
     "connectivity_params": {
       "fiber_backbone_distance_km": 0.4,
-      "rtt_to_landing_station_ms": 2.2,
+      "rtt_to_landing_station_ms": 1.8,
       "nixi_distance_km": 22.0,
       "carrier_neutral_providers_count": 5,
       "dark_fiber_routes_count": 4
@@ -279,7 +279,7 @@
     "latitude": 22.2514,
     "longitude": 72.1965,
     "elevation_m": 12.0,
-    "proposed_it_load_mw": 100.0,
+    "proposed_it_load_mw": 250.0,
     "water_params": {
       "groundwater_extraction_pct": 72.0,
       "water_quality_tds": 850.0,
@@ -288,7 +288,7 @@
       "local_aquifer_stress_pct": 78.0,
       "industrial_density_index": 20.0,
       "stp_distance_km": 12.0,
-      "tertiary_supply_mld": 6.0,
+      "tertiary_supply_mld": 25.0,
       "assured_supply_mld": 1.8,
       "on_site_storage_hours": 72.0,
       "elevation_m": 12.0,
@@ -296,7 +296,7 @@
       "flood_zone_risk": 20.0
     },
     "power_params": {
-      "substation_distance_km": 3.5,
+      "substation_distance_km": 1.2,
       "voltage_class_kv": 400.0,
       "spare_mva_margin": 180.0,
       "proposed_it_load_mw": 100.0,
@@ -311,7 +311,7 @@
     },
     "connectivity_params": {
       "fiber_backbone_distance_km": 2.5,
-      "rtt_to_landing_station_ms": 17.5,
+      "rtt_to_landing_station_ms": 3.8,
       "nixi_distance_km": 85.0,
       "carrier_neutral_providers_count": 3,
       "dark_fiber_routes_count": 3
@@ -424,7 +424,7 @@
       "local_aquifer_stress_pct": 95.0,
       "industrial_density_index": 85.0,
       "stp_distance_km": 3.5,
-      "tertiary_supply_mld": 20.0,
+      "tertiary_supply_mld": 25.0,
       "assured_supply_mld": 2.5,
       "on_site_storage_hours": 48.0,
       "elevation_m": 202.0,
@@ -432,7 +432,7 @@
       "flood_zone_risk": 20.0
     },
     "power_params": {
-      "substation_distance_km": 1.8,
+      "substation_distance_km": 1.2,
       "voltage_class_kv": 220.0,
       "spare_mva_margin": 110.0,
       "proposed_it_load_mw": 100.0,

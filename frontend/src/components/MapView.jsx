@@ -157,10 +157,12 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
       const sitesLayer = L.layerGroup().addTo(map);
       const supercomputersLayer = L.layerGroup().addTo(map);
       const subseaLayer = L.layerGroup().addTo(map);
+      const recommendationLayer = L.layerGroup().addTo(map);
 
       layersRef.current.sitesLayer = sitesLayer;
       layersRef.current.supercomputersLayer = supercomputersLayer;
       layersRef.current.subseaLayer = subseaLayer;
+      layersRef.current.recommendationLayer = recommendationLayer;
 
       mapInstanceRef.current = map;
 
@@ -392,6 +394,107 @@ export default function MapView({ sites = [], selectedSite = null, onSelectSite 
       layer.addLayer(marker);
     });
   }, [showSubsea]);
+
+  // 5. Render Recommended Alternative Connector & Marker
+  useEffect(() => {
+    const layer = layersRef.current.recommendationLayer;
+    if (!layer || !mapInstanceRef.current) return;
+
+    layer.clearLayers();
+
+    if (!selectedSite) return;
+
+    const rec = selectedSite.recommended_alternative;
+    if (!rec) return;
+
+    const fromLat = selectedSite.latitude || selectedSite.coordinates?.lat;
+    const fromLon = selectedSite.longitude || selectedSite.coordinates?.lon;
+    const toLat = rec.latitude;
+    const toLon = rec.longitude;
+
+    if (!fromLat || !fromLon || !toLat || !toLon) return;
+
+    // Draw dashed geodesic line between current site and recommended alternative
+    const polyline = L.polyline([[fromLat, fromLon], [toLat, toLon]], {
+      color: '#10B981',
+      weight: 3.5,
+      opacity: 0.85,
+      dashArray: '8, 8',
+      lineCap: 'round',
+    });
+
+    polyline.bindTooltip(
+      `<div style="font-family: monospace; font-size: 11px; font-weight: bold; color: #065F46;">
+        ✨ Recommended Alternative: ${rec.site_name} (${rec.distance_km} km away • +${rec.score_delta > 0 ? rec.score_delta.toFixed(1) : ''} pts)
+      </div>`,
+      { sticky: true }
+    );
+
+    polyline.on('click', () => {
+      if (onSelectSite) onSelectSite(rec);
+    });
+
+    layer.addLayer(polyline);
+
+    // Render prominent star / recommended marker at destination
+    const recIconHtml = `
+      <div class="relative flex items-center justify-center cursor-pointer group">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-xl ring-4 ring-emerald-400 bg-emerald-600 text-white transition-transform group-hover:scale-125 border-2 border-white">
+          <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="absolute -top-6 whitespace-nowrap px-2 py-0.5 rounded-md bg-emerald-800 text-white font-mono text-[9px] font-bold shadow-md">
+          Recommended Alternative
+        </div>
+        <div class="absolute -inset-2 rounded-full animate-ping opacity-50 bg-emerald-400 pointer-events-none"></div>
+      </div>
+    `;
+
+    const recIcon = L.divIcon({
+      className: 'rec-alternative-marker',
+      html: recIconHtml,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+
+    const recMarker = L.marker([toLat, toLon], { icon: recIcon, zIndexOffset: 1000 });
+
+    const recPopup = `
+      <div style="font-family: inherit; min-width: 220px; padding: 4px;">
+        <div style="font-size: 10px; font-weight: bold; color: #10B981; text-transform: uppercase; margin-bottom: 2px;">
+          ⭐ Recommended Sovereign Alternative
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #16191f; margin-bottom: 2px;">
+          ${rec.site_name}
+        </div>
+        <div style="font-size: 11px; color: #454c58; margin-bottom: 6px;">
+          ${rec.district}, ${rec.state} • <strong>${rec.distance_km} km away</strong>
+        </div>
+        <div style="font-size: 11px; font-weight: bold; color: #047857; background: #ECFDF5; padding: 4px 8px; border-radius: 6px; margin-bottom: 6px;">
+          Feasibility: ${rec.composite_score.toFixed(1)}/100 (+${rec.score_delta > 0 ? rec.score_delta.toFixed(1) : ''} pts higher)
+        </div>
+        <button id="btn-switch-rec" style="width: 100%; padding: 6px; font-size: 11px; font-weight: bold; color: white; background: #059669; border: none; border-radius: 6px; cursor: pointer;">
+          Adopt & Switch to this Site →
+        </button>
+      </div>
+    `;
+
+    recMarker.bindPopup(recPopup);
+
+    recMarker.on('popupopen', () => {
+      const btn = document.getElementById('btn-switch-rec');
+      if (btn) {
+        btn.onclick = () => {
+          if (onSelectSite) onSelectSite(rec);
+        };
+      }
+    });
+
+    recMarker.on('click', () => {
+      if (onSelectSite) onSelectSite(rec);
+    });
+
+    layer.addLayer(recMarker);
+  }, [selectedSite, onSelectSite]);
 
   // 6. Smooth Pan on Site Selection (Keep national overview on mount, flyTo on user selection)
   useEffect(() => {

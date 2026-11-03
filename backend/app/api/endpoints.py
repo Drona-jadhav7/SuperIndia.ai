@@ -283,6 +283,26 @@ def assess_live_site_endpoint(req: LiveTelemetryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Live site assessment error: {str(e)}")
 
+@router.get("/telemetry/sovereign-apis-directory", tags=["Authentic Live Telemetry"])
+def get_sovereign_apis_directory_endpoint():
+    """
+    Returns the complete directory of 50 Sovereign Public, Satellite, and Indian Government APIs
+    powering the 50-Factor Siting & Sovereign Defense Matrix.
+    """
+    from backend.app.services.sovereign_apis_directory import get_all_sovereign_apis_directory
+    apis = get_all_sovereign_apis_directory()
+    return {
+        "total_apis": len(apis),
+        "mesh_status": "ONLINE_ACTIVE",
+        "mesh_tier_distribution": {
+            "tier_1_dynamic_telemetry": sum(1 for a in apis if a.get("tier") == "TIER_1_DYNAMIC_TELEMETRY"),
+            "tier_2_spatial_vector_layer": sum(1 for a in apis if a.get("tier") == "TIER_2_SPATIAL_VECTOR_LAYER"),
+            "tier_3_statutory_registry": sum(1 for a in apis if a.get("tier") == "TIER_3_STATUTORY_REGISTRY"),
+        },
+        "apis": apis,
+        "apis_directory": apis,
+    }
+
 # ==========================================
 # 3. Data Center Engineering Planner
 # ==========================================

@@ -208,3 +208,23 @@ def test_eco_assess_endpoint(client):
     assert res.status_code == 200
     data = res.json()
     assert "overall_eco_score" in data
+
+
+def test_sovereign_apis_directory_endpoint(client):
+    """Verify GET /api/telemetry/sovereign-apis-directory returns full 50-API mesh."""
+    res = client.get("/api/telemetry/sovereign-apis-directory")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["total_apis"] == 50
+    assert data["mesh_status"] == "ONLINE_ACTIVE"
+    assert "mesh_tier_distribution" in data
+    dist = data["mesh_tier_distribution"]
+    assert dist["tier_1_dynamic_telemetry"] == 22
+    assert dist["tier_2_spatial_vector_layer"] == 18
+    assert dist["tier_3_statutory_registry"] == 10
+    assert len(data["apis_directory"]) == 50
+
+    # Also verify non-prefixed resilient route
+    res_direct = client.get("/telemetry/sovereign-apis-directory")
+    assert res_direct.status_code == 200
+    assert res_direct.json()["total_apis"] == 50

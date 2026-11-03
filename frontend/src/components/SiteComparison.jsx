@@ -9,6 +9,8 @@ export default function SiteComparison({ sites = [], selectedSite = null, onSele
 
   const getTierBadgeClass = (tierBadge) => {
     switch (tierBadge) {
+      case 'OPTIMAL':
+        return 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold';
       case 'VIABLE':
         return 'bg-emerald-50 text-emerald-800 border-emerald-200';
       case 'CONDITIONAL':
